@@ -1,0 +1,17 @@
+{
+  "background_color": "#ffffff",
+  "description": "Automobile Financing",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Autosheets",
+  "orientation": "any",
+  "scope": "/AutoSheets/",
+  "short_name": "Autosheets",
+  "start_url": "/AutoSheets/",
+  "theme_color": "#ffffff",
+  "categories": [
+    "cars",
+    "finance",
+    "utilities"
+  ]
+}

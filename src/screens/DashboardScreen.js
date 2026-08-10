@@ -15,6 +15,41 @@ import MetricCard from '../components/MetricCard';
 import ShortcutButton from '../components/ShortcutButton';
 import GlassCard from '../components/GlassCard';
 
+const ALL_SHORTCUTS = [
+  {
+    key: 'rental',
+    title: 'Quick Rental',
+    color: COLORS.primary,
+    icon: <Ionicons name="document-text" size={22} color={COLORS.primary} />,
+    route: 'Rental',
+    roles: ['owner', 'rental'],
+  },
+  {
+    key: 'parking',
+    title: 'Log Parking',
+    color: COLORS.accent,
+    icon: <MaterialCommunityIcons name="parking" size={22} color={COLORS.accent} />,
+    route: 'Parking',
+    roles: ['owner', 'parking'],
+  },
+  {
+    key: 'taxi',
+    title: 'Dispatch Taxi',
+    color: COLORS.secondary,
+    icon: <Ionicons name="car-sport" size={22} color={COLORS.secondary} />,
+    route: 'Taxi',
+    roles: ['owner', 'dispatcher'],
+  },
+  {
+    key: 'expense',
+    title: 'Record Expense',
+    color: COLORS.warning,
+    icon: <Ionicons name="receipt" size={22} color={COLORS.warning} />,
+    route: 'Expense',
+    roles: ['owner', 'accountant', 'rental', 'parking', 'dispatcher'],
+  },
+];
+
 export default function DashboardScreen({ navigation, route }) {
   const [currency, setCurrency] = useState('USD');
   const role = route?.params?.role || 'owner';
@@ -26,6 +61,7 @@ export default function DashboardScreen({ navigation, route }) {
   };
 
   const totalRevenue = SHIFT_SUMMARY.totalGross;
+  const visibleShortcuts = ALL_SHORTCUTS.filter((s) => s.roles.includes(role));
 
   return (
     <View style={styles.container}>
@@ -108,30 +144,15 @@ export default function DashboardScreen({ navigation, route }) {
         {/* Shortcuts */}
         <Text style={styles.sectionTitle}>INSTANT ACTIONS</Text>
         <View style={styles.shortcuts}>
-          <ShortcutButton
-            title="Quick Rental"
-            color={COLORS.primary}
-            icon={<Ionicons name="document-text" size={22} color={COLORS.primary} />}
-            onPress={() => navigation.navigate('Rental')}
-          />
-          <ShortcutButton
-            title="Log Parking"
-            color={COLORS.accent}
-            icon={<MaterialCommunityIcons name="parking" size={22} color={COLORS.accent} />}
-            onPress={() => navigation.navigate('Parking')}
-          />
-          <ShortcutButton
-            title="Dispatch Taxi"
-            color={COLORS.secondary}
-            icon={<Ionicons name="car-sport" size={22} color={COLORS.secondary} />}
-            onPress={() => navigation.navigate('Taxi')}
-          />
-          <ShortcutButton
-            title="Record Expense"
-            color={COLORS.warning}
-            icon={<Ionicons name="receipt" size={22} color={COLORS.warning} />}
-            onPress={() => navigation.navigate('Expense')}
-          />
+          {visibleShortcuts.map((s) => (
+            <ShortcutButton
+              key={s.key}
+              title={s.title}
+              color={s.color}
+              icon={s.icon}
+              onPress={() => navigation.navigate(s.route)}
+            />
+          ))}
         </View>
 
         {/* Quick Stats Footer */}

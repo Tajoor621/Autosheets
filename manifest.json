@@ -6,7 +6,7 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui", "browser"],
+  "display_override": ["window-controls-overlay", "standalone", "minimal-ui", "browser"],
   "orientation": "portrait-primary",
   "background_color": "#090D16",
   "theme_color": "#090D16",
@@ -15,6 +15,10 @@
   "categories": ["business", "finance", "productivity", "utilities"],
   "prefer_related_applications": false,
   "related_applications": [],
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
   "icons": [
     {
       "src": "assets/icon-192x192.png",
@@ -39,7 +43,7 @@
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
-      "description": "Open executive dashboard",
+      "description": "Open the executive dashboard",
       "url": "./index.html",
       "icons": [
         {
@@ -53,7 +57,7 @@
       "name": "Quick Rental",
       "short_name": "Rental",
       "description": "Create a new rental agreement",
-      "url": "./index.html",
+      "url": "./index.html#rental",
       "icons": [
         {
           "src": "assets/icon-192x192.png",
@@ -66,7 +70,7 @@
       "name": "Log Parking",
       "short_name": "Parking",
       "description": "Issue a parking ticket",
-      "url": "./index.html",
+      "url": "./index.html#parking",
       "icons": [
         {
           "src": "assets/icon-192x192.png",
@@ -78,8 +82,8 @@
     {
       "name": "Dispatch Taxi",
       "short_name": "Taxi",
-      "description": "Record a taxi fare",
-      "url": "./index.html",
+      "description": "Record and settle a taxi fare",
+      "url": "./index.html#taxi",
       "icons": [
         {
           "src": "assets/icon-192x192.png",
@@ -99,8 +103,32 @@
       "url": "url"
     }
   },
-  "launch_handler": {
-    "client_mode": ["navigate-existing", "auto"]
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "application/json": [".json"]
+      },
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "./index.html"
   },
-  "handle_links": "preferred"
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+autosheets",
+      "url": "./index.html?data=%s"
+    }
+  ]
 }

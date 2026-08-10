@@ -599,5 +599,11 @@
 
     renderFleet();
   </script>
-</body>
+</body><script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(function(e) {
+      console.log("SW registration failed");
+    });
+  }
+</script>
 </html>

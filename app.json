@@ -29,11 +29,15 @@
       "package": "com.autosheets.app"
     },
     "web": {
-      "favicon": "./assets/logo-gold.jpg"
+      "favicon": "./assets/logo-gold.jpg",
+      "bundler": "metro"
     },
     "plugins": [
       "expo-local-authentication",
       "expo-secure-store"
-    ]
+    ],
+    "experiments": {
+      "baseUrl": "/Autosheets"
+    }
   }
 }

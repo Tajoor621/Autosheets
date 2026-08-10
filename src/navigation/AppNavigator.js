@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer, DarkTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
 import { COLORS } from '../theme';
 
 import SplashScreen from '../screens/SplashScreen';
@@ -69,12 +70,38 @@ function MainTabs({ route }) {
 }
 
 export default function AppNavigator() {
+  const [isReady, setIsReady] = useState(false);
+  const [initialRoute, setInitialRoute] = useState('Splash');
+  const [savedRole, setSavedRole] = useState('owner');
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const loggedIn = await SecureStore.getItemAsync('autosheets_logged_in');
+        const role = await SecureStore.getItemAsync('autosheets_role');
+        if (loggedIn === 'true') {
+          setInitialRoute('Main');
+          if (role) setSavedRole(role);
+        }
+      } catch (e) {
+        // SecureStore unavailable — fall back to Splash/Login flow
+      } finally {
+        setIsReady(true);
+      }
+    })();
+  }, []);
+
+  if (!isReady) return null;
+
   return (
     <NavigationContainer theme={navTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false, animation: 'fade' }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false, animation: 'fade' }}
+        initialRouteName={initialRoute}
+      >
         <Stack.Screen name="Splash" component={SplashScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Main" component={MainTabs} />
+        <Stack.Screen name="Main" component={MainTabs} initialParams={{ role: savedRole }} />
         <Stack.Screen name="Rental" component={RentalScreen} options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="Parking" component={ParkingScreen} options={{ animation: 'slide_from_right' }} />
         <Stack.Screen name="Taxi" component={TaxiScreen} options={{ animation: 'slide_from_right' }} />

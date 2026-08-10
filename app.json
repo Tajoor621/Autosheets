@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "AutoSheets",
+    "slug": "autosheets",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo-gold.jpg",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/logo-gold.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#090D16"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.autosheets.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/logo-gold.jpg",
+        "backgroundColor": "#090D16"
+      },
+      "package": "com.autosheets.app"
+    },
+    "web": {
+      "favicon": "./assets/logo-gold.jpg",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-local-authentication",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "baseUrl": "/Autosheets"
+    }
+  }
+}

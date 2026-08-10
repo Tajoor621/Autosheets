@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as LocalAuthentication from 'expo-local-authentication';
+import * as SecureStore from 'expo-secure-store';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS } from '../theme';
 import { ROLES } from '../data/mockData';
 import GlassCard from '../components/GlassCard';
@@ -24,8 +25,19 @@ export default function LoginScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Missing info', 'Please enter both email and password.');
+      return;
+    }
+
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      try {
+        await SecureStore.setItemAsync('autosheets_logged_in', 'true');
+        await SecureStore.setItemAsync('autosheets_role', selectedRole);
+      } catch (e) {
+        // SecureStore unavailable (e.g. web) — continue without persistence
+      }
       setLoading(false);
       navigation.replace('Main', { role: selectedRole });
     }, 800);

@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#4A5568" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>AutoSheets</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/icon-192x192.png" />
+  <style>
+    :root {
+      --bg: #C0C0C0;
+      --bg2: #A8A8A8;
+      --surface: #E8E8E8;
+      --surface2: #D4D4D4;
+      --metal1: #F5F5F5;
+      --metal2: #BEBEBE;
+      --metal3: #8B8B8B;
+      --primary: #3A6EA5;
+      --primary-dark: #2A5080;
+      --accent: #5B9BD5;
+      --success: #2E7D32;
+      --warning: #E65100;
+      --danger: #C62828;
+      --text: #1A1A1A;
+      --text2: #4A4A4A;
+      --border: #7A7A7A;
+      --shadow: rgba(0,0,0,0.25);
+      --gold: #B8860B;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #D8D8D8 0%, #B0B0B0 50%, #989898 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 88px;
+    }
+
+    /* Metallic button style */
+    .btn {
+      background: linear-gradient(180deg, #F0F0F0 0%, #C8C8C8 45%, #A8A8A8 55%, #B8B8B8 100%);
+      border: 1px solid #6A6A6A;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 1px 2px var(--shadow);
+      color: var(--text);
+      padding: 12px 16px;
+      width: 100%;
+      font-weight: 600;
+      font-size: 15px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .btn:active { background: linear-gradient(180deg, #A0A0A0 0%, #C0C0C0 100%); }
+    .btn-primary {
+      background: linear-gradient(180deg, #6BA3D6 0%, #3A6EA5 45%, #2A5080 55%, #3A6EA5 100%);
+      color: #fff;
+      border-color: #1A4060;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+    }
+    .btn-danger {
+      background: linear-gradient(180deg, #E57373 0%, #C62828 50%, #B71C1C 100%);
+      color: #fff;
+      border-color: #8B0000;
+    }
+    .btn-secondary {
+      background: linear-gradient(180deg, #E8E8E8 0%, #C0C0C0 100%);
+      color: var(--text2);
+    }
+
+    .header {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(180deg, #F8F8F8 0%, #C8C8C8 40%, #A0A0A0 100%);
+      border-bottom: 1px solid #707070;
+      box-shadow: 0 2px 4px var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .header h1 { font-size: 18px; font-weight: 700; color: #1A1A1A; text-shadow: 0 1px 0 #fff; }
+    .badge { font-size: 10px; color: var(--primary-dark); font-weight: 700; letter-spacing: 0.5px; margin-top: 2px; }
+    .currency-btn {
+      background: linear-gradient(180deg, #F0F0F0, #C0C0C0);
+      border: 1px solid #707070;
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: inset 0 1px 0 #fff;
+    }
+
+    .container { padding: 12px; }
+    .card {
+      background: linear-gradient(180deg, #F5F5F5 0%, #E0E0E0 100%);
+      border: 1px solid #8A8A8A;
+      border-radius: 6px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: inset 0 1px 0 #fff, 0 1px 3px var(--shadow);
+    }
+    .hero-label { font-size: 11px; color: var(--text2); letter-spacing: 1px; margin-bottom: 4px; font-weight: 600; }
+    .hero-value { font-size: 28px; font-weight: 800; margin-bottom: 8px; color: #1A1A1A; }
+    .breakdown { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--text2); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .metric-card {
+      background: linear-gradient(180deg, #F8F8F8, #D8D8D8);
+      border: 1px solid #8A8A8A;
+      border-radius: 6px;
+      padding: 12px;
+      box-shadow: inset 0 1px 0 #fff;
+    }
+    .metric-title { font-size: 10px; color: var(--text2); text-transform: uppercase; margin-bottom: 4px; font-weight: 600; }
+    .metric-value { font-size: 20px; font-weight: 700; }
+
+    .section-title { font-size: 11px; color: var(--text2); letter-spacing: 1px; margin: 14px 0 8px 2px; font-weight: 700; }
+    .shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .shortcut {
+      background: linear-gradient(180deg, #F0F0F0, #C8C8C8);
+      border: 1px solid #7A7A7A;
+      border-radius: 6px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 600;
+      box-shadow: inset 0 1px 0 #fff, 0 1px 2px var(--shadow);
+    }
+    .shortcut .icon {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 8px; font-size: 18px;
+      background: linear-gradient(180deg, #E0E0E0, #A0A0A0);
+      border: 1px solid #707070;
+    }
+
+    .bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(180deg, #E8E8E8 0%, #B0B0B0 100%);
+      border-top: 1px solid #707070;
+      display: flex; justify-content: space-around;
+      padding: 8px 0 14px; z-index: 100;
+      box-shadow: 0 -2px 6px var(--shadow);
+    }
+    .nav-item { text-align: center; font-size: 10px; color: var(--text2); flex: 1; font-weight: 600; }
+    .nav-item.active { color: var(--primary-dark); }
+    .nav-item span { display: block; font-size: 18px; margin-bottom: 2px; }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .list-item {
+      background: linear-gradient(180deg, #F5F5F5, #E0E0E0);
+      border: 1px solid #8A8A8A;
+      border-radius: 5px;
+      padding: 12px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: inset 0 1px 0 #fff;
+    }
+    input, select {
+      width: 100%;
+      background: #fff;
+      border: 1px solid #8A8A8A;
+      border-radius: 4px;
+      padding: 10px 12px;
+      color: var(--text);
+      margin-top: 4px;
+      margin-bottom: 10px;
+      font-size: 15px;
+      box-shadow: inset 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    label { font-size: 12px; color: var(--text2); font-weight: 600; }
+    .status { font-size: 11px; padding: 3px 8px; border-radius: 3px; font-weight: 600; }
+    .status-green { background: #C8E6C9; color: #1B5E20; }
+    .status-blue { background: #BBDEFB; color: #0D47A1; }
+    .status-purple { background: #E1BEE7; color: #4A148C; }
+    .status-cyan { background: #B2EBF2; color: #006064; }
+    .status-orange { background: #FFE0B2; color: #E65100; }
+
+    /* LOGIN */
+    #page-login {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px;
+      background: linear-gradient(180deg, #D0D0D0 0%, #A0A0A0 100%);
+    }
+    .login-logo { text-align: center; margin-bottom: 24px; }
+    .login-logo h1 {
+      font-size: 26px; font-weight: 800;
+      color: #2A2A2A;
+      text-shadow: 0 1px 0 #fff, 0 -1px 0 #888;
+      letter-spacing: 1px;
+    }
+    .login-logo p { font-size: 12px; color: var(--text2); margin-top: 4px; }
+    .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px; }
+    .role-btn {
+      background: linear-gradient(180deg, #F0F0F0, #C8C8C8);
+      border: 1px solid #7A7A7A;
+      border-radius: 4px;
+      padding: 10px 6px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text2);
+      font-weight: 600;
+      box-shadow: inset 0 1px 0 #fff;
+    }
+    .role-btn.selected {
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      background: linear-gradient(180deg, #D0E4F7, #A0C4E8);
+    }
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #B0B0B0;
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 14px; font-weight: 600; }
+    .setting-value { font-size: 13px; color: var(--text2); }
+    .empty-msg { text-align: center; padding: 20px; color: var(--text2); font-size: 14px; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="page-login" class="page active">
+    <div class="login-logo">
+      <h1>AUTOSHEETS</h1>
+      <p>Fleet • Rental • Parking • Taxi</p>
+    </div>
+    <div class="card">
+      <label>Email</label>
+      <input id="loginEmail" type="email" value="owner@autosheets.com" placeholder="Email" autocomplete="username" />
+      <label>Password</label>
+      <input id="loginPassword" type="password" value="demo1234" placeholder="Password" autocomplete="current-password" />
+      <label>Select Role</label>
+      <div class="role-grid" id="roleGrid">
+        <div class="role-btn selected" data-role="Fleet Owner" onclick="selectRole(this)">Fleet Owner</div>
+        <div class="role-btn" data-role="Rental Desk" onclick="selectRole(this)">Rental Desk</div>
+        <div class="role-btn" data-role="Parking Attendant" onclick="selectRole(this)">Parking</div>
+        <div class="role-btn" data-role="Dispatcher" onclick="selectRole(this)">Dispatcher</div>
+        <div class="role-btn" data-role="Accountant" onclick="selectRole(this)">Accountant</div>
+      </div>
+      <button type="button" class="btn btn-primary" id="btnLogin">Login</button>
+      <button type="button" class="btn btn-secondary" id="btnPin" style="margin-top:8px;">Use PIN / Quick Login</button>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div id="mainApp" style="display:none;">
+    <div class="header">
+      <div>
+        <h1>AutoSheets</h1>
+        <div class="badge" id="roleBadge">FLEET OWNER • LIVE</div>
+      </div>
+      <button type="button" class="currency-btn" id="btnCurrency"><span id="currencyCode">USD</span> ⇄</button>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page active container">
+      <div class="card">
+        <div class="hero-label">TODAY'S GROSS REVENUE</div>
+        <div class="hero-value" id="totalRevenue">$0.00</div>
+        <div class="breakdown" id="revenueBreakdown">
+          <span><span class="dot" style="background:var(--primary)"></span>Rentals $0</span>
+          <span><span class="dot" style="background:#00838F"></span>Parking $0</span>
+          <span><span class="dot" style="background:#6A1B9A"></span>Taxis $0</span>
+        </div>
+      </div>
+      <div class="metrics">
+        <div class="metric-card"><div class="metric-title">Utilization</div><div class="metric-value" style="color:var(--success)" id="mUtil">—</div></div>
+        <div class="metric-card"><div class="metric-title">Active Rentals</div><div class="metric-value" style="color:var(--primary)" id="mRentals">0</div></div>
+        <div class="metric-card"><div class="metric-title">Records Saved</div><div class="metric-value" style="color:#006064" id="mRecords">0</div></div>
+        <div class="metric-card"><div class="metric-title">Expenses</div><div class="metric-value" style="color:var(--warning)" id="mExpenses">$0</div></div>
+      </div>
+      <div class="section-title">INSTANT ACTIONS</div>
+      <div class="shortcuts">
+        <div class="shortcut" onclick="showPage('rental')"><div class="icon">📄</div>Quick Rental</div>
+        <div class="shortcut" onclick="showPage('parking')"><div class="icon">🅿️</div>Log Parking</div>
+        <div class="shortcut" onclick="showPage('taxi')"><div class="icon">🚕</div>Dispatch Taxi</div>
+        <div class="shortcut" onclick="showPage('expense')"><div class="icon">🧾</div>Record Expense</div>
+      </div>
+      <div class="section-title">RECENT RECORDS</div>
+      <div id="recentList" class="empty-msg">No records yet. Create one above.</div>
+    </div>
+
+    <!-- FLEET -->
+    <div id="page-fleet" class="page container">
+      <div class="section-title">FLEET ASSETS</div>
+      <div id="fleetList"></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div id="page-reports" class="page container">
+      <div class="card">
+        <div class="section-title" style="margin-top:0">P&L SUMMARY</div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Rentals</span><strong id="plRentals">$0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Parking</span><strong id="plParking">$0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0"><span>Taxis</span><strong id="plTaxis">$0</strong></div>
+        <hr style="border-color:#B0B0B0;margin:10px 0">
+        <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Gross Revenue</span><strong id="plGross">$0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0"><span>Expenses</span><strong style="color:var(--danger)" id="plExpenses">-$0</strong></div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0">
+          <span style="font-weight:700">Net Profit</span>
+          <strong style="color:var(--success);font-size:18px" id="plNet">$0</strong>
+        </div>
+      </div>
+      <div class="section-title">ALL RECORDS</div>
+      <div id="allRecords" class="empty-msg">No records yet.</div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="page-settings" class="page container">
+      <div class="section-title">ACCOUNT</div>
+      <div class="card">
+        <div class="setting-row"><div class="setting-label">Email</div><div class="setting-value" id="settingsEmail">—</div></div>
+        <div class="setting-row"><div class="setting-label">Current Role</div><div class="setting-value" id="settingsRole">—</div></div>
+        <div class="setting-row"><div class="setting-label">Currency</div><div class="setting-value" id="settingsCurrency">USD</div></div>
+      </div>
+      <div class="section-title">CHANGE ROLE</div>
+      <div class="card">
+        <div class="role-grid" id="settingsRoleGrid">
+          <div class="role-btn" data-role="Fleet Owner" onclick="changeRole(this)">Fleet Owner</div>
+          <div class="role-btn" data-role="Rental Desk" onclick="changeRole(this)">Rental Desk</div>
+          <div class="role-btn" data-role="Parking Attendant" onclick="changeRole(this)">Parking</div>
+          <div class="role-btn" data-role="Dispatcher" onclick="changeRole(this)">Dispatcher</div>
+          <div class="role-btn" data-role="Accountant" onclick="changeRole(this)">Accountant</div>
+        </div>
+      </div>
+      <div class="section-title">DATA</div>
+      <div class="card">
+        <div class="setting-row"><div class="setting-label">Offline Records</div><div class="setting-value" id="settingsRecords">0</div></div>
+        <button type="button" class="btn btn-secondary" id="btnExport">Export Data (JSON)</button>
+        <button type="button" class="btn btn-danger" id="btnClear">Clear All Records</button>
+      </div>
+      <div class="section-title">ABOUT</div>
+      <div class="card">
+        <div class="setting-row"><div class="setting-label">Version</div><div class="setting-value">1.1.0 PWA</div></div>
+        <div class="setting-row"><div class="setting-label">Build</div><div class="setting-value">AutoSheets 621/24</div></div>
+        <div class="setting-row"><div class="setting-label">Theme</div><div class="setting-value">Vista Metallic</div></div>
+      </div>
+      <button type="button" class="btn btn-danger" id="btnLogout" style="margin-top:8px;">Logout</button>
+    </div>
+
+    <!-- RENTAL -->
+    <div id="page-rental" class="page container">
+      <div class="card">
+        <label>Client Name</label>
+        <input id="rentalClient" placeholder="Enter client name" />
+        <label>Vehicle</label>
+        <select id="rentalVehicle">
+          <option>2024 Hyundai Tucson - AUH-R-3391</option>
+          <option>2023 BMW X5 - DXB-R-5521</option>
+          <option>2025 Toyota Camry - DXB-T-7842</option>
+        </select>
+        <label>Days</label>
+        <input id="rentalDays" type="number" value="3" min="1" />
+        <label>Daily Rate</label>
+        <input id="rentalRate" type="number" value="85" min="0" />
+        <label>Deposit</label>
+        <input id="rentalDeposit" type="number" value="200" min="0" />
+        <button type="button" class="btn btn-primary" id="btnRental">Generate Agreement</button>
+      </div>
+    </div>
+
+    <!-- PARKING -->
+    <div id="page-parking" class="page container">
+      <div class="card">
+        <label>Vehicle Plate</label>
+        <input id="parkingPlate" placeholder="e.g. DXB-P-1122" />
+        <label>Tariff Type</label>
+        <select id="parkingTariff">
+          <option value="8">Hourly - 8 / hr</option>
+          <option value="35">Flat Day - 35</option>
+          <option value="150">Weekly - 150</option>
+        </select>
+        <label>Hours (for hourly)</label>
+        <input id="parkingHours" type="number" value="2" min="1" />
+        <button type="button" class="btn btn-primary" id="btnParking">Issue Parking Ticket</button>
+      </div>
+    </div>
+
+    <!-- TAXI -->
+    <div id="page-taxi" class="page container">
+      <div class="card">
+        <label>Select Taxi</label>
+        <select id="taxiVehicle">
+          <option>2025 Toyota Camry - DXB-T-7842</option>
+          <option>2024 Nissan Altima - AUH-T-9910</option>
+        </select>
+        <label>Fare Amount</label>
+        <input id="taxiFare" type="number" value="75" min="0" />
+        <label>Driver Commission %</label>
+        <input id="taxiCommission" type="number" value="60" min="0" max="100" />
+        <button type="button" class="btn btn-primary" id="btnTaxi">Record & Settle Fare</button>
+      </div>
+    </div>
+
+    <!-- EXPENSE -->
+    <div id="page-expense" class="page container">
+      <div class="card">
+        <label>Category</label>
+        <select id="expenseCat">
+          <option>Fuel</option>
+          <option>Maintenance</option>
+          <option>Tolls</option>
+          <option>Permits</option>
+          <option>Insurance</option>
+        </select>
+        <label>Amount</label>
+        <input id="expenseAmount" type="number" placeholder="0.00" min="0" />
+        <label>Note</label>
+        <input id="expenseNote" placeholder="Optional note" />
+        <button type="button" class="btn btn-primary" id="btnExpense">Save Expense</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bottom-nav">
+      <div class="nav-item active" data-page="dashboard" onclick="navTo('dashboard')"><span>📊</span>Dashboard</div>
+      <div class="nav-item" data-page="fleet" onclick="navTo('fleet')"><span>🚗</span>Fleet</div>
+      <div class="nav-item" data-page="reports" onclick="navTo('reports')"><span>📈</span>Reports</div>
+      <div class="nav-item" data-page="settings" onclick="navTo('settings')"><span>⚙️</span>Settings</div>
+    </div>
+  </div>
+
+  <script>
+    // ========== STATE ==========
+    var currentRole = "Fleet Owner";
+    var currencies = ["USD", "EUR", "AED", "GBP", "SAR"];
+    var currIndex = 0;
+
+    var fleet = [
+      { name: "2025 Toyota Camry", plate: "DXB-T-7842", type: "Taxi", status: "On Trip", color: "blue" },
+      { name: "2024 Hyundai Tucson", plate: "AUH-R-3391", type: "Rental", status: "Rented", color: "purple" },
+      { name: "Downtown Bay #A4", plate: "DXB-P-1122", type: "Parking", status: "Occupied", color: "cyan" },
+      { name: "2023 BMW X5", plate: "DXB-R-5521", type: "Rental", status: "Available", color: "green" },
+      { name: "2024 Nissan Altima", plate: "AUH-T-9910", type: "Taxi", status: "Idle", color: "blue" },
+      { name: "Mall Bay #B12", plate: "AUH-P-3344", type: "Parking", status: "Available", color: "green" }
+    ];
+
+    // ========== STORAGE ==========
+    function saveData(key, value) {
+      try { localStorage.setItem("as_" + key, JSON.stringify(value)); } catch (e) {}
+    }
+    function loadData(key, fallback) {
+      try {
+        var v = localStorage.getItem("as_" + key);
+        return v ? JSON.parse(v) : fallback;
+      } catch (e) { return fallback; }
+    }
+
+    // ========== ROLE ==========
+    function selectRole(el) {
+      var buttons = document.querySelectorAll("#roleGrid .role-btn");
+      for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove("selected");
+      el.classList.add("selected");
+      currentRole = el.getAttribute("data-role");
+    }
+
+    function changeRole(el) {
+      var buttons = document.querySelectorAll("#settingsRoleGrid .role-btn");
+      for (var i = 0; i < buttons.length; i++) buttons[i].classList.remove("selected");
+      el.classList.add("selected");
+      currentRole = el.getAttribute("data-role");
+      document.getElementById("roleBadge").textContent = currentRole.toUpperCase() + " • LIVE";
+      document.getElementById("settingsRole").textContent = currentRole;
+      var session = loadData("session", {});
+      session.role = currentRole;
+      saveData("session", session);
+      alert("Role changed to: " + currentRole);
+    }
+
+    // ========== LOGIN ==========
+    function doLogin() {
+      var emailEl = document.getElementById("loginEmail");
+      var passEl = document.getElementById("loginPassword");
+      var email = (emailEl && emailEl.value) ? emailEl.value.trim() : "owner@autosheets.com";
+      var password = (passEl && passEl.value) ? passEl.value.trim() : "";
+
+      if (!password || password.length < 1) {
+        alert("Enter any password (demo: demo1234)");
+        return;
+      }
+
+      saveData("session", {
+        email: email,
+        role: currentRole,
+        loggedIn: true,
+        time: new Date().toISOString()
+      });
+
+      document.getElementById("roleBadge").textContent = currentRole.toUpperCase() + " • LIVE";
+      document.getElementById("settingsEmail").textContent = email;
+      document.getElementById("settingsRole").textContent = currentRole;
+
+      var loginPage = document.getElementById("page-login");
+      loginPage.classList.remove("active");
+      loginPage.style.display = "none";
+
+      var main = document.getElementById("mainApp");
+      main.style.display = "block";
+
+      refreshAll();
+      showPage("dashboard");
+    }
+
+    function doLogout() {
+      try { localStorage.removeItem("as_session"); } catch (e) {}
+      document.getElementById("mainApp").style.display = "none";
+      var loginPage = document.getElementById("page-login");
+      loginPage.style.display = "flex";
+      loginPage.classList.add("active");
+    }
+
+    // ========== CURRENCY ==========
+    function cycleCurrency() {
+      currIndex = (currIndex + 1) % currencies.length;
+      document.getElementById("currencyCode").textContent = currencies[currIndex];
+      document.getElementById("settingsCurrency").textContent = currencies[currIndex];
+      saveData("currency", currencies[currIndex]);
+      refreshAll();
+    }
+
+    // ========== NAV ==========
+    function showPage(name) {
+      var pages = document.querySelectorAll("#mainApp .page");
+      for (var i = 0; i < pages.length; i++) pages[i].classList.remove("active");
+      var page = document.getElementById("page-" + name);
+      if (page) page.classList.add("active");
+      if (name === "fleet") renderFleet();
+      if (name === "reports") renderReports();
+      if (name === "settings") updateSettings();
+      if (name === "dashboard") refreshAll();
+    }
+
+    function navTo(name) {
+      var items = document.querySelectorAll(".nav-item");
+      for (var i = 0; i < items.length; i++) items[i].classList.remove("active");
+      var target = document.querySelector('.nav-item[data-page="' + name + '"]');
+      if (target) target.classList.add("active");
+      showPage(name);
+    }
+
+    // ========== FLEET ==========
+    function renderFleet() {
+      var list = document.getElementById("fleetList");
+      var html = "";
+      for (var i = 0; i < fleet.length; i++) {
+        var f = fleet[i];
+        var sc = "status-blue";
+        if (f.color === "green") sc = "status-green";
+        if (f.color === "purple") sc = "status-purple";
+        if (f.color === "cyan") sc = "status-cyan";
+        html += '<div class="list-item"><div><div style="font-weight:600">' + f.name + '</div><div style="font-size:12px;color:var(--text2)">' + f.plate + " • " + f.type + '</div></div><span class="status ' + sc + '">' + f.status + '</span></div>';
+      }
+      list.innerHTML = html;
+    }
+
+    // ========== RECORDS / CALCULATIONS ==========
+    function getHistory() {
+      return loadData("history", []);
+    }
+
+    function calcTotals() {
+      var history = getHistory();
+      var rentals = 0, parking = 0, taxis = 0, expenses = 0, activeRentals = 0;
+      for (var i = 0; i < history.length; i++) {
+        var r = history[i];
+        if (r.type === "rental") { rentals += Number(r.total) || 0; activeRentals++; }
+        if (r.type === "parking") parking += Number(r.amount) || 0;
+        if (r.type === "taxi") taxis += Number(r.fare) || 0;
+        if (r.type === "expense") expenses += Number(r.amt) || 0;
+      }
+      return { rentals: rentals, parking: parking, taxis: taxis, expenses: expenses, activeRentals: activeRentals, gross: rentals + parking + taxis, count: history.length };
+    }
+
+    function money(n) {
+      return "$" + (Number(n) || 0).toFixed(2);
+    }
+
+    function refreshAll() {
+      var t = calcTotals();
+      document.getElementById("totalRevenue").textContent = money(t.gross);
+      document.getElementById("revenueBreakdown").innerHTML =
+        '<span><span class="dot" style="background:var(--primary)"></span>Rentals ' + money(t.rentals) + '</span> ' +
+        '<span><span class="dot" style="background:#00838F"></span>Parking ' + money(t.parking) + '</span> ' +
+        '<span><span class="dot" style="background:#6A1B9A"></span>Taxis ' + money(t.taxis) + '</span>';
+      document.getElementById("mRentals").textContent = t.activeRentals;
+      document.getElementById("mRecords").textContent = t.count;
+      document.getElementById("mExpenses").textContent = money(t.expenses);
+      document.getElementById("mUtil").textContent = t.count > 0 ? "78%" : "—";
+
+      // Recent list
+      var history = getHistory().slice().reverse().slice(0, 5);
+      var recent = document.getElementById("recentList");
+      if (history.length === 0) {
+        recent.innerHTML = '<div class="empty-msg">No records yet. Create one above.</div>';
+      } else {
+        var h = "";
+        for (var i = 0; i < history.length; i++) {
+          var r = history[i];
+          var label = r.type.toUpperCase();
+          var detail = "";
+          if (r.type === "rental") detail = r.client + " • " + money(r.total);
+          if (r.type === "parking") detail = r.plate + " • " + money(r.amount);
+          if (r.type === "taxi") detail = "Fare " + money(r.fare);
+          if (r.type === "expense") detail = r.cat + " • " + money(r.amt);
+          h += '<div class="list-item"><div><div style="font-weight:600">' + label + '</div><div style="font-size:12px;color:var(--text2)">' + detail + '</div></div></div>';
+        }
+        recent.innerHTML = h;
+      }
+    }
+
+    function renderReports() {
+      var t = calcTotals();
+      document.getElementById("plRentals").textContent = money(t.rentals);
+      document.getElementById("plParking").textContent = money(t.parking);
+      document.getElementById("plTaxis").textContent = money(t.taxis);
+      document.getElementById("plGross").textContent = money(t.gross);
+      document.getElementById("plExpenses").textContent = "-" + money(t.expenses);
+      document.getElementById("plNet").textContent = money(t.gross - t.expenses);
+
+      var history = getHistory().slice().reverse();
+      var box = document.getElementById("allRecords");
+      if (history.length === 0) {
+        box.innerHTML = '<div class="empty-msg">No records yet.</div>';
+      } else {
+        var h = "";
+        for (var i = 0; i < history.length; i++) {
+          var r = history[i];
+          var label = r.type.toUpperCase();
+          var detail = "";
+          if (r.type === "rental") detail = r.client + " • " + r.days + " days • " + money(r.total);
+          if (r.type === "parking") detail = r.plate + " • " + money(r.amount);
+          if (r.type === "taxi") detail = "Fare " + money(r.fare) + " • Driver " + money(r.driver);
+          if (r.type === "expense") detail = r.cat + " • " + money(r.amt) + (r.note ? " • " + r.note : "");
+          h += '<div class="list-item"><div><div style="font-weight:600">' + label + '</div><div style="font-size:12px;color:var(--text2)">' + detail + '</div></div></div>';
+        }
+        box.innerHTML = h;
+      }
+    }
+
+    function updateSettings() {
+      var t = calcTotals();
+      document.getElementById("settingsRecords").textContent = t.count;
+      document.getElementById("settingsCurrency").textContent = currencies[currIndex];
+    }
+
+    // ========== ACTIONS ==========
+    function createRental() {
+      var client = document.getElementById("rentalClient").value.trim() || "Client";
+      var days = Number(document.getElementById("rentalDays").value) || 1;
+      var rate = Number(document.getElementById("rentalRate").value) || 0;
+      var deposit = Number(document.getElementById("rentalDeposit").value) || 0;
+      var vehicle = document.getElementById("rentalVehicle").value;
+      var total = days * rate;
+      var history = getHistory();
+      history.push({ type: "rental", client: client, vehicle: vehicle, days: days, rate: rate, deposit: deposit, total: total, time: new Date().toISOString() });
+      saveData("history", history);
+      alert("Rental saved!\n\nClient: " + client + "\nDays: " + days + "\nTotal: " + money(total));
+      document.getElementById("rentalClient").value = "";
+      navTo("dashboard");
+    }
+
+    function logParking() {
+      var plate = document.getElementById("parkingPlate").value.trim() || "Unknown";
+      var tariff = Number(document.getElementById("parkingTariff").value) || 8;
+      var hours = Number(document.getElementById("parkingHours").value) || 1;
+      var amount = (tariff === 8) ? hours * 8 : tariff;
+      var history = getHistory();
+      history.push({ type: "parking", plate: plate, amount: amount, time: new Date().toISOString() });
+      saveData("history", history);
+      alert("Parking ticket saved!\n\nPlate: " + plate + "\nAmount: " + money(amount));
+      document.getElementById("parkingPlate").value = "";
+      navTo("dashboard");
+    }
+
+    function dispatchTaxi() {
+      var fare = Number(document.getElementById("taxiFare").value) || 0;
+      var commission = Number(document.getElementById("taxiCommission").value) || 60;
+      var driver = Math.round(fare * commission / 100);
+      var owner = fare - driver;
+      var vehicle = document.getElementById("taxiVehicle").value;
+      var history = getHistory();
+      history.push({ type: "taxi", vehicle: vehicle, fare: fare, driver: driver, owner: owner, time: new Date().toISOString() });
+      saveData("history", history);
+      alert("Taxi fare saved!\n\nFare: " + money(fare) + "\nDriver: " + money(driver) + "\nOwner: " + money(owner));
+      navTo("dashboard");
+    }
+
+    function saveExpense() {
+      var cat = document.getElementById("expenseCat").value;
+      var amt = document.getElementById("expenseAmount").value || "0";
+      var note = document.getElementById("expenseNote").value || "";
+      var history = getHistory();
+      history.push({ type: "expense", cat: cat, amt: amt, note: note, time: new Date().toISOString() });
+      saveData("history", history);
+      alert("Expense saved!\n\n" + cat + ": " + money(amt));
+      document.getElementById("expenseAmount").value = "";
+      document.getElementById("expenseNote").value = "";
+      navTo("dashboard");
+    }
+
+    function exportData() {
+      var data = { session: loadData("session", {}), history: getHistory(), exportedAt: new Date().toISOString() };
+      var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = "autosheets-export.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function clearData() {
+      if (confirm("Delete ALL offline records?")) {
+        try { localStorage.removeItem("as_history"); } catch (e) {}
+        refreshAll();
+        updateSettings();
+        renderReports();
+        alert("All records cleared.");
+      }
+    }
+
+    // ========== INIT ==========
+    function init() {
+      // Bind buttons (more reliable than inline onclick in some WebViews)
+      document.getElementById("btnLogin").addEventListener("click", doLogin);
+      document.getElementById("btnPin").addEventListener("click", doLogin);
+      document.getElementById("btnCurrency").addEventListener("click", cycleCurrency);
+      document.getElementById("btnRental").addEventListener("click", createRental);
+      document.getElementById("btnParking").addEventListener("click", logParking);
+      document.getElementById("btnTaxi").addEventListener("click", dispatchTaxi);
+      document.getElementById("btnExpense").addEventListener("click", saveExpense);
+      document.getElementById("btnExport").addEventListener("click", exportData);
+      document.getElementById("btnClear").addEventListener("click", clearData);
+      document.getElementById("btnLogout").addEventListener("click", doLogout);
+
+      // Restore currency
+      var savedCur = loadData("currency", null);
+      if (savedCur) {
+        var idx = currencies.indexOf(savedCur);
+        if (idx >= 0) {
+          currIndex = idx;
+          document.getElementById("currencyCode").textContent = currencies[currIndex];
+        }
+      }
+
+      // Auto-login if session exists
+      var session = loadData("session", null);
+      if (session && session.loggedIn) {
+        currentRole = session.role || "Fleet Owner";
+        document.getElementById("roleBadge").textContent = currentRole.toUpperCase() + " • LIVE";
+        document.getElementById("settingsEmail").textContent = session.email || "owner@autosheets.com";
+        document.getElementById("settingsRole").textContent = currentRole;
+        document.getElementById("page-login").classList.remove("active");
+        document.getElementById("page-login").style.display = "none";
+        document.getElementById("mainApp").style.display = "block";
+        refreshAll();
+      }
+
+      renderFleet();
+
+      // Service worker
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("./sw.js").catch(function () {});
+      }
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>

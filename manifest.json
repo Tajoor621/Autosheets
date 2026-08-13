@@ -1,0 +1,149 @@
+{
+  "id": "/Autosheets/",
+  "name": "AutoSheets",
+  "short_name": "AutoSheets",
+  "description": "Fleet, Rental, Parking & Taxi Accounting — P&L, Balance Sheet, Customer Statements",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "tabbed", "standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#C0C0C0",
+  "theme_color": "#4A5568",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["business", "finance", "productivity"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "assets/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "AutoSheets Dashboard"
+    },
+    {
+      "src": "assets/screenshot-mobile.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "AutoSheets Mobile"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "short_name": "Home",
+      "description": "Open accounting dashboard",
+      "url": "./index.html",
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Quick Rental",
+      "short_name": "Rental",
+      "description": "Create a rental entry",
+      "url": "./index.html#rental",
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Log Parking",
+      "short_name": "Parking",
+      "description": "Log a parking ticket",
+      "url": "./index.html#parking",
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "short_name": "Reports",
+      "description": "P&L and Balance Sheet",
+      "url": "./index.html#reports",
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "share_target": {
+    "action": "./index.html",
+    "method": "GET",
+    "enctype": "application/x-www-form-urlencoded",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "launch_handler": {
+    "client_mode": ["focus-existing", "navigate-existing", "auto"]
+  },
+  "file_handlers": [
+    {
+      "action": "./index.html",
+      "accept": {
+        "application/json": [".json"]
+      },
+      "icons": [
+        {
+          "src": "assets/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "launch_type": "single-client"
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+autosheets",
+      "url": "./index.html?protocol=%s"
+    }
+  ],
+  "note_taking": {
+    "new_note_url": "./index.html"
+  },
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "handle_links": "preferred"
+}

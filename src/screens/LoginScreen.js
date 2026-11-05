@@ -71,7 +71,7 @@ export default function LoginScreen({ navigation }) {
     >
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
         <Image
-          source={require('../../assets/logo-silver.jpg')}
+          source={require('../../assets/icon-512x512.png')}
           style={styles.logo}
           resizeMode="contain"
         />
@@ -140,7 +140,7 @@ export default function LoginScreen({ navigation }) {
           </TouchableOpacity>
         </GlassCard>
 
-        <Text style={styles.demoNote}>Demo credentials pre-filled • Offline-first ready</Text>
+        <Text style={styles.demoNote}>Demo only. Sample sign-in on this device — not a company account.</Text>
       </ScrollView>
     </KeyboardAvoidingView>
   );

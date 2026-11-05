@@ -18,7 +18,7 @@ export default function SplashScreen({ navigation }) {
         style={StyleSheet.absoluteFill}
       />
       <Image
-        source={require('../../assets/logo-gold.jpg')}
+        source={require('../../assets/icon-512x512.png')}
         style={styles.logo}
         resizeMode="contain"
       />

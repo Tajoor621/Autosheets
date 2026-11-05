@@ -2,7 +2,7 @@
   "id": "/Autosheets/",
   "name": "AutoSheets",
   "short_name": "AutoSheets",
-  "description": "Fleet, Rental, Parking & Taxi Accounting — P&L, Balance Sheet, Customer Statements",
+  "description": "Offline fleet, rental, parking, and taxi accounting. Ledger, profit and loss, balance sheet, deposits, aging, and customer statements — stored in your browser.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -36,18 +36,18 @@
   ],
   "screenshots": [
     {
-      "src": "assets/screenshot-wide.png",
+      "src": "assets/screenshot-desktop.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "AutoSheets Dashboard"
+      "label": "AutoSheets dashboard"
     },
     {
       "src": "assets/screenshot-mobile.png",
       "sizes": "750x1334",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "AutoSheets Mobile"
+      "label": "AutoSheets on a phone"
     }
   ],
   "shortcuts": [

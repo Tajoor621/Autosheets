@@ -1,5 +1,5 @@
-/* AutoSheets Service Worker — offline + sync hooks */
-const CACHE_NAME = "autosheets-v4";
+/* AutoSheets service worker — offline shell, fresh HTML when online. */
+const CACHE_NAME = "autosheets-v5";
 const ASSETS = [
   "./",
   "./index.html",
@@ -23,8 +23,30 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+function isDocument(request) {
+  if (request.mode === "navigate") return true;
+  const url = new URL(request.url);
+  return url.pathname.endsWith("/") || url.pathname.endsWith("index.html");
+}
+
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  if (isDocument(event.request)) {
+    event.respondWith(
+      fetch(event.request)
+        .then((res) => {
+          if (res && res.ok) {
+            const copy = res.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put("./index.html", copy));
+          }
+          return res;
+        })
+        .catch(() => caches.match("./index.html").then((cached) => cached || caches.match("./")))
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)
@@ -41,7 +63,6 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-/* Background Sync — queue name used when online again */
 self.addEventListener("sync", (event) => {
   if (event.tag === "autosheets-sync") {
     event.waitUntil(
@@ -52,7 +73,6 @@ self.addEventListener("sync", (event) => {
   }
 });
 
-/* Periodic Background Sync (when browser supports it) */
 self.addEventListener("periodicsync", (event) => {
   if (event.tag === "autosheets-periodic") {
     event.waitUntil(
@@ -63,7 +83,6 @@ self.addEventListener("periodicsync", (event) => {
   }
 });
 
-/* Push — structure ready (needs your push server keys to fully work) */
 self.addEventListener("push", (event) => {
   let data = { title: "AutoSheets", body: "You have an update" };
   try {

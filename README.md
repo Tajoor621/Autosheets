@@ -1,259 +1,104 @@
 # AutoSheets
 
-**Ultimate Fleet, Rental, Parking & Taxi Business & Accounting Mobile Application**
+Offline accounting for fleet, rental, parking, and taxi operators. The published app keeps the books in the browser: income, expenses, deposits, receivables, and printable statements.
+
+**Live app:** [https://tajoor621.github.io/Autosheets/](https://tajoor621.github.io/Autosheets/)
 
 <p align="center">
-  <img src="./assets/logo-gold.jpg" alt="AutoSheets Logo" width="320"/>
+  <img src="./assets/icon-512x512.png" alt="AutoSheets logo: a gold car, rising bars, and a check mark" width="160">
 </p>
 
 <p align="center">
-  <strong>Dark-mode executive mobile app</strong> for car rental businesses, parking operators, taxi fleet managers and private transit entrepreneurs.
+  <img src="./assets/screenshot-desktop.png" alt="AutoSheets dashboard with revenue, today's activity, receivables, deposits, and shortcuts for rental, parking, taxi, and expenses" width="720">
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Expo-51-blue?logo=expo" alt="Expo"/>
-  <img src="https://img.shields.io/badge/React%20Native-0.74-61dafb?logo=react" alt="React Native"/>
-  <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20Android%20%7C%20Web-lightgrey" alt="Platform"/>
-  <img src="https://img.shields.io/badge/Offline--First-Ready-10B981" alt="Offline"/>
-  <img src="https://img.shields.io/badge/Multi--Currency-USD%20EUR%20AED%20GBP%20JPY%20CAD%20SAR-8B5CF6" alt="Currency"/>
-</p>
+The cash figure on the balance sheet is a running total of entries in this browser. AutoSheets does not connect to a bank.
 
----
+## What you can do
 
-## Overview
+- Sign in with email and password, or unlock the same browser with a 4–6 digit PIN.
+- Work as Fleet Owner, Rental Desk, Parking Attendant, Dispatcher, or Accountant. Every role can use the full set of books.
+- Post rental agreements, parking tickets, taxi fares, expenses, customer receipts, and vendor payments.
+- Keep customers, opening balances, and a fleet list with plate, status, book value, odometer, and service due.
+- Switch the book currency among USD, EUR, AED, GBP, SAR, and PKR. Symbols change. Amounts are not converted.
+- Read a ledger with debit and credit, profit and loss, a balance sheet, customer statements, a monthly summary, and receivables aging.
+- Print or share a voucher, a day sheet, profit and loss, the balance sheet, and a customer statement.
+- Export a JSON backup or a CSV ledger, and import a JSON backup without changing the password or PIN.
 
-**AutoSheets** is a production-oriented, offline-first mobile application purpose-built for the transit and automotive services industry. It unifies three core verticals under one executive dashboard:
+Rental agreements can hold a security deposit, an odometer-out reading, and a return date. An overdue return and a due service show under Needs attention. Marking the vehicle returned sets that asset back to Available. A fuel or service expense can update the odometer when the reading is higher.
 
-| Vertical          | Capabilities                                      |
-|-------------------|---------------------------------------------------|
-| **Car Rentals**   | Agreements, deposits, daily/weekly rates, multi-currency invoices |
-| **Parking**       | Hourly & flat tariffs, ticket logging, overstay tracking |
-| **Taxi / Fleet**  | Dispatch, fare recording, driver–owner commission splits |
+Taxi commission is the driver share of the fare. The full fare is still taxi income. The driver and owner amounts are stored on the entry.
 
-Designed for high-speed commercial environments with glassmorphism UI, neon telemetry indicators, and zero-clutter ergonomics.
+## Demo sign-in
 
----
+The sign-in on the public page is a **demo only**. It is not a company account.
 
-## Features
+| Field | Value |
+| --- | --- |
+| Email | `owner@autosheets.com` |
+| Password | `demo1234` |
 
-### Authentication & Security
-- Splash screen with branded logo
-- Email / password login
-- Biometric unlock (Face ID / Fingerprint) via `expo-local-authentication`
-- Role-based workspace switching:
-  - Fleet Owner
-  - Rental Desk Agent
-  - Parking Attendant
-  - Dispatcher
-  - Accountant
+A new email is saved in this browser when the password is at least 4 characters. Use a password you do not use anywhere else. Passwords and the PIN stay in `localStorage` on this device. They are not sent to a server.
 
-### Executive Dashboard (Command Center)
-- Today’s Gross Revenue (Rentals + Parking + Taxis)
-- Fleet Utilization %
-- Active Rentals & Open Parking Slots
-- Live Taxi Queue & Unsettled Fares
-- Instant one-tap shortcuts:
-  - Quick Rental Agreement
-  - Log Parking Ticket
-  - Dispatch Taxi Fare
-  - Record Expense
-- Header currency switcher (instant global toggle)
+## Your books stay on this device
 
-### Multi-Currency Financial Engine
-Supported currencies with offline exchange rates:
+Nothing is uploaded when you add a customer, a vehicle, or an entry. Clearing the site data for this browser deletes the books, so export a backup first.
 
-| Code | Symbol | Name            |
-|------|--------|-----------------|
-| USD  | $      | US Dollar       |
-| EUR  | €      | Euro            |
-| GBP  | £      | British Pound   |
-| AED  | د.إ    | UAE Dirham      |
-| JPY  | ¥      | Japanese Yen    |
-| CAD  | C$     | Canadian Dollar |
-| SAR  | ﷼      | Saudi Riyal     |
+The JSON backup includes the signed-in email and role. It does not include the password or PIN. Importing a file replaces customers, fleet, entries, rates, and the company name, and leaves sign-in and the PIN alone.
 
-- Real-time base currency configuration
-- Dual-currency invoice preview (local + corporate base)
-- Local rate table for fully offline calculation
+The app also installs as a standalone page and can open again from the cache when the network is down. While you are online, the page itself is loaded fresh.
 
-### Specialized Modules
-- **Rental Ledger** – daily rates, deposit holds, client details, agreement generation
-- **Parking Management** – hourly / flat tariffs, plate entry, auto ticket
-- **Taxi Dispatch** – fare entry + automatic driver/owner commission split
-- **Expense Tracker** – Fuel, Maintenance, Tolls, Permits, Insurance
-- **Fleet Assets** – live status, fuel, odometer, assignment
-- **Financial Reports** – P&L by vertical, net profit, JSON / CSV export
+## Using the pages
 
-### Offline-First Architecture
-- Mock data + local structure ready for SQLite / SecureStore
-- No mandatory cloud dependency
-- Daily shift closing reports exportable as JSON or CSV
+| Place | What it is |
+| --- | --- |
+| Home | Revenue, today, receivables, cash, deposits, fleet use, overdue rentals, and shortcuts |
+| Clients | Customers and what each one owes |
+| Ledger | Every entry, with search and a debit / credit total |
+| Reports | Profit and loss, balance sheet, customer statement, month, and aging |
+| Settings | Company name, PIN, default rates, role, export, import, and clear entries |
 
----
+These addresses open the matching page after sign-in:
 
-## Tech Stack
+- [Home](https://tajoor621.github.io/Autosheets/#dashboard)
+- [Rental](https://tajoor621.github.io/Autosheets/#rental)
+- [Parking](https://tajoor621.github.io/Autosheets/#parking)
+- [Taxi](https://tajoor621.github.io/Autosheets/#taxi)
+- [Reports](https://tajoor621.github.io/Autosheets/#reports)
 
-| Layer            | Technology                          |
-|------------------|-------------------------------------|
-| Framework        | Expo SDK 51 + React Native 0.74     |
-| Navigation       | React Navigation 6 (Stack + Tabs)   |
-| UI               | Custom glassmorphism + Ionicons     |
-| Auth             | expo-local-authentication           |
-| Storage (ready)  | expo-secure-store + SQLite pattern  |
-| Styling          | StyleSheet + design tokens          |
-| Currency Engine  | Pure JS offline converter           |
+## Run the website locally
 
----
-
-## Design System
-
-```
-Background:      #090D16
-Surface:         #111827
-Primary:         #3B82F6
-Secondary:       #8B5CF6
-Accent:          #06B6D4
-Success:         #10B981
-Warning:         #F59E0B
-Danger:          #EF4444
-Text Primary:    #F9FAFB
-Text Secondary:  #9CA3AF
-Gold (brand):    #D4AF37
-```
-
-Typography: Inter / SF Pro Display scale  
-Radius: 12–16 px cards, full pills  
-Glassmorphism cards with subtle borders and elevation
-
----
-
-## Project Structure
-
-```
-AutoSheets/
-├── App.js
-├── app.json
-├── package.json
-├── babel.config.js
-├── README.md
-├── .gitignore
-├── assets/
-│   ├── logo-gold.jpg          # Primary brand logo
-│   └── logo-silver.jpg        # Secondary / dark UI logo
-└── src/
-    ├── theme/
-    │   └── index.js           # Colors, spacing, typography, radius
-    ├── data/
-    │   └── mockData.js        # Fleet, transactions, rates, roles, shift
-    ├── utils/
-    │   └── currency.js        # convertCurrency, formatCurrency
-    ├── components/
-    │   ├── GlassCard.js
-    │   ├── MetricCard.js
-    │   └── ShortcutButton.js
-    ├── screens/
-    │   ├── SplashScreen.js
-    │   ├── LoginScreen.js
-    │   ├── DashboardScreen.js
-    │   ├── RentalScreen.js
-    │   ├── ParkingScreen.js
-    │   ├── TaxiScreen.js
-    │   ├── ExpenseScreen.js
-    │   ├── FleetScreen.js
-    │   └── ReportsScreen.js
-    └── navigation/
-        └── AppNavigator.js
-```
-
----
-
-## Getting Started
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-- Expo Go app on your phone (optional) or Android/iOS simulator
-
-### Installation
+The site is static. From this folder:
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/AutoSheets.git
-cd AutoSheets
+python3 -m http.server 8765
+```
 
-# 2. Install dependencies
+Open [http://127.0.0.1:8765/](http://127.0.0.1:8765/). GitHub Pages publishes the same files from `main`. `.nojekyll` keeps the asset paths as they are.
+
+## Optional Expo app
+
+`App.js` and `src/` are a separate React Native / Expo shell with its own sample fleet. It does not read or write the books from the website. Sign-in there is also a demo: the sample email and password are filled in so the screens can be opened. Biometric unlock is attempted on a device that has it, and otherwise the demo sign-in continues.
+
+```bash
 npm install
-
-# 3. Start the development server
 npx expo start
 ```
 
-### Run Options
+Node.js 18 or newer is enough for that shell. The published website does not need Node.
 
-| Key | Action                |
-|-----|-----------------------|
-| `a` | Open Android emulator |
-| `i` | Open iOS simulator    |
-| `w` | Open in web browser   |
-| QR  | Scan with Expo Go     |
+## Layout
 
----
+```
+AutoSheets/
+├── index.html          # Published accounting app
+├── manifest.json       # Installable app metadata
+├── sw.js               # Offline cache
+├── assets/             # Icon and screenshots
+├── App.js              # Optional Expo shell
+└── src/                # Expo screens, navigation, and sample data
+```
 
-## Demo Credentials
+## Rights
 
-| Field    | Value                    |
-|----------|--------------------------|
-| Email    | `owner@autosheets.com`   |
-| Password | `demo1234`               |
-
-Any role can be selected — the app is fully functional with the included mock data.
-
----
-
-## Screens Overview
-
-1. **Splash** – Branded gold logo + loading indicator  
-2. **Login** – Credentials, role selector, biometric button  
-3. **Dashboard** – Live metrics, currency switcher, 4 instant actions  
-4. **Rental Agreement** – Vehicle select, client, days, deposit, multi-currency summary  
-5. **Parking Ticket** – Plate, hourly/flat tariff, auto amount  
-6. **Taxi Dispatch** – Select taxi, enter fare, live commission split  
-7. **Expense** – Category chips + amount + note  
-8. **Fleet** – All assets with status, fuel, assignment  
-9. **Reports** – P&L by vertical, recent transactions, JSON/CSV export
-
----
-
-## Roadmap / Next Steps (Production)
-
-- [ ] Replace mock data with SQLite (WatermelonDB or expo-sqlite)
-- [ ] Persist credentials with expo-secure-store
-- [ ] Real PDF invoice generation
-- [ ] Camera / document scanner for licenses & receipts
-- [ ] Push notifications for unsettled fares
-- [ ] Multi-user sync (optional cloud backend)
-- [ ] Advanced analytics & charts
-- [ ] Localization (AR / EN)
-
----
-
-## Brand Assets
-
-- `assets/logo-gold.jpg` — Primary logo (splash, invoices, marketing)
-- `assets/logo-silver.jpg` — Secondary logo (dark surfaces, status bars)
-
-Both logos are already wired into the app and Expo config.
-
----
-
-## License
-
-Private / Commercial use.  
-**AutoSheets 621/24**
-
----
-
-<p align="center">
-  Built for high-speed commercial transit environments.<br/>
-  Offline-first • Multi-currency • Executive grade
-</p>
+This repository does not include a license file. All rights remain with the copyright holder.

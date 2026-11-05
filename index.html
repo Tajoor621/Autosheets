@@ -1,1102 +1,2030 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-<meta name="theme-color" content="#4A5568"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="mobile-web-app-capable" content="yes"/>
-<title>AutoSheets Accounting</title>
-<link rel="manifest" href="manifest.json"/>
-<link rel="icon" href="assets/icon-192x192.png"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Offline accounting for fleet, car rental, parking, and taxi operators. Track income, expenses, deposits, and receivables, then print statements in your browser.">
+<meta name="robots" content="index, follow">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#4A5568">
+<meta name="application-name" content="AutoSheets">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="AutoSheets">
+<meta name="format-detection" content="telephone=no">
+<meta property="og:title" content="AutoSheets Accounting — Fleet, Rental, Parking &amp; Taxi Books">
+<meta property="og:description" content="Offline accounting for fleet, car rental, parking, and taxi operators. Track income, expenses, deposits, and receivables, then print statements in your browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://tajoor621.github.io/Autosheets/">
+<meta property="og:image" content="https://tajoor621.github.io/Autosheets/assets/icon-512x512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AutoSheets Accounting">
+<meta name="twitter:description" content="Offline accounting for fleet, car rental, parking, and taxi operators. Track income, expenses, deposits, and receivables, then print statements in your browser.">
+<meta name="twitter:image" content="https://tajoor621.github.io/Autosheets/assets/icon-512x512.png">
+<link rel="canonical" href="https://tajoor621.github.io/Autosheets/">
+<title>AutoSheets Accounting — Fleet, Rental, Parking &amp; Taxi Books</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="assets/icon-192x192.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/icon-192x192.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AutoSheets Accounting",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "url": "https://tajoor621.github.io/Autosheets/",
+  "description": "Offline accounting for fleet, car rental, parking, and taxi operators. Track income, expenses, deposits, and receivables, then print statements in your browser."
+}
+</script>
 <style>
-:root{--p:#3A6EA5;--pd:#2A5080;--ok:#2E7D32;--warn:#E65100;--bad:#C62828;--t:#1A1A1A;--t2:#4A4A4A;--sh:rgba(0,0,0,.25)}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:"Segoe UI",Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(180deg,#D8D8D8,#B0B0B0 50%,#989898);color:var(--t);min-height:100vh;padding-bottom:92px}
-.btn{background:linear-gradient(180deg,#F0F0F0,#C8C8C8 45%,#A8A8A8 55%,#B8B8B8);border:1px solid #6A6A6A;border-radius:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.7),0 1px 2px var(--sh);color:var(--t);padding:11px 14px;width:100%;font-weight:600;font-size:14px;margin-top:8px}
-.btn-p{background:linear-gradient(180deg,#6BA3D6,#3A6EA5 45%,#2A5080 55%,#3A6EA5);color:#fff;border-color:#1A4060}
-.btn-d{background:linear-gradient(180deg,#E57373,#C62828);color:#fff;border-color:#8B0000}
-.btn-s{background:linear-gradient(180deg,#E8E8E8,#C0C0C0);color:var(--t2)}
-.btn-sm{width:auto;padding:6px 10px;margin:0;font-size:12px;display:inline-block}
-.header{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(180deg,#F8F8F8,#C8C8C8 40%,#A0A0A0);border-bottom:1px solid #707070;box-shadow:0 2px 4px var(--sh);position:sticky;top:0;z-index:50}
-.header h1{font-size:17px;font-weight:700;text-shadow:0 1px 0 #fff}
-.badge{font-size:10px;color:var(--pd);font-weight:700;margin-top:2px}
-.cur{background:linear-gradient(180deg,#F0F0F0,#C0C0C0);border:1px solid #707070;padding:5px 10px;border-radius:4px;font-weight:700;font-size:12px;box-shadow:inset 0 1px 0 #fff}
-.container{padding:10px}
-.card{background:linear-gradient(180deg,#F5F5F5,#E0E0E0);border:1px solid #8A8A8A;border-radius:6px;padding:12px;margin-bottom:8px;box-shadow:inset 0 1px 0 #fff,0 1px 3px var(--sh)}
-.hl{font-size:10px;color:var(--t2);letter-spacing:1px;margin-bottom:3px;font-weight:600}
-.hv{font-size:26px;font-weight:800;margin-bottom:6px}
-.bd{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--t2)}
-.dot{width:7px;height:7px;border-radius:50%;display:inline-block;margin-right:3px}
-.metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
-.mc{background:linear-gradient(180deg,#F8F8F8,#D8D8D8);border:1px solid #8A8A8A;border-radius:6px;padding:10px;box-shadow:inset 0 1px 0 #fff}
-.mt{font-size:9px;color:var(--t2);text-transform:uppercase;margin-bottom:3px;font-weight:600}
-.mv{font-size:18px;font-weight:700}
-.st{font-size:10px;color:var(--t2);letter-spacing:1px;margin:12px 0 6px 2px;font-weight:700}
-.shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
-.sc{background:linear-gradient(180deg,#F0F0F0,#C8C8C8);border:1px solid #7A7A7A;border-radius:6px;padding:12px 8px;text-align:center;font-size:11px;font-weight:600;box-shadow:inset 0 1px 0 #fff,0 1px 2px var(--sh)}
-.sc .ic{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:16px;background:linear-gradient(180deg,#E0E0E0,#A0A0A0);border:1px solid #707070}
-.bn{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,#E8E8E8,#B0B0B0);border-top:1px solid #707070;display:flex;justify-content:space-around;padding:6px 0 12px;z-index:100;box-shadow:0 -2px 6px var(--sh)}
-.ni{text-align:center;font-size:9px;color:var(--t2);flex:1;font-weight:600}
-.ni.active{color:var(--pd)}
-.ni span{display:block;font-size:16px;margin-bottom:1px}
-.page{display:none}.page.active{display:block}
-.li{background:linear-gradient(180deg,#F5F5F5,#E0E0E0);border:1px solid #8A8A8A;border-radius:5px;padding:10px;margin-bottom:5px;box-shadow:inset 0 1px 0 #fff}
-.li-row{display:flex;justify-content:space-between;align-items:center}
-input,select,textarea{width:100%;background:#fff;border:1px solid #8A8A8A;border-radius:4px;padding:9px 11px;color:var(--t);margin-top:3px;margin-bottom:8px;font-size:14px;box-shadow:inset 1px 1px 2px rgba(0,0,0,.1)}
-label{font-size:11px;color:var(--t2);font-weight:600}
-#page-login{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:18px;background:linear-gradient(180deg,#D0D0D0,#A0A0A0)}
-.ll{text-align:center;margin-bottom:18px}
-.ll h1{font-size:24px;font-weight:800;color:#2A2A2A;text-shadow:0 1px 0 #fff;letter-spacing:1px}
-.ll p{font-size:11px;color:var(--t2);margin-top:3px}
-.rg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px}
-.rb{background:linear-gradient(180deg,#F0F0F0,#C8C8C8);border:1px solid #7A7A7A;border-radius:4px;padding:9px 5px;text-align:center;font-size:11px;color:var(--t2);font-weight:600;box-shadow:inset 0 1px 0 #fff}
-.rb.sel{border-color:var(--p);color:var(--pd);background:linear-gradient(180deg,#D0E4F7,#A0C4E8)}
-.sr{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #B0B0B0}
-.sr:last-child{border-bottom:none}
-.sl{font-size:13px;font-weight:600}.sv{font-size:12px;color:var(--t2)}
-.em{text-align:center;padding:16px;color:var(--t2);font-size:13px}
-.err{color:var(--bad);font-size:12px;margin-top:6px;display:none;text-align:center;font-weight:600}
-.hint{font-size:10px;color:var(--t2);margin-top:-4px;margin-bottom:8px}
-.tbl{width:100%;border-collapse:collapse;font-size:12px}
-.tbl th,.tbl td{padding:6px 4px;border-bottom:1px solid #B0B0B0;text-align:left}
-.tbl th{font-weight:700;color:var(--t2);font-size:10px}
-.tbl .r{text-align:right}
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;padding:20px;overflow:auto}
-.modal.show{display:block}
-.modal-box{background:linear-gradient(180deg,#F5F5F5,#E0E0E0);border:1px solid #707070;border-radius:8px;padding:14px;max-width:420px;margin:30px auto;box-shadow:0 4px 20px rgba(0,0,0,.3)}
-.tabs{display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap}
-.tab{flex:1;min-width:70px;padding:8px 6px;text-align:center;font-size:11px;font-weight:600;background:linear-gradient(180deg,#E8E8E8,#C0C0C0);border:1px solid #8A8A8A;border-radius:4px}
-.tab.on{background:linear-gradient(180deg,#D0E4F7,#A0C4E8);border-color:var(--p);color:var(--pd)}
-.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%) translateY(20px);background:linear-gradient(180deg,#388E3C,#2E7D32);color:#fff;padding:12px 20px;border-radius:8px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(0,0,0,.35);z-index:9999;opacity:0;transition:opacity .25s,transform .25s;max-width:90%;text-align:center;pointer-events:none}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.err{background:linear-gradient(180deg,#D32F2F,#C62828)}
-
+:root {
+  --p: #1f4e79;
+  --pd: #163a5f;
+  --ok: #1b5e20;
+  --warn: #9a3412;
+  --bad: #9f1239;
+  --t: #1c1917;
+  --t2: #44403c;
+  --line: #a8a29e;
+  --gold: #a16207;
+  --focus: #1d4ed8;
+  --card: #fffcf8;
+  --sh: rgba(28, 25, 23, .16);
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--t);
+  background:
+    radial-gradient(1100px 420px at 8% -10%, rgba(255,255,255,.55), transparent 55%),
+    linear-gradient(180deg, #e7e5e4 0%, #cfc9c2 46%, #a8a29e 100%);
+  min-height: 100vh;
+  line-height: 1.45;
+}
+body.app-on { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+img { max-width: 100%; height: auto; }
+:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.skip {
+  position: absolute; left: 12px; top: -48px; z-index: 10000;
+  background: #fff; color: var(--pd); padding: 8px 12px; border-radius: 6px;
+  font-weight: 700;
+}
+.skip:focus { top: 12px; }
+.ll { text-align: center; margin: 0 auto 16px; }
+.brand-mark {
+  width: 96px; height: 96px; border-radius: 16px; display: block; margin: 0 auto 8px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.28);
+}
+.ll h1, .header h1 {
+  font-size: 1.7rem; line-height: 1.1; margin: 0;
+  letter-spacing: .04em; font-weight: 800;
+}
+.ll p, .badge { margin: 4px 0 0; color: var(--t2); font-size: .78rem; font-weight: 700; letter-spacing: .06em; }
+.brand-rule { width: 84px; height: 3px; border: 0; margin: 10px auto 0; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+#page-login, #page-pin {
+  min-height: 100vh; flex-direction: column; align-items: center; justify-content: center;
+  padding: 28px 16px 40px;
+  background: linear-gradient(180deg, #d6d3d1, #a8a29e);
+}
+#page-login { display: flex; }
+#page-pin { display: none; }
+#page-login .card, #page-pin .card, #page-login .ll, #page-pin .ll { width: min(100%, 440px); }
+.header {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: calc(10px + env(safe-area-inset-top)) 16px 10px;
+  background: linear-gradient(180deg, #fffefb, #d6d3d1 70%);
+  border-bottom: 1px solid #78716c;
+  box-shadow: 0 1px 0 rgba(255,255,255,.7), 0 8px 18px rgba(28,25,23,.08);
+  position: sticky; top: 0; z-index: 40;
+}
+.header h1 { font-size: 1.25rem; letter-spacing: 0; word-break: break-word; }
+.cur {
+  flex: none; min-height: 44px; padding: 8px 12px; border-radius: 8px; font-weight: 800;
+  background: linear-gradient(180deg, #fff, #d6d3d1); border: 1px solid #57534e;
+  box-shadow: inset 0 1px 0 #fff;
+}
+.shell { width: min(1120px, 100%); margin: 0 auto; }
+.content { min-width: 0; }
+.container { padding: 12px; }
+.card, form.card {
+  background: linear-gradient(180deg, var(--card), #f3eee7);
+  border: 1px solid #8c847c; border-radius: 12px; padding: 14px; margin: 0 0 10px;
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px var(--sh);
+}
+.form-card { max-width: 680px; }
+h2.st, .st {
+  font-size: .78rem; letter-spacing: .08em; text-transform: uppercase;
+  margin: 14px 2px 8px; color: var(--pd);
+}
+.card h2.st, form h2.st { margin-top: 0; }
+.hl { font-size: .75rem; font-weight: 700; letter-spacing: .08em; color: var(--t2); margin-bottom: 4px; }
+.hv { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -.03em; margin: 0 0 6px; }
+.bd { display: flex; flex-wrap: wrap; gap: 8px 14px; color: var(--t2); font-size: .92rem; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+.metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+.mc { background: #fff; border: 1px solid #c4bdb4; border-radius: 10px; padding: 10px 12px; }
+.mt { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--t2); }
+.mv { font-size: 1.25rem; font-weight: 800; margin-top: 2px; }
+.mn { font-size: .8rem; color: var(--t2); }
+.shortcuts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sc {
+  background: linear-gradient(180deg, #fff, #e7e5e4); border: 1px solid #78716c; border-radius: 12px;
+  min-height: 84px; padding: 10px 8px; text-align: center; font-weight: 700;
+  box-shadow: inset 0 1px 0 #fff;
+}
+.sc .ic {
+  width: 36px; height: 36px; margin: 0 auto 6px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: #efeae3; border: 1px solid #a8a29e;
+}
+.bn {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+  display: flex; justify-content: space-around; gap: 2px;
+  padding: 6px 6px calc(8px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, #f5f5f4, #d6d3d1);
+  border-top: 1px solid #78716c;
+  box-shadow: 0 -6px 16px rgba(28,25,23,.08);
+}
+.ni {
+  flex: 1; min-height: 48px; border: 0; background: transparent; color: var(--t2);
+  border-radius: 10px; font-size: .75rem; font-weight: 700;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+.ni span[aria-hidden] { font-size: 1.05rem; line-height: 1; }
+.ni.active { color: var(--pd); background: rgba(31, 78, 121, .1); box-shadow: inset 0 -3px 0 var(--gold); }
+.page { display: none; }
+.page.active { display: block; }
+label { display: block; font-size: .82rem; font-weight: 700; color: var(--t2); margin-top: 8px; }
+.label-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.label-row label { margin-top: 8px; }
+input, select, textarea {
+  width: 100%; margin-top: 4px; background: #fff; border: 1px solid #78716c; border-radius: 8px;
+  padding: 10px 12px; min-height: 44px; box-shadow: inset 0 1px 2px rgba(28,25,23,.06);
+}
+textarea { min-height: 88px; resize: vertical; }
+input[readonly] { background: #f5f5f4; color: var(--t2); }
+::placeholder { color: #57534e; opacity: 1; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; width: 100%;
+  min-height: 44px; margin-top: 10px; padding: 10px 14px; border-radius: 8px; font-weight: 700;
+  border: 1px solid #57534e;
+  background: linear-gradient(180deg, #fff, #d6d3d1);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 1px var(--sh);
+}
+.btn-p { background: linear-gradient(180deg, #3d7ab5, #1f4e79 55%, #163a5f); color: #fff; border-color: #0f2744; }
+.btn-d { background: linear-gradient(180deg, #e11d48, #9f1239); color: #fff; border-color: #881337; }
+.btn-s { background: linear-gradient(180deg, #fff, #e7e5e4); color: var(--t); }
+.btn-sm { width: auto; min-height: 36px; margin: 0; padding: 6px 10px; font-size: .82rem; }
+.rg { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+.rb {
+  min-height: 44px; border-radius: 8px; border: 1px solid #78716c; background: #fff; color: var(--t2); font-weight: 700;
+}
+.rb.sel { border-color: var(--p); color: var(--pd); background: #e8f1fb; box-shadow: inset 0 0 0 1px var(--p); }
+.rg .rb:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.hint, .note { font-size: .86rem; color: var(--t2); line-height: 1.45; }
+.hint { margin: 6px 0; }
+.note { margin: 0 0 8px; }
+.preview { font-weight: 800; margin: 8px 0 0; min-height: 1.2em; }
+.err { color: var(--bad); font-weight: 700; text-align: center; margin-top: 8px; }
+.li { background: #fff; border: 1px solid #d6d3d1; border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+.li-row { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+.li-title { font-weight: 800; }
+.li-sub { color: var(--t2); font-size: .86rem; }
+.li-side { text-align: right; }
+.li-amt { font-weight: 800; margin-bottom: 6px; }
+.tag {
+  display: inline-block; margin: 4px 4px 0 0; padding: 2px 7px; border-radius: 999px;
+  border: 1px solid var(--line); font-size: .68rem; font-weight: 800; letter-spacing: .04em; text-transform: uppercase;
+}
+.tag.ok { color: var(--ok); border-color: #166534; }
+.tag.warn { color: var(--warn); border-color: #c2410c; }
+.tag.bad { color: #fff; background: var(--bad); border-color: var(--bad); }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.tab {
+  flex: 1 1 120px; min-height: 44px; border-radius: 8px; border: 1px solid #78716c;
+  background: #fff; font-weight: 700;
+}
+.tab.on { background: #e8f1fb; color: var(--pd); border-color: var(--p); }
+.table-wrap { overflow-x: auto; }
+.tbl { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.tbl.wide { min-width: 640px; }
+.tbl th, .tbl td { padding: 8px 6px; border-bottom: 1px solid #e7e5e4; text-align: left; vertical-align: top; }
+.tbl th { font-size: .75rem; letter-spacing: .04em; text-transform: uppercase; color: var(--t2); }
+.tbl .r, .r { text-align: right; }
+.tbl tr:nth-child(even) td { background: rgba(255,255,255,.55); }
+.sr { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid #e7e5e4; }
+.sr:last-child { border-bottom: 0; }
+.sl { font-weight: 700; }
+.sv { color: var(--t2); text-align: right; }
+.em { text-align: center; color: var(--t2); padding: 16px 8px; }
+.linkish {
+  display: block; width: 100%; text-align: left; background: transparent; border: 0;
+  border-bottom: 1px solid #e7e5e4; padding: 10px 2px; font-weight: 700; color: var(--pd); min-height: 44px;
+}
+.print-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.print-actions .btn { width: auto; flex: 1 1 180px; margin-top: 0; }
+.modal { display: none; position: fixed; inset: 0; z-index: 80; background: rgba(28,25,23,.5); padding: 16px; overflow: auto; }
+.modal.show { display: block; }
+.modal-box { width: min(100%, 480px); margin: 24px auto; max-height: min(90vh, 860px); overflow: auto; }
+body.modal-open { overflow: hidden; }
+.toast {
+  position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%) translateY(12px);
+  background: #166534; color: #fff; padding: 12px 16px; border-radius: 10px; font-weight: 700;
+  opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 90; max-width: min(92vw, 420px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.err { background: #9f1239; }
+.print-box { background: #fff; color: #111; padding: 16px; }
+.print-box h2 { margin: 0 0 4px; }
+.meta { color: #444; font-size: .85rem; }
+@media (min-width: 800px) {
+  body.app-on { padding-bottom: 28px; }
+  .shell { display: grid; grid-template-columns: 210px minmax(0, 1fr); gap: 8px; align-items: start; padding: 12px; }
+  .bn {
+    position: sticky; top: 84px; display: flex; flex-direction: column; width: auto;
+    border: 1px solid #78716c; border-radius: 12px; padding: 8px; background: rgba(255,255,255,.72);
+    box-shadow: 0 8px 20px rgba(28,25,23,.06);
+  }
+  .ni { flex-direction: row; justify-content: flex-start; gap: 8px; padding: 0 10px; font-size: .92rem; }
+  .ni.active { box-shadow: inset 3px 0 0 var(--gold); }
+  .metrics { grid-template-columns: repeat(4, 1fr); }
+  .shortcuts { grid-template-columns: repeat(4, 1fr); }
+  .container { padding: 4px 4px 20px; }
+}
+@media (hover: hover) {
+  .btn:hover, .sc:hover, .rb:hover, .tab:hover, .ni:hover { filter: brightness(1.03); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .toast { transition: none; }
+}
+@media (forced-colors: active) {
+  .btn, .card, .ni, .sc, .tab, .rb { border: 1px solid ButtonText; }
+}
 @media print {
   body * { visibility: hidden !important; }
   #printArea, #printArea * { visibility: visible !important; }
-  #printArea { position: absolute; left: 0; top: 0; width: 100%; background: #fff; color: #000; padding: 20px; }
-  .bn, .header, .ni, .btn, .toast, .modal { display: none !important; }
+  #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
+  .bn, .header, .toast, .modal, .skip { display: none !important; }
 }
-.print-box { background:#fff; color:#111; border:1px solid #333; padding:16px; border-radius:6px; font-size:13px; }
-.print-box h2 { font-size:18px; margin-bottom:4px; }
-.print-box .meta { font-size:11px; color:#555; margin-bottom:12px; }
-.print-actions { display:flex; gap:8px; margin-top:10px; }
-
 </style>
 </head>
 <body>
-<div id="toast" class="toast"></div>
-<div id="printArea" style="display:none"></div>
+<a class="skip" id="skipLink" href="#loginEmail">Skip to sign in</a>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<div id="printArea" hidden></div>
+<noscript><p class="card" style="margin:16px">AutoSheets needs JavaScript. The books stay in this browser.</p></noscript>
 
 <div id="page-login" class="page active">
-  <div class="ll"><h1>AUTOSHEETS</h1><p>Accounting • Fleet • Rental • Parking • Taxi</p></div>
-  <div class="card">
-    <label>Email</label>
-    <input id="loginEmail" type="email" placeholder="your@email.com" autocomplete="username"/>
-    <label>Password</label>
-    <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password"/>
-    <div class="hint">Demo: owner@autosheets.com / demo1234 — or register any new email</div>
-    <label>Role</label>
-    <div class="rg" id="roleGrid">
-      <div class="rb sel" data-role="Fleet Owner">Fleet Owner</div>
-      <div class="rb" data-role="Rental Desk">Rental Desk</div>
-      <div class="rb" data-role="Parking Attendant">Parking</div>
-      <div class="rb" data-role="Dispatcher">Dispatcher</div>
-      <div class="rb" data-role="Accountant">Accountant</div>
-    </div>
-    <div class="err" id="loginError">Invalid email or password</div>
-    <button type="button" class="btn btn-p" id="btnLogin">Login</button>
-    <button type="button" class="btn btn-s" id="btnPinLogin" style="margin-top:6px">Login with PIN</button>
+  <div class="ll">
+    <img class="brand-mark" src="assets/icon-512x512.png" width="96" height="96" alt="">
+    <h1>AUTOSHEETS</h1>
+    <p>Accounting · Fleet · Rental · Parking · Taxi</p>
+    <hr class="brand-rule">
   </div>
+  <form id="loginForm" class="card" novalidate>
+    <label for="loginEmail">Email</label>
+    <input id="loginEmail" type="email" autocomplete="username" placeholder="you@example.com" spellcheck="false">
+    <div class="label-row">
+      <label for="loginPassword">Password</label>
+      <button type="button" class="btn btn-sm btn-s" id="btnShowPass" aria-pressed="false">Show</button>
+    </div>
+    <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Password">
+    <p class="hint" id="loginHint">Demo only: owner@autosheets.com / demo1234. A new email and a password of at least 4 characters is saved in this browser only. This is not a company login.</p>
+    <div class="rg" id="roleGrid" role="group" aria-label="Role">
+      <button type="button" class="rb sel" data-role="Fleet Owner" aria-pressed="true">Fleet Owner</button>
+      <button type="button" class="rb" data-role="Rental Desk" aria-pressed="false">Rental Desk</button>
+      <button type="button" class="rb" data-role="Parking Attendant" aria-pressed="false">Parking</button>
+      <button type="button" class="rb" data-role="Dispatcher" aria-pressed="false">Dispatcher</button>
+      <button type="button" class="rb" data-role="Accountant" aria-pressed="false">Accountant</button>
+    </div>
+    <p class="err" id="loginError" role="alert" hidden>Invalid email or password</p>
+    <button type="submit" class="btn btn-p" id="btnLogin">Login</button>
+    <button type="button" class="btn btn-s" id="btnPinLogin">Login with PIN</button>
+  </form>
 </div>
 
-<div id="page-pin" style="display:none;min-height:100vh;flex-direction:column;justify-content:center;padding:18px;background:linear-gradient(180deg,#D0D0D0,#A0A0A0)">
-  <div class="ll"><h1>Enter PIN</h1><p>Security PIN</p></div>
-  <div class="card">
-    <input id="pinInput" type="password" inputmode="numeric" maxlength="6" placeholder="••••" style="text-align:center;font-size:22px;letter-spacing:8px"/>
-    <div class="err" id="pinError">Wrong PIN</div>
-    <button type="button" class="btn btn-p" id="btnPinOk">Unlock</button>
-    <button type="button" class="btn btn-s" id="btnPinBack" style="margin-top:6px">Back</button>
+<div id="page-pin">
+  <div class="ll">
+    <h1>Enter PIN</h1>
+    <p>Security PIN for this browser</p>
   </div>
+  <form id="pinForm" class="card" novalidate>
+    <label for="pinInput">PIN</label>
+    <input id="pinInput" type="password" inputmode="numeric" maxlength="6" autocomplete="off" placeholder="••••" aria-describedby="pinError" style="text-align:center;font-size:1.4rem;letter-spacing:.4rem">
+    <p class="err" id="pinError" role="alert" hidden>Wrong PIN</p>
+    <button type="submit" class="btn btn-p" id="btnPinOk">Unlock</button>
+    <button type="button" class="btn btn-s" id="btnPinBack">Back</button>
+  </form>
 </div>
 
 <div id="mainApp" style="display:none">
-  <div class="header">
-    <div><h1 id="hdrCo">AutoSheets</h1><div class="badge" id="roleBadge">FLEET OWNER • LIVE</div></div>
-    <button type="button" class="cur" id="btnCur"><span id="curCode">USD</span> ⇄</button>
-  </div>
+  <header class="header">
+    <div>
+      <h1 id="hdrCo">AutoSheets</h1>
+      <p class="badge" id="roleBadge">FLEET OWNER • LIVE</p>
+    </div>
+    <button type="button" class="cur" id="btnCur" aria-label="Book currency USD. Activate to switch currency."><span id="curCode">USD</span> <span aria-hidden="true">⇄</span></button>
+  </header>
+  <div class="shell">
+    <nav class="bn" aria-label="Primary">
+      <button type="button" class="ni active" data-p="dashboard" aria-current="page"><span aria-hidden="true">📊</span>Home</button>
+      <button type="button" class="ni" data-p="customers"><span aria-hidden="true">👤</span>Clients</button>
+      <button type="button" class="ni" data-p="daybook"><span aria-hidden="true">📒</span>Ledger</button>
+      <button type="button" class="ni" data-p="reports"><span aria-hidden="true">📈</span>Reports</button>
+      <button type="button" class="ni" data-p="settings"><span aria-hidden="true">⚙️</span>Settings</button>
+    </nav>
+    <div id="main" class="content" tabindex="-1">
 
-  <div id="page-dashboard" class="page active container">
-    <div class="card">
-      <div class="hl">GROSS REVENUE (<span id="bookCur">USD</span>)</div>
-      <div class="hv" id="totalRev">$0.00</div>
-      <div class="bd" id="revBreak"></div>
-    </div>
-    <div class="metrics">
-      <div class="mc"><div class="mt">Receivables</div><div class="mv" style="color:var(--p)" id="mRecv">$0</div></div>
-      <div class="mc"><div class="mt">Records</div><div class="mv" style="color:#006064" id="mRec">0</div></div>
-      <div class="mc"><div class="mt">Expenses</div><div class="mv" style="color:var(--warn)" id="mExp">$0</div></div>
-      <div class="mc"><div class="mt">Net Profit</div><div class="mv" style="color:var(--ok)" id="mNet">$0</div></div>
-    </div>
-    <div class="st">QUICK ACTIONS</div>
-    <div class="shortcuts">
-      <div class="sc" id="goRental"><div class="ic">📄</div>Rental</div>
-      <div class="sc" id="goParking"><div class="ic">🅿️</div>Parking</div>
-      <div class="sc" id="goTaxi"><div class="ic">🚕</div>Taxi</div>
-      <div class="sc" id="goExpense"><div class="ic">🧾</div>Expense</div>
-      <div class="sc" id="goReceipt"><div class="ic">💵</div>Receipt</div>
-      <div class="sc" id="goPayment"><div class="ic">💸</div>Payment</div>
-      <div class="sc" id="goCustomer"><div class="ic">👤</div>Customers</div>
-      <div class="sc" id="goInventory"><div class="ic">📦</div>Inventory</div>
-    </div>
-    <div class="st">RECENT ENTRIES — TAP EDIT TO VIEW / CHANGE</div>
-    <div id="recentList" class="em">No entries yet.</div>
-  </div>
+      <div id="page-dashboard" class="page active container">
+        <h2 class="sr-only" id="dashTitle">Dashboard</h2>
+        <section class="card" aria-labelledby="revTitle">
+          <h2 class="hl" id="revTitle">Gross revenue (<span id="bookCur">USD</span>)</h2>
+          <p class="hv" id="totalRev">$0.00</p>
+          <div class="bd" id="revBreak"></div>
+        </section>
+        <section class="card" aria-labelledby="todayTitle">
+          <h2 class="st" id="todayTitle">Today</h2>
+          <p class="bd" id="todayBreak">No entries yet today.</p>
+          <button type="button" class="btn btn-s" id="btnPrintToday">Print day sheet</button>
+        </section>
+        <div class="metrics">
+          <div class="mc"><div class="mt">Receivables</div><div class="mv" id="mRecv">$0.00</div></div>
+          <div class="mc"><div class="mt">Expenses</div><div class="mv" id="mExp">$0.00</div></div>
+          <div class="mc"><div class="mt">Net profit</div><div class="mv" id="mNet">$0.00</div></div>
+          <div class="mc"><div class="mt">Cash (book)</div><div class="mv" id="mCash">$0.00</div></div>
+          <div class="mc"><div class="mt">Records</div><div class="mv" id="mRec">0</div></div>
+          <div class="mc"><div class="mt">Deposits held</div><div class="mv" id="mDep">$0.00</div></div>
+          <div class="mc"><div class="mt">Fleet in use</div><div class="mv" id="mUtil">—</div><div class="mn" id="mUtilNote">Add fleet assets</div></div>
+          <div class="mc"><div class="mt">Overdue rentals</div><div class="mv" id="mOver">0</div></div>
+        </div>
+        <section class="card" id="attention" hidden aria-labelledby="attTitle">
+          <h2 class="st" id="attTitle">Needs attention</h2>
+          <div id="attentionList"></div>
+        </section>
+        <h2 class="st">Quick actions</h2>
+        <div class="shortcuts">
+          <button type="button" class="sc" id="goRental"><span class="ic" aria-hidden="true">📄</span>Rental</button>
+          <button type="button" class="sc" id="goParking"><span class="ic" aria-hidden="true">🅿️</span>Parking</button>
+          <button type="button" class="sc" id="goTaxi"><span class="ic" aria-hidden="true">🚕</span>Taxi</button>
+          <button type="button" class="sc" id="goExpense"><span class="ic" aria-hidden="true">🧾</span>Expense</button>
+          <button type="button" class="sc" id="goReceipt"><span class="ic" aria-hidden="true">💵</span>Receipt</button>
+          <button type="button" class="sc" id="goPayment"><span class="ic" aria-hidden="true">💸</span>Payment</button>
+          <button type="button" class="sc" id="goCustomer"><span class="ic" aria-hidden="true">👤</span>Customers</button>
+          <button type="button" class="sc" id="goInventory"><span class="ic" aria-hidden="true">📦</span>Inventory</button>
+        </div>
+        <h2 class="st">Recent entries</h2>
+        <div id="recentList"><p class="em">No entries yet. Post a rental, parking ticket, taxi fare, or expense.</p></div>
+      </div>
 
-  <div id="page-customers" class="page container">
-    <div class="st">CUSTOMERS / CLIENTS</div>
-    <div class="card">
-      <label>Name</label><input id="cName" placeholder="Customer name"/>
-      <label>Phone</label><input id="cPhone" placeholder="Phone"/>
-      <label>Email</label><input id="cEmail" placeholder="Email"/>
-      <label>Opening Balance (receivable)</label><input id="cOpen" type="number" value="0" step="0.01"/>
-      <button type="button" class="btn btn-p" id="btnAddCust">Add Customer</button>
-    </div>
-    <div id="custList" class="em">No customers yet.</div>
-  </div>
+      <div id="page-customers" class="page container">
+        <h2 class="st" id="custTitle">Customers</h2>
+        <form id="custForm" class="card form-card" novalidate>
+          <label for="cName">Name</label>
+          <input id="cName" autocomplete="name" placeholder="Customer name" required>
+          <label for="cPhone">Phone</label>
+          <input id="cPhone" type="tel" autocomplete="tel" placeholder="Phone">
+          <label for="cEmail">Email</label>
+          <input id="cEmail" type="email" autocomplete="email" placeholder="Email">
+          <label for="cOpen">Opening balance (receivable)</label>
+          <input id="cOpen" type="number" inputmode="decimal" value="0" step="0.01">
+          <p class="hint">Amount this customer already owes. It increases receivables and is not income.</p>
+          <button type="submit" class="btn btn-p" id="btnAddCust">Add customer</button>
+        </form>
+        <div class="card">
+          <label for="cSearch">Search customers</label>
+          <input id="cSearch" type="search" placeholder="Name, phone, or email">
+        </div>
+        <div id="custList"><p class="em">No customers yet.</p></div>
+      </div>
 
-  <div id="page-inventory" class="page container">
-    <div class="st">INVENTORY / FLEET ASSETS</div>
-    <div class="card">
-      <label>Name</label><input id="iName" placeholder="e.g. 2024 Toyota Camry"/>
-      <label>Plate / Code</label><input id="iPlate" placeholder="DXB-1234"/>
-      <label>Type</label>
-      <select id="iType"><option>Rental</option><option>Taxi</option><option>Parking</option><option>Other</option></select>
-      <label>Status</label>
-      <select id="iStatus"><option>Available</option><option>Rented</option><option>On Trip</option><option>Maintenance</option><option>Occupied</option></select>
-      <label>Value / Cost</label><input id="iValue" type="number" value="0" step="0.01"/>
-      <button type="button" class="btn btn-p" id="btnAddInv">Add Asset</button>
-    </div>
-    <div id="invList" class="em">No assets yet. Add your fleet.</div>
-  </div>
+      <div id="page-inventory" class="page container">
+        <h2 class="st" id="invTitle">Inventory / fleet assets</h2>
+        <form id="invForm" class="card form-card" novalidate>
+          <label for="iName">Name</label>
+          <input id="iName" placeholder="2024 Toyota Camry" required>
+          <label for="iPlate">Plate / code</label>
+          <input id="iPlate" placeholder="DXB-1234" autocomplete="off" required>
+          <label for="iType">Type</label>
+          <select id="iType"><option>Rental</option><option>Taxi</option><option>Parking</option><option>Other</option></select>
+          <label for="iStatus">Status</label>
+          <select id="iStatus"><option>Available</option><option>Rented</option><option>On Trip</option><option>Maintenance</option><option>Occupied</option></select>
+          <label for="iValue">Value / cost</label>
+          <input id="iValue" type="number" inputmode="decimal" value="0" step="0.01">
+          <p class="hint">Book value is added to fleet assets on the balance sheet. It is not a bank balance.</p>
+          <label for="iOdo">Odometer</label>
+          <input id="iOdo" type="number" inputmode="numeric" min="0" step="1" value="0">
+          <label for="iNext">Next service date</label>
+          <input id="iNext" type="date">
+          <label for="iAt">Service due at km</label>
+          <input id="iAt" type="number" inputmode="numeric" min="0" step="1" placeholder="Optional">
+          <button type="submit" class="btn btn-p" id="btnAddInv">Add asset</button>
+        </form>
+        <form id="invEditForm" class="card form-card" hidden novalidate>
+          <h2 class="st">Edit asset</h2>
+          <input type="hidden" id="iEditId">
+          <label for="iEditName">Name</label><input id="iEditName" required>
+          <label for="iEditPlate">Plate / code</label><input id="iEditPlate" required>
+          <label for="iEditType">Type</label>
+          <select id="iEditType"><option>Rental</option><option>Taxi</option><option>Parking</option><option>Other</option></select>
+          <label for="iEditStatus">Status</label>
+          <select id="iEditStatus"><option>Available</option><option>Rented</option><option>On Trip</option><option>Maintenance</option><option>Occupied</option></select>
+          <label for="iEditValue">Value / cost</label><input id="iEditValue" type="number" step="0.01">
+          <label for="iEditOdo">Odometer</label><input id="iEditOdo" type="number" min="0" step="1">
+          <label for="iEditNext">Next service date</label><input id="iEditNext" type="date">
+          <label for="iEditAt">Service due at km</label><input id="iEditAt" type="number" min="0" step="1">
+          <button type="submit" class="btn btn-p" id="btnSaveInvEdit">Save asset</button>
+          <button type="button" class="btn btn-s" id="btnCancelInvEdit">Cancel</button>
+        </form>
+        <div class="card">
+          <label for="invFilter">Show</label>
+          <select id="invFilter">
+            <option value="all">All</option>
+            <option value="Available">Available</option>
+            <option value="Rented">Rented</option>
+            <option value="On Trip">On trip</option>
+            <option value="Maintenance">Maintenance</option>
+            <option value="Occupied">Occupied</option>
+            <option value="service">Service due</option>
+          </select>
+        </div>
+        <div id="invList"><p class="em">No assets yet. Add your fleet.</p></div>
+      </div>
 
-  <div id="page-daybook" class="page container">
-    <div class="st">DAY BOOK / ALL ENTRIES</div>
-    <div class="card">
-      <label>Filter</label>
-      <select id="dbFilter">
-        <option value="all">All</option>
-        <option value="rental">Rentals</option>
-        <option value="parking">Parking</option>
-        <option value="taxi">Taxi</option>
-        <option value="expense">Expenses</option>
-        <option value="receipt">Receipts</option>
-        <option value="payment">Payments</option>
-      </select>
-    </div>
-    <div id="daybookList" class="em">No entries.</div>
-  </div>
+      <div id="page-daybook" class="page container">
+        <h2 class="st" id="dayTitle">Day book</h2>
+        <div class="card">
+          <label for="dbFilter">Filter</label>
+          <select id="dbFilter">
+            <option value="all">All</option>
+            <option value="rental">Rentals</option>
+            <option value="parking">Parking</option>
+            <option value="taxi">Taxi</option>
+            <option value="expense">Expenses</option>
+            <option value="receipt">Receipts</option>
+            <option value="payment">Payments</option>
+          </select>
+          <label for="dbSearch">Search</label>
+          <input id="dbSearch" type="search" placeholder="Client, plate, note, vehicle">
+        </div>
+        <div id="daybookList"><p class="em">No entries.</p></div>
+      </div>
 
-  <div id="page-reports" class="page container">
-    <div class="tabs">
-      <div class="tab on" data-rep="pl">P&L</div>
-      <div class="tab" data-rep="bs">Balance Sheet</div>
-      <div class="tab" data-rep="stmt">Customer Stmt</div>
-      <div class="tab" data-rep="month">Monthly</div>
-    </div>
-    <div id="rep-pl" class="rep-panel">
-      <div class="card">
-        <div class="st" style="margin-top:0">PROFIT & LOSS</div>
-        <table class="tbl">
-          <tr><td>Rental Income</td><td class="r" id="plR">$0</td></tr>
-          <tr><td>Parking Income</td><td class="r" id="plP">$0</td></tr>
-          <tr><td>Taxi Income</td><td class="r" id="plT">$0</td></tr>
-          <tr><td>Other Receipts</td><td class="r" id="plRc">$0</td></tr>
-          <tr><th>Total Income</th><th class="r" id="plInc">$0</th></tr>
-          <tr><td>Expenses</td><td class="r" id="plE">$0</td></tr>
-          <tr><td>Payments / Costs</td><td class="r" id="plPay">$0</td></tr>
-          <tr><th>Net Profit / (Loss)</th><th class="r" id="plN">$0</th></tr>
-        </table>
+      <div id="page-reports" class="page container">
+        <h2 class="st" id="repTitle">Reports</h2>
+        <div class="tabs" role="tablist" aria-label="Reports">
+          <button type="button" class="tab on" id="tab-pl" role="tab" aria-selected="true" aria-controls="rep-pl" data-rep="pl">P&amp;L</button>
+          <button type="button" class="tab" id="tab-bs" role="tab" aria-selected="false" aria-controls="rep-bs" data-rep="bs">Balance Sheet</button>
+          <button type="button" class="tab" id="tab-stmt" role="tab" aria-selected="false" aria-controls="rep-stmt" data-rep="stmt">Customer Stmt</button>
+          <button type="button" class="tab" id="tab-month" role="tab" aria-selected="false" aria-controls="rep-month" data-rep="month">Monthly</button>
+          <button type="button" class="tab" id="tab-aging" role="tab" aria-selected="false" aria-controls="rep-aging" data-rep="aging">Aging</button>
+        </div>
+        <div id="rep-pl" class="rep-panel" role="tabpanel" aria-labelledby="tab-pl">
+          <div class="card">
+            <h2 class="st">Profit and loss</h2>
+            <p class="hint">Income includes rental, parking, taxi, and other receipts. A receipt from a customer reduces what they owe and is also counted here.</p>
+            <div id="plTables" class="table-wrap">
+              <table class="tbl">
+                <caption class="sr-only">Profit and loss</caption>
+                <tbody>
+                  <tr><td>Rental income</td><td class="r" id="plR">$0.00</td></tr>
+                  <tr><td>Parking income</td><td class="r" id="plP">$0.00</td></tr>
+                  <tr><td>Taxi income</td><td class="r" id="plT">$0.00</td></tr>
+                  <tr><td>Other receipts</td><td class="r" id="plRc">$0.00</td></tr>
+                  <tr><th scope="row">Total income</th><th class="r" id="plInc">$0.00</th></tr>
+                  <tr><td>Expenses</td><td class="r" id="plE">$0.00</td></tr>
+                  <tr><td>Payments / costs</td><td class="r" id="plPay">$0.00</td></tr>
+                  <tr><th scope="row">Net profit / (loss)</th><th class="r" id="plN">$0.00</th></tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-s" id="btnPrintPL">Print profit and loss</button>
+          </div>
+        </div>
+        <div id="rep-bs" class="rep-panel" role="tabpanel" aria-labelledby="tab-bs" hidden>
+          <div class="card">
+            <h2 class="st">Balance sheet</h2>
+            <p class="hint">Cash is a book total from entries in this browser. Balancing capital makes assets equal liabilities and equity. It is not a bank balance, and AutoSheets does not connect to a bank.</p>
+            <div id="bsTables">
+              <h3 class="hl">Assets</h3>
+              <div class="table-wrap">
+                <table class="tbl">
+                  <caption class="sr-only">Assets</caption>
+                  <tbody>
+                    <tr><td>Cash / Bank (net)</td><td class="r" id="bsCash">$0.00</td></tr>
+                    <tr><td>Accounts receivable</td><td class="r" id="bsAr">$0.00</td></tr>
+                    <tr><td>Inventory / fleet value</td><td class="r" id="bsInv">$0.00</td></tr>
+                    <tr><th scope="row">Total assets</th><th class="r" id="bsTa">$0.00</th></tr>
+                  </tbody>
+                </table>
+              </div>
+              <h3 class="hl">Liabilities and equity</h3>
+              <div class="table-wrap">
+                <table class="tbl">
+                  <caption class="sr-only">Liabilities and equity</caption>
+                  <tbody>
+                    <tr><td>Customer deposits held</td><td class="r" id="bsDep">$0.00</td></tr>
+                    <tr><td>Accounts payable</td><td class="r" id="bsAp">$0.00</td></tr>
+                    <tr><td>Balancing capital</td><td class="r" id="bsCap">$0.00</td></tr>
+                    <tr><td>Retained earnings (net)</td><td class="r" id="bsRe">$0.00</td></tr>
+                    <tr><th scope="row">Total liabilities and equity</th><th class="r" id="bsTl">$0.00</th></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <button type="button" class="btn btn-s" id="btnPrintBS">Print balance sheet</button>
+          </div>
+        </div>
+        <div id="rep-stmt" class="rep-panel" role="tabpanel" aria-labelledby="tab-stmt" hidden>
+          <form id="stmtForm" class="card" novalidate>
+            <label for="stmtCust">Select customer</label>
+            <select id="stmtCust"></select>
+            <button type="submit" class="btn btn-p" id="btnStmt">Generate statement</button>
+          </form>
+          <div id="stmtOut" class="card" hidden>
+            <h2 class="st" id="stmtTitle">Statement of account</h2>
+            <div id="stmtBody"></div>
+            <p style="margin-top:10px;font-weight:800">Balance due: <span id="stmtBal">$0.00</span></p>
+            <div class="print-actions">
+              <button type="button" class="btn btn-p" id="btnPrintStmt">Print statement</button>
+              <button type="button" class="btn btn-s" id="btnShareStmt">Share statement</button>
+            </div>
+          </div>
+        </div>
+        <div id="rep-month" class="rep-panel" role="tabpanel" aria-labelledby="tab-month" hidden>
+          <form id="monthForm" class="card" novalidate>
+            <label for="monthPick">Month</label>
+            <input id="monthPick" type="month">
+            <button type="submit" class="btn btn-p" id="btnMonth">Show monthly summary</button>
+          </form>
+          <div id="monthOut" class="card" hidden>
+            <h2 class="st" id="monthTitle">Monthly report</h2>
+            <table class="tbl">
+              <caption class="sr-only">Monthly summary</caption>
+              <tbody>
+                <tr><td>Income</td><td class="r" id="moInc">$0.00</td></tr>
+                <tr><td>Expenses</td><td class="r" id="moExp">$0.00</td></tr>
+                <tr><th scope="row">Net</th><th class="r" id="moNet">$0.00</th></tr>
+                <tr><td>Prior month net</td><td class="r" id="moPrev">—</td></tr>
+                <tr><td>Transactions</td><td class="r" id="moCnt">0</td></tr>
+              </tbody>
+            </table>
+            <div id="monthList"></div>
+          </div>
+        </div>
+        <div id="rep-aging" class="rep-panel" role="tabpanel" aria-labelledby="tab-aging" hidden>
+          <div class="card">
+            <h2 class="st">Receivables aging</h2>
+            <p class="hint">Unpaid rental and parking invoices, aged from the entry date. Receipts and opening balances are shown apart so this can be read next to receivables on the dashboard.</p>
+            <div id="ageTables" class="table-wrap">
+              <table class="tbl">
+                <caption class="sr-only">Receivables aging</caption>
+                <thead><tr><th scope="col">Bucket</th><th class="r" scope="col">Amount</th><th class="r" scope="col">Invoices</th></tr></thead>
+                <tbody>
+                  <tr><td>0–30 days</td><td class="r" id="age0">$0.00</td><td class="r" id="age0n">0</td></tr>
+                  <tr><td>31–60 days</td><td class="r" id="age1">$0.00</td><td class="r" id="age1n">0</td></tr>
+                  <tr><td>61–90 days</td><td class="r" id="age2">$0.00</td><td class="r" id="age2n">0</td></tr>
+                  <tr><td>Over 90 days</td><td class="r" id="age3">$0.00</td><td class="r" id="age3n">0</td></tr>
+                  <tr><td>Opening balances (not aged)</td><td class="r" id="ageOpen">$0.00</td><td class="r">—</td></tr>
+                  <tr><td>Receipts on account</td><td class="r" id="ageRc">$0.00</td><td class="r">—</td></tr>
+                  <tr><th scope="row">Net receivables</th><th class="r" id="ageNet">$0.00</th><th class="r"></th></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-settings" class="page container">
+        <h2 class="st" id="setTitle">Settings</h2>
+        <h2 class="st">Account</h2>
+        <div class="card">
+          <div class="sr"><div class="sl">Email</div><div class="sv" id="sEmail">—</div></div>
+          <div class="sr"><div class="sl">Role</div><div class="sv" id="sRole">—</div></div>
+          <div class="sr"><div class="sl">Book currency</div><div class="sv" id="sCur">USD</div></div>
+          <div class="sr"><div class="sl">Company</div><div class="sv" id="sCo">AutoSheets</div></div>
+        </div>
+        <h2 class="st">Company</h2>
+        <form id="coForm" class="card form-card" novalidate>
+          <label for="coName">Company name</label>
+          <input id="coName" autocomplete="organization" placeholder="Company name">
+          <button type="submit" class="btn btn-p" id="btnSaveCo">Save company</button>
+        </form>
+        <h2 class="st">Security — PIN</h2>
+        <form id="pinSetForm" class="card form-card" novalidate>
+          <label for="newPin">Set PIN (4–6 digits)</label>
+          <input id="newPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="PIN">
+          <p class="hint">The PIN unlocks this browser only. It is stored on this device, not on a server.</p>
+          <button type="submit" class="btn btn-p" id="btnSavePin">Save PIN</button>
+        </form>
+        <h2 class="st">Default rates (in book currency)</h2>
+        <form id="ratesForm" class="card form-card" novalidate>
+          <label for="rDaily">Rental daily</label><input id="rDaily" type="number" inputmode="decimal" step="0.01">
+          <label for="rWeekly">Rental weekly</label><input id="rWeekly" type="number" inputmode="decimal" step="0.01">
+          <label for="rMonthly">Rental monthly</label><input id="rMonthly" type="number" inputmode="decimal" step="0.01">
+          <label for="pHourly">Parking hourly</label><input id="pHourly" type="number" inputmode="decimal" step="0.01">
+          <label for="pDaily">Parking daily</label><input id="pDaily" type="number" inputmode="decimal" step="0.01">
+          <label for="pWeekly">Parking weekly</label><input id="pWeekly" type="number" inputmode="decimal" step="0.01">
+          <label for="pMonthly">Parking monthly</label><input id="pMonthly" type="number" inputmode="decimal" step="0.01">
+          <label for="tComm">Taxi commission %</label><input id="tComm" type="number" inputmode="decimal" step="0.01">
+          <p class="hint">Commission is the driver share of the fare. The full fare still posts as taxi income.</p>
+          <button type="submit" class="btn btn-p" id="btnSaveRates">Save rates</button>
+        </form>
+        <h2 class="st">Change role</h2>
+        <div class="card">
+          <div class="rg" id="setRoles" role="group" aria-label="Change role">
+            <button type="button" class="rb" data-role="Fleet Owner" aria-pressed="false">Fleet Owner</button>
+            <button type="button" class="rb" data-role="Rental Desk" aria-pressed="false">Rental Desk</button>
+            <button type="button" class="rb" data-role="Parking Attendant" aria-pressed="false">Parking</button>
+            <button type="button" class="rb" data-role="Dispatcher" aria-pressed="false">Dispatcher</button>
+            <button type="button" class="rb" data-role="Accountant" aria-pressed="false">Accountant</button>
+          </div>
+        </div>
+        <h2 class="st">Data</h2>
+        <div class="card">
+          <p class="note">Books stay in this browser. Export a backup before clearing site data. The JSON file includes your signed-in email and role. It does not include your password or PIN. Import will not change sign-in or PIN.</p>
+          <div class="sr"><div class="sl">Entries</div><div class="sv" id="sRec">0</div></div>
+          <button type="button" class="btn btn-s" id="btnExport">Export JSON</button>
+          <button type="button" class="btn btn-s" id="btnExportCsv">Export CSV</button>
+          <label class="btn btn-s" for="importFile">Import JSON backup</label>
+          <input id="importFile" class="sr-only" type="file" accept="application/json,.json">
+          <button type="button" class="btn btn-d" id="btnClear">Clear all entries</button>
+        </div>
+        <h2 class="st">About</h2>
+        <div class="card">
+          <div class="sr"><div class="sl">Version</div><div class="sv" id="sVer">4.3.0</div></div>
+          <div class="sr"><div class="sl">Modules</div><div class="sv" id="sMod">Ledger, P&amp;L, deposits, aging</div></div>
+          <div class="sr"><div class="sl">Source</div><div class="sv"><a href="https://github.com/Tajoor621/Autosheets" rel="noopener noreferrer">GitHub</a></div></div>
+        </div>
+        <button type="button" class="btn btn-d" id="btnLogout">Logout</button>
+      </div>
+
+      <div id="page-rental" class="page container">
+        <h2 class="st" id="rentTitle">Rental agreement</h2>
+        <form id="rentalForm" class="card form-card" novalidate>
+          <label for="rCust">Customer</label><select id="rCust"></select>
+          <label for="rClient">Or new client name</label><input id="rClient" placeholder="If not in the list">
+          <label for="rVehicle">Vehicle</label><select id="rVehicle"></select>
+          <label for="rBill">Billing</label>
+          <select id="rBill"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
+          <label for="rQty">Quantity</label><input id="rQty" type="number" min="1" step="1" value="1">
+          <label for="rRate">Rate (in book currency)</label><input id="rRate" type="number" inputmode="decimal" step="0.01" placeholder="0">
+          <p class="preview" id="rPreview" aria-live="polite"></p>
+          <label for="rDep">Deposit</label><input id="rDep" type="number" inputmode="decimal" value="0" step="0.01">
+          <p class="hint">A deposit is held, not income, until you mark it returned on the entry.</p>
+          <label for="rOdo">Odometer out</label><input id="rOdo" type="number" inputmode="numeric" min="0" step="1" placeholder="Optional">
+          <label for="rDue">Return due</label><input id="rDue" type="date">
+          <label for="rPaid">Paid now?</label>
+          <select id="rPaid"><option value="0">No — on account</option><option value="1">Yes — received</option></select>
+          <button type="submit" class="btn btn-p" id="btnRental">Save rental</button>
+        </form>
+      </div>
+
+      <div id="page-parking" class="page container">
+        <h2 class="st" id="parkTitle">Parking ticket</h2>
+        <form id="parkingForm" class="card form-card" novalidate>
+          <label for="pCust">Customer (optional)</label><select id="pCust"></select>
+          <label for="pPlate">Vehicle plate</label><input id="pPlate" placeholder="Plate" autocomplete="off">
+          <label for="pBay">Bay / space</label><input id="pBay" placeholder="A4" autocomplete="off">
+          <label for="pTariff">Tariff</label>
+          <select id="pTariff"><option value="hourly">Hourly</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
+          <label for="pHours">Hours (hourly tariff)</label><input id="pHours" type="number" min="1" step="1" value="1">
+          <label for="pRate">Rate (in book currency)</label><input id="pRate" type="number" inputmode="decimal" step="0.01" placeholder="0">
+          <label for="pPaid">Paid now?</label>
+          <select id="pPaid"><option value="1">Yes</option><option value="0">No — on account</option></select>
+          <button type="submit" class="btn btn-p" id="btnParking">Save parking</button>
+        </form>
+      </div>
+
+      <div id="page-taxi" class="page container">
+        <h2 class="st" id="taxiTitle">Taxi fare</h2>
+        <form id="taxiForm" class="card form-card" novalidate>
+          <label for="tVehicle">Taxi</label><select id="tVehicle"></select>
+          <label for="tDriver">Driver name</label><input id="tDriver" placeholder="Optional" autocomplete="name">
+          <label for="tFare">Fare (book currency)</label><input id="tFare" type="number" inputmode="decimal" step="0.01" placeholder="0">
+          <label for="tCommission">Commission %</label><input id="tCommission" type="number" inputmode="decimal" step="0.01" value="60">
+          <p class="preview" id="tPreview" aria-live="polite"></p>
+          <button type="submit" class="btn btn-p" id="btnTaxi">Save taxi</button>
+        </form>
+      </div>
+
+      <div id="page-expense" class="page container">
+        <h2 class="st" id="expTitle">Expense</h2>
+        <form id="expenseForm" class="card form-card" novalidate>
+          <label for="eCat">Category</label>
+          <select id="eCat">
+            <option>Fuel</option>
+            <option>Oil &amp; fluids</option>
+            <option>Tires</option>
+            <option>Maintenance</option>
+            <option>Cleaning</option>
+            <option>Tolls</option>
+            <option>Permits</option>
+            <option>Registration</option>
+            <option>Insurance</option>
+            <option>Salary</option>
+            <option>Other</option>
+          </select>
+          <label for="eVehicle">Vehicle (optional)</label><select id="eVehicle"></select>
+          <label for="eOdo">Odometer</label>
+          <input id="eOdo" type="number" inputmode="numeric" min="0" step="1" placeholder="Optional">
+          <p class="hint">If this reading is higher than the asset odometer, the fleet record is updated.</p>
+          <label for="eAmt">Amount</label><input id="eAmt" type="number" inputmode="decimal" step="0.01" placeholder="0">
+          <label for="eNote">Note</label><input id="eNote" placeholder="Note">
+          <button type="submit" class="btn btn-p" id="btnExpense">Save expense</button>
+        </form>
+      </div>
+
+      <div id="page-receipt" class="page container">
+        <h2 class="st" id="rcptTitle">Receipt</h2>
+        <form id="receiptForm" class="card form-card" novalidate>
+          <label for="rcCust">Customer</label><select id="rcCust"></select>
+          <label for="rcAmt">Amount received</label><input id="rcAmt" type="number" inputmode="decimal" step="0.01">
+          <label for="rcNote">Note</label><input id="rcNote" placeholder="Against invoice / advance">
+          <button type="submit" class="btn btn-p" id="btnReceipt">Save receipt</button>
+        </form>
+      </div>
+
+      <div id="page-payment" class="page container">
+        <h2 class="st" id="payTitle">Payment</h2>
+        <form id="paymentForm" class="card form-card" novalidate>
+          <label for="payName">Payee / vendor</label><input id="payName" placeholder="Name">
+          <label for="payAmt">Amount paid</label><input id="payAmt" type="number" inputmode="decimal" step="0.01">
+          <label for="payNote">Note</label><input id="payNote" placeholder="Purpose">
+          <button type="submit" class="btn btn-p" id="btnPayment">Save payment</button>
+        </form>
       </div>
     </div>
-    <div id="rep-bs" class="rep-panel" style="display:none">
-      <div class="card">
-        <div class="st" style="margin-top:0">BALANCE SHEET</div>
-        <div class="hl">ASSETS</div>
-        <table class="tbl">
-          <tr><td>Cash / Bank (net)</td><td class="r" id="bsCash">$0</td></tr>
-          <tr><td>Accounts Receivable</td><td class="r" id="bsAr">$0</td></tr>
-          <tr><td>Inventory / Fleet Value</td><td class="r" id="bsInv">$0</td></tr>
-          <tr><th>Total Assets</th><th class="r" id="bsTa">$0</th></tr>
-        </table>
-        <div class="hl" style="margin-top:10px">LIABILITIES & EQUITY</div>
-        <table class="tbl">
-          <tr><td>Accounts Payable</td><td class="r" id="bsAp">$0</td></tr>
-          <tr><td>Retained Earnings (Net)</td><td class="r" id="bsRe">$0</td></tr>
-          <tr><th>Total L+E</th><th class="r" id="bsTl">$0</th></tr>
-        </table>
-      </div>
-    </div>
-    <div id="rep-stmt" class="rep-panel" style="display:none">
-      <div class="card">
-        <label>Select Customer</label>
-        <select id="stmtCust"></select>
-        <button type="button" class="btn btn-p" id="btnStmt">Generate Statement</button>
-      </div>
-      <div id="stmtOut" class="card" style="display:none">
-        <div class="st" style="margin-top:0" id="stmtTitle">Statement of Account</div>
-        <div id="stmtBody"></div>
-        <div style="margin-top:10px;font-weight:700">Balance Due: <span id="stmtBal">$0</span></div>
-      </div>
-    </div>
-    <div id="rep-month" class="rep-panel" style="display:none">
-      <div class="card">
-        <label>Month</label>
-        <input id="monthPick" type="month"/>
-        <button type="button" class="btn btn-p" id="btnMonth">Show Monthly Summary</button>
-      </div>
-      <div id="monthOut" class="card" style="display:none">
-        <div class="st" style="margin-top:0" id="monthTitle">Monthly Report</div>
-        <table class="tbl">
-          <tr><td>Income</td><td class="r" id="moInc">$0</td></tr>
-          <tr><td>Expenses</td><td class="r" id="moExp">$0</td></tr>
-          <tr><th>Net</th><th class="r" id="moNet">$0</th></tr>
-          <tr><td>Transactions</td><td class="r" id="moCnt">0</td></tr>
-        </table>
-        <div id="monthList" style="margin-top:8px"></div>
-      </div>
-    </div>
   </div>
 
-  <div id="page-settings" class="page container">
-    <div class="st">ACCOUNT</div>
-    <div class="card">
-      <div class="sr"><div class="sl">Email</div><div class="sv" id="sEmail">—</div></div>
-      <div class="sr"><div class="sl">Role</div><div class="sv" id="sRole">—</div></div>
-      <div class="sr"><div class="sl">Book Currency</div><div class="sv" id="sCur">USD</div></div>
-      <div class="sr"><div class="sl">Company</div><div class="sv" id="sCo">AutoSheets</div></div>
-    </div>
-    <div class="st">COMPANY</div>
-    <div class="card">
-      <label>Company Name</label><input id="coName" placeholder="Company name"/>
-      <button type="button" class="btn btn-p" id="btnSaveCo">Save Company</button>
-    </div>
-    <div class="st">SECURITY — PIN</div>
-    <div class="card">
-      <label>Set PIN (4–6 digits)</label>
-      <input id="newPin" type="password" inputmode="numeric" maxlength="6" placeholder="PIN"/>
-      <button type="button" class="btn btn-p" id="btnSavePin">Save PIN</button>
-    </div>
-    <div class="st">DEFAULT RATES (IN BOOK CURRENCY)</div>
-    <div class="card">
-      <label>Rental Daily</label><input id="rDaily" type="number" step="0.01"/>
-      <label>Rental Weekly</label><input id="rWeekly" type="number" step="0.01"/>
-      <label>Rental Monthly</label><input id="rMonthly" type="number" step="0.01"/>
-      <label>Parking Hourly</label><input id="pHourly" type="number" step="0.01"/>
-      <label>Parking Daily</label><input id="pDaily" type="number" step="0.01"/>
-      <label>Parking Weekly</label><input id="pWeekly" type="number" step="0.01"/>
-      <label>Parking Monthly</label><input id="pMonthly" type="number" step="0.01"/>
-      <label>Taxi Commission %</label><input id="tComm" type="number"/>
-      <button type="button" class="btn btn-p" id="btnSaveRates">Save Rates</button>
-    </div>
-    <div class="st">CHANGE ROLE</div>
-    <div class="card">
-      <div class="rg" id="setRoles">
-        <div class="rb" data-role="Fleet Owner">Fleet Owner</div>
-        <div class="rb" data-role="Rental Desk">Rental Desk</div>
-        <div class="rb" data-role="Parking Attendant">Parking</div>
-        <div class="rb" data-role="Dispatcher">Dispatcher</div>
-        <div class="rb" data-role="Accountant">Accountant</div>
-      </div>
-    </div>
-    <div class="st">DATA</div>
-    <div class="card">
-      <div class="sr"><div class="sl">Entries</div><div class="sv" id="sRec">0</div></div>
-      <button type="button" class="btn btn-s" id="btnExport">Export JSON</button>
-      <button type="button" class="btn btn-d" id="btnClear">Clear All Entries</button>
-    </div>
-    <div class="st">ABOUT</div>
-    <div class="card">
-      <div class="sr"><div class="sl">Version</div><div class="sv">4.2.0 ACCOUNTING</div></div>
-      <div class="sr"><div class="sl">Modules</div><div class="sv">Ledger, BS, P&L, Stmt</div></div>
-    </div>
-    <button type="button" class="btn btn-d" id="btnLogout" style="margin-top:6px">Logout</button>
-  </div>
-
-  <div id="page-rental" class="page container">
-    <div class="card">
-      <label>Customer</label><select id="rCust"></select>
-      <label>Or new client name</label><input id="rClient" placeholder="If not in list"/>
-      <label>Vehicle</label><select id="rVehicle"></select>
-      <label>Billing</label>
-      <select id="rBill"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
-      <label>Quantity</label><input id="rQty" type="number" value="1" min="1"/>
-      <label>Rate (in book currency)</label><input id="rRate" type="number" step="0.01" placeholder="0"/>
-      <label>Deposit</label><input id="rDep" type="number" value="0" step="0.01"/>
-      <label>Paid now?</label>
-      <select id="rPaid"><option value="0">No — on account</option><option value="1">Yes — received</option></select>
-      <button type="button" class="btn btn-p" id="btnRental">Save Rental</button>
-    </div>
-  </div>
-
-  <div id="page-parking" class="page container">
-    <div class="card">
-      <label>Customer (optional)</label><select id="pCust"></select>
-      <label>Vehicle Plate</label><input id="pPlate" placeholder="Plate"/>
-      <label>Tariff</label>
-      <select id="pTariff"><option value="hourly">Hourly</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
-      <label>Hours (hourly only)</label><input id="pHours" type="number" value="1" min="1"/>
-      <label>Rate (in book currency — edit freely)</label><input id="pRate" type="number" step="0.01" placeholder="0"/>
-      <label>Paid now?</label>
-      <select id="pPaid"><option value="1">Yes</option><option value="0">No — on account</option></select>
-      <button type="button" class="btn btn-p" id="btnParking">Save Parking</button>
-    </div>
-  </div>
-
-  <div id="page-taxi" class="page container">
-    <div class="card">
-      <label>Taxi</label><select id="tVehicle"></select>
-      <label>Fare (book currency)</label><input id="tFare" type="number" step="0.01" placeholder="0"/>
-      <label>Commission %</label><input id="tCommission" type="number" value="60"/>
-      <button type="button" class="btn btn-p" id="btnTaxi">Save Taxi</button>
-    </div>
-  </div>
-
-  <div id="page-expense" class="page container">
-    <div class="card">
-      <label>Category</label>
-      <select id="eCat"><option>Fuel</option><option>Maintenance</option><option>Tolls</option><option>Permits</option><option>Insurance</option><option>Salary</option><option>Other</option></select>
-      <label>Amount</label><input id="eAmt" type="number" step="0.01" placeholder="0"/>
-      <label>Note</label><input id="eNote" placeholder="Note"/>
-      <button type="button" class="btn btn-p" id="btnExpense">Save Expense</button>
-    </div>
-  </div>
-
-  <div id="page-receipt" class="page container">
-    <div class="card">
-      <label>Customer</label><select id="rcCust"></select>
-      <label>Amount Received</label><input id="rcAmt" type="number" step="0.01"/>
-      <label>Note</label><input id="rcNote" placeholder="Against invoice / advance"/>
-      <button type="button" class="btn btn-p" id="btnReceipt">Save Receipt</button>
-    </div>
-  </div>
-
-  <div id="page-payment" class="page container">
-    <div class="card">
-      <label>Payee / Vendor</label><input id="payName" placeholder="Name"/>
-      <label>Amount Paid</label><input id="payAmt" type="number" step="0.01"/>
-      <label>Note</label><input id="payNote" placeholder="Purpose"/>
-      <button type="button" class="btn btn-p" id="btnPayment">Save Payment</button>
-    </div>
-  </div>
-
-  <div class="modal" id="editModal">
-    <div class="modal-box">
-      <div class="st" style="margin-top:0">VIEW / EDIT ENTRY</div>
-      <input type="hidden" id="editId"/>
-      <label>Type</label><input id="editType" readonly/>
-      <label>Date</label><input id="editDate" readonly/>
-      <label>Amount / Total</label><input id="editAmt" type="number" step="0.01"/>
-      <label>Details (client / plate / note)</label><input id="editNote"/>
-      <label>Paid?</label>
+  <div class="modal" id="editModal" role="dialog" aria-modal="true" aria-labelledby="editTitle" aria-hidden="true">
+    <div class="modal-box card">
+      <h2 class="st" id="editTitle">View or edit entry</h2>
+      <input type="hidden" id="editId">
+      <label for="editRef">Reference</label><input id="editRef" readonly>
+      <label for="editType">Type</label><input id="editType" readonly>
+      <label for="editDate">Date</label><input id="editDate" readonly>
+      <label for="editAmt">Amount / total</label><input id="editAmt" type="number" inputmode="decimal" step="0.01">
+      <label for="editNote">Details (client / plate / note)</label><input id="editNote">
+      <label for="editPaid">Paid?</label>
       <select id="editPaid"><option value="1">Yes</option><option value="0">No</option></select>
-      <button type="button" class="btn btn-p" id="btnEditSave">Save Changes</button>
-      <button type="button" class="btn btn-s" id="btnEditPrint">Print Receipt</button>
-      <button type="button" class="btn btn-s" id="btnEditShare">Share Receipt</button>
-      <button type="button" class="btn btn-d" id="btnEditDel">Delete Entry</button>
+      <div id="editExtra" hidden>
+        <label for="editDue">Return due</label><input id="editDue" type="date">
+        <label for="editDep">Deposit held</label><input id="editDep" type="number" inputmode="decimal" step="0.01">
+        <label for="editDepBack">Deposit returned?</label>
+        <select id="editDepBack"><option value="0">No — still held</option><option value="1">Yes — returned</option></select>
+        <label for="editReturned">Vehicle returned?</label>
+        <select id="editReturned"><option value="0">No — still out</option><option value="1">Yes — back in fleet</option></select>
+      </div>
+      <button type="button" class="btn btn-p" id="btnEditSave">Save changes</button>
+      <button type="button" class="btn btn-s" id="btnEditPrint">Print receipt</button>
+      <button type="button" class="btn btn-s" id="btnEditShare">Share receipt</button>
+      <button type="button" class="btn btn-d" id="btnEditDel">Delete entry</button>
       <button type="button" class="btn btn-s" id="btnEditClose">Close</button>
     </div>
   </div>
-
-  <div class="bn">
-    <div class="ni active" data-p="dashboard"><span>📊</span>Home</div>
-    <div class="ni" data-p="customers"><span>👤</span>Clients</div>
-    <div class="ni" data-p="daybook"><span>📒</span>Ledger</div>
-    <div class="ni" data-p="reports"><span>📈</span>Reports</div>
-    <div class="ni" data-p="settings"><span>⚙️</span>Settings</div>
-  </div>
 </div>
-
 <script>
-(function(){
-  var ACCOUNTS={"owner@autosheets.com":"demo1234","admin@autosheets.com":"admin123"};
-  var role="Fleet Owner";
-  var curs=["USD","EUR","AED","GBP","SAR","PKR"];
-  var sym={USD:"$",EUR:"€",AED:"AED ",GBP:"£",SAR:"SAR ",PKR:"Rs "};
-  var ci=0;
-  var defRates={rentalDaily:85,rentalWeekly:500,rentalMonthly:1800,parkHourly:8,parkDaily:35,parkWeekly:150,parkMonthly:400,taxiComm:60};
+(function () {
+  var VERSION = "4.3.0";
+  var BASE_TITLE = "AutoSheets Accounting — Fleet, Rental, Parking & Taxi Books";
+  var ACCOUNTS = { "owner@autosheets.com": "demo1234", "admin@autosheets.com": "admin123" };
+  var role = "Fleet Owner";
+  var curs = ["USD", "EUR", "AED", "GBP", "SAR", "PKR"];
+  var sym = { USD: "$", EUR: "€", AED: "AED ", GBP: "£", SAR: "SAR ", PKR: "Rs " };
+  var ci = 0;
+  var defRates = { rentalDaily: 85, rentalWeekly: 500, rentalMonthly: 1800, parkHourly: 8, parkDaily: 35, parkWeekly: 150, parkMonthly: 400, taxiComm: 60 };
+  var lastFocus = null;
+  var subPages = ["rental", "parking", "taxi", "expense", "receipt", "payment", "inventory"];
 
-  function save(k,v){try{localStorage.setItem("as_"+k,JSON.stringify(v))}catch(e){}}
-  function load(k,f){try{var v=localStorage.getItem("as_"+k);return v?JSON.parse(v):f}catch(e){return f}}
-  function rates(){return load("rates",defRates)}
-  function hist(){return load("history",[])}
-  function custs(){return load("customers",[])}
-  function inv(){return load("inventory",[])}
-  function cur(){return curs[ci]}
-  function money(n){return (sym[cur()]||cur()+" ")+(Number(n)||0).toFixed(2)}
-  function uid(){return "E"+Date.now()+"_"+Math.floor(Math.random()*9999)}
-  function toast(msg,type){
-    var el=document.getElementById("toast");
-    el.textContent=msg;
-    el.className="toast show"+(type==="err"?" err":"");
+  function byId(id) { return document.getElementById(id); }
+  function save(k, v) { try { localStorage.setItem("as_" + k, JSON.stringify(v)); } catch (e) {} }
+  function load(k, f) { try { var v = localStorage.getItem("as_" + k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
+  function rates() { return load("rates", defRates); }
+  function hist() { return load("history", []); }
+  function custs() { return load("customers", []); }
+  function inv() { return load("inventory", []); }
+  function cur() { return curs[ci]; }
+  function money(n) { return (sym[cur()] || (cur() + " ")) + (Number(n) || 0).toFixed(2); }
+  function uid() { return "E" + Date.now() + "_" + Math.floor(Math.random() * 9999); }
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function todayISO() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function localDay(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return String(iso).slice(0, 10);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function companyName() {
+    var co = load("company", { name: "AutoSheets" });
+    return (co && co.name) || "AutoSheets";
+  }
+  function assetLabel(a) { return (a.name || "") + " - " + (a.plate || ""); }
+  function toast(msg, type) {
+    var el = byId("toast");
+    el.textContent = msg;
+    el.className = "toast show" + (type === "err" ? " err" : "");
+    el.setAttribute("aria-live", type === "err" ? "assertive" : "polite");
     clearTimeout(window._tt);
-    window._tt=setTimeout(function(){el.className="toast"},2200);
+    window._tt = setTimeout(function () { el.className = "toast"; }, 2400);
   }
-
-  function selectRole(el,g){
-    var bs=document.querySelectorAll(g+" .rb");
-    for(var i=0;i<bs.length;i++)bs[i].classList.remove("sel");
-    el.classList.add("sel");role=el.getAttribute("data-role");
+  function appOpen() {
+    var d = byId("mainApp").style.display;
+    return d && d !== "none";
   }
-
-  function enterApp(email){
-    save("session",{email:email,role:role,loggedIn:true,time:new Date().toISOString()});
-    document.getElementById("roleBadge").textContent=role.toUpperCase()+" • LIVE";
-    document.getElementById("sEmail").textContent=email;
-    document.getElementById("sRole").textContent=role;
-    document.getElementById("page-login").style.display="none";
-    document.getElementById("page-pin").style.display="none";
-    document.getElementById("mainApp").style.display="block";
-    var co=load("company",{name:"AutoSheets"});
-    document.getElementById("sCo").textContent=co.name||"AutoSheets";
-    document.getElementById("hdrCo").textContent=co.name||"AutoSheets";
-    document.getElementById("coName").value=co.name||"";
-    fillSelects();applyRates();refreshAll();showPage("dashboard");
-  }
-
-  function doLogin(){
-    document.getElementById("loginError").style.display="none";
-    var email=(document.getElementById("loginEmail").value||"").trim().toLowerCase();
-    var pass=(document.getElementById("loginPassword").value||"").trim();
-    if(!email||!pass){document.getElementById("loginError").textContent="Enter email and password";document.getElementById("loginError").style.display="block";return}
-    var users=load("users",ACCOUNTS);
-    if(users[email]&&users[email]===pass){enterApp(email);return}
-    if(!users[email]){
-      if(pass.length<4){document.getElementById("loginError").textContent="Password min 4 chars";document.getElementById("loginError").style.display="block";return}
-      users[email]=pass;save("users",users);enterApp(email);return;
+  function markRoles(group) {
+    var bs = document.querySelectorAll(group + " .rb");
+    for (var i = 0; i < bs.length; i++) {
+      var on = bs[i].getAttribute("data-role") === role;
+      bs[i].classList.toggle("sel", on);
+      bs[i].setAttribute("aria-pressed", on ? "true" : "false");
     }
-    document.getElementById("loginError").textContent="Wrong email or password";
-    document.getElementById("loginError").style.display="block";
   }
-
-  function doPinLogin(){
-    if(!load("pin",null)){toast("Set PIN in Settings first","err");return}
-    document.getElementById("page-login").style.display="none";
-    document.getElementById("page-pin").style.display="flex";
-    document.getElementById("pinInput").value="";
-    document.getElementById("pinError").style.display="none";
+  function selectRole(el, group) {
+    role = el.getAttribute("data-role");
+    markRoles(group);
   }
-  function checkPin(){
-    if((document.getElementById("pinInput").value||"").trim()===String(load("pin",""))){
-      var s=load("session",{});role=s.role||"Fleet Owner";enterApp(s.email||"user@autosheets.com");
-    } else document.getElementById("pinError").style.display="block";
+  function setCurLabel() {
+    byId("curCode").textContent = cur();
+    byId("sCur").textContent = cur();
+    byId("bookCur").textContent = cur();
+    byId("btnCur").setAttribute("aria-label", "Book currency " + cur() + ". Activate to switch currency.");
   }
-  function doLogout(){
-    var s=load("session",{});s.loggedIn=false;save("session",s);
-    document.getElementById("mainApp").style.display="none";
-    document.getElementById("page-login").style.display="flex";
-    document.getElementById("loginPassword").value="";
+  function cycleCur() {
+    ci = (ci + 1) % curs.length;
+    save("currency", cur());
+    setCurLabel();
+    refreshAll();
+    renderReports();
   }
-  function savePin(){
-    var p=(document.getElementById("newPin").value||"").trim();
-    if(p.length<4||p.length>6||!/^\d+$/.test(p)){toast("PIN must be 4-6 digits","err");return}
-    save("pin",p);document.getElementById("newPin").value="";toast("PIN saved successfully");
+  function focusHeading(pageEl) {
+    var heading = pageEl.querySelector("h2");
+    if (!heading) return;
+    heading.setAttribute("tabindex", "-1");
+    heading.focus();
+    byId("skipLink").setAttribute("href", "#" + heading.id);
   }
-
-  function cycleCur(){
-    ci=(ci+1)%curs.length;
-    document.getElementById("curCode").textContent=curs[ci];
-    document.getElementById("sCur").textContent=curs[ci];
-    document.getElementById("bookCur").textContent=curs[ci];
-    save("currency",curs[ci]);
-    refreshAll();renderReports();
-  }
-
-  function showPage(name){
-    var pages=document.querySelectorAll("#mainApp .page");
-    for(var i=0;i<pages.length;i++)pages[i].classList.remove("active");
-    var p=document.getElementById("page-"+name);
-    if(p)p.classList.add("active");
-    var nis=document.querySelectorAll(".ni");
-    for(var j=0;j<nis.length;j++){
-      var dp=nis[j].getAttribute("data-p");
-      nis[j].classList.toggle("active", dp===name || (["rental","parking","taxi","expense","receipt","payment","inventory"].indexOf(name)>=0&&dp==="dashboard"));
+  function showPage(name, opts) {
+    opts = opts || {};
+    var pages = document.querySelectorAll("#mainApp .page");
+    for (var i = 0; i < pages.length; i++) pages[i].classList.remove("active");
+    var p = byId("page-" + name);
+    if (!p) { name = "dashboard"; p = byId("page-dashboard"); }
+    p.classList.add("active");
+    var nis = document.querySelectorAll(".ni");
+    for (var j = 0; j < nis.length; j++) {
+      var dp = nis[j].getAttribute("data-p");
+      var on = dp === name || (subPages.indexOf(name) >= 0 && dp === "dashboard");
+      nis[j].classList.toggle("active", on);
+      if (on) nis[j].setAttribute("aria-current", "page");
+      else nis[j].removeAttribute("aria-current");
     }
-    if(name==="customers")renderCust();
-    if(name==="inventory")renderInv();
-    if(name==="daybook")renderDaybook();
-    if(name==="reports")renderReports();
-    if(name==="settings")updSettings();
-    if(name==="dashboard")refreshAll();
-    if(["rental","parking","taxi","receipt"].indexOf(name)>=0){fillSelects();applyRates()}
-  }
-
-  function fillSelects(){
-    var cs=custs(),is=inv();
-    var cOpt='<option value="">— Select —</option>';
-    for(var i=0;i<cs.length;i++)cOpt+='<option value="'+cs[i].id+'">'+cs[i].name+'</option>';
-    ["rCust","pCust","rcCust","stmtCust"].forEach(function(id){var el=document.getElementById(id);if(el)el.innerHTML=cOpt});
-    var rOpt="",tOpt="";
-    if(!is.length){rOpt="<option>Add assets in Inventory</option>";tOpt=rOpt}
-    else{
-      for(var j=0;j<is.length;j++){
-        var a=is[j],lab=a.name+" - "+a.plate;
-        rOpt+="<option>"+lab+"</option>";
-        if(a.type==="Taxi")tOpt+="<option>"+lab+"</option>";
+    if (name === "customers") renderCust();
+    if (name === "inventory") renderInv();
+    if (name === "daybook") renderDaybook();
+    if (name === "reports") renderReports();
+    if (name === "settings") updSettings();
+    if (name === "dashboard") refreshAll();
+    if (["rental", "parking", "taxi", "receipt", "expense"].indexOf(name) >= 0) { fillSelects(); applyRates(); }
+    if (!opts.silentHash) {
+      var next = "#" + name;
+      if (location.hash !== next) {
+        if (opts.replaceHash) history.replaceState({ page: name }, "", next);
+        else history.pushState({ page: name }, "", next);
       }
-      if(!tOpt)tOpt="<option>Add taxi assets</option>";
     }
-    document.getElementById("rVehicle").innerHTML=rOpt;
-    document.getElementById("tVehicle").innerHTML=tOpt;
+    if (!opts.keepFocus) focusHeading(p);
   }
-
-  function calc(){
-    var h=hist(),R=0,P=0,T=0,E=0,Rc=0,Pay=0,ar=0;
-    for(var i=0;i<h.length;i++){
-      var r=h[i];
-      if(r.type==="rental"){R+=Number(r.total)||0;if(!r.paid)ar+=Number(r.total)||0}
-      if(r.type==="parking"){P+=Number(r.amount)||0;if(!r.paid)ar+=Number(r.amount)||0}
-      if(r.type==="taxi")T+=Number(r.fare)||0;
-      if(r.type==="expense")E+=Number(r.amt)||0;
-      if(r.type==="receipt"){Rc+=Number(r.amt)||0;ar-=Number(r.amt)||0}
-      if(r.type==="payment")Pay+=Number(r.amt)||0;
+  function pageFromHash() {
+    var h = (location.hash || "").replace(/^#/, "").toLowerCase().split("&")[0].split("?")[0];
+    var map = { home: "dashboard", ledger: "daybook", clients: "customers", fleet: "inventory", statement: "reports" };
+    if (map[h]) h = map[h];
+    var allowed = ["dashboard", "customers", "daybook", "reports", "settings", "rental", "parking", "taxi", "expense", "receipt", "payment", "inventory"];
+    return allowed.indexOf(h) >= 0 ? h : null;
+  }
+  function enterApp(email) {
+    save("session", { email: email, role: role, loggedIn: true, time: new Date().toISOString() });
+    byId("roleBadge").textContent = role.toUpperCase() + " • LIVE";
+    byId("sEmail").textContent = email;
+    byId("sRole").textContent = role;
+    markRoles("#setRoles");
+    byId("page-login").style.display = "none";
+    byId("page-pin").style.display = "none";
+    byId("mainApp").style.display = "block";
+    document.body.classList.add("app-on");
+    var name = companyName();
+    byId("sCo").textContent = name;
+    byId("hdrCo").textContent = name;
+    byId("coName").value = name === "AutoSheets" ? (load("company", {}).name || "") : name;
+    if (!load("company", null)) byId("coName").value = "";
+    document.title = name + " — AutoSheets Accounting";
+    byId("skipLink").textContent = "Skip to content";
+    byId("sVer").textContent = VERSION;
+    fillSelects();
+    applyRates();
+    refreshAll();
+    showPage(pageFromHash() || "dashboard", { replaceHash: true });
+  }
+  function showLoginError(msg) {
+    var el = byId("loginError");
+    el.textContent = msg;
+    el.hidden = false;
+    byId("loginEmail").setAttribute("aria-invalid", "true");
+    byId("loginPassword").setAttribute("aria-invalid", "true");
+  }
+  function doLogin() {
+    byId("loginError").hidden = true;
+    byId("loginEmail").removeAttribute("aria-invalid");
+    byId("loginPassword").removeAttribute("aria-invalid");
+    var email = (byId("loginEmail").value || "").trim().toLowerCase();
+    var pass = (byId("loginPassword").value || "").trim();
+    if (!email || !pass) { showLoginError("Enter email and password"); return; }
+    var users = load("users", ACCOUNTS);
+    if (users[email] && users[email] === pass) { enterApp(email); return; }
+    if (!users[email]) {
+      if (pass.length < 4) { showLoginError("Password must be at least 4 characters"); return; }
+      users[email] = pass;
+      save("users", users);
+      enterApp(email);
+      return;
     }
-    var cs=custs();
-    for(var k=0;k<cs.length;k++)ar+=Number(cs[k].opening)||0;
-    var invVal=0,is=inv();
-    for(var m=0;m<is.length;m++)invVal+=Number(is[m].value)||0;
-    var income=R+P+T+Rc, expense=E+Pay, net=income-expense;
-    var cash=Rc+h.filter(function(x){return (x.type==="rental"||x.type==="parking")&&x.paid}).reduce(function(s,x){return s+(Number(x.total||x.amount)||0)},0)+T-E-Pay;
-    return{R:R,P:P,T:T,E:E,Rc:Rc,Pay:Pay,ar:Math.max(0,ar),income:income,expense:expense,net:net,cash:cash,invVal:invVal,n:h.length};
+    showLoginError("Wrong email or password");
   }
-
-  function entryLabel(r){
-    if(r.type==="rental")return (r.client||"")+" • "+(r.qty||"")+" "+(r.billType||"");
-    if(r.type==="parking")return (r.plate||"")+" • "+(r.tariff||"");
-    if(r.type==="taxi")return "Fare";
-    if(r.type==="expense")return r.cat||"";
-    if(r.type==="receipt")return r.note||"Receipt";
-    if(r.type==="payment")return r.payee||"Payment";
+  function doPinLogin() {
+    if (!load("pin", null)) { toast("Set a PIN in Settings after you sign in", "err"); return; }
+    byId("page-login").style.display = "none";
+    byId("page-pin").style.display = "flex";
+    byId("pinInput").value = "";
+    byId("pinError").hidden = true;
+    byId("pinInput").focus();
+  }
+  function checkPin() {
+    if ((byId("pinInput").value || "").trim() === String(load("pin", ""))) {
+      var s = load("session", {});
+      role = s.role || "Fleet Owner";
+      enterApp(s.email || "user@autosheets.com");
+    } else {
+      byId("pinError").hidden = false;
+    }
+  }
+  function doLogout() {
+    var s = load("session", {});
+    s.loggedIn = false;
+    save("session", s);
+    byId("mainApp").style.display = "none";
+    byId("page-pin").style.display = "none";
+    byId("page-login").style.display = "flex";
+    document.body.classList.remove("app-on");
+    byId("loginPassword").value = "";
+    document.title = BASE_TITLE;
+    byId("skipLink").textContent = "Skip to sign in";
+    byId("skipLink").setAttribute("href", "#loginEmail");
+    if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+  }
+  function savePin() {
+    var p = (byId("newPin").value || "").trim();
+    if (p.length < 4 || p.length > 6 || !/^\d+$/.test(p)) { toast("PIN must be 4–6 digits", "err"); return; }
+    save("pin", p);
+    byId("newPin").value = "";
+    toast("PIN saved");
+  }
+  function custNameById(id) {
+    var cs = custs();
+    for (var i = 0; i < cs.length; i++) if (cs[i].id === id) return cs[i].name;
     return "";
   }
-  function entryAmt(r){
-    if(r.type==="rental")return money(r.total);
-    if(r.type==="parking")return money(r.amount);
-    if(r.type==="taxi")return money(r.fare);
-    if(r.type==="expense"||r.type==="receipt"||r.type==="payment")return money(r.amt);
-    return money(0);
+  function setOptions(id, html) {
+    var el = byId(id);
+    if (!el) return;
+    var prev = el.value;
+    el.innerHTML = html;
+    if (prev) el.value = prev;
   }
-
-  function bindEditButtons(box){
-    var btns=box.querySelectorAll(".edit-btn");
-    for(var i=0;i<btns.length;i++)btns[i].onclick=function(){openEdit(this.closest(".li").getAttribute("data-id"))};
-  }
-
-  function refreshAll(){
-    var t=calc();
-    document.getElementById("totalRev").textContent=money(t.income);
-    document.getElementById("bookCur").textContent=cur();
-    document.getElementById("revBreak").innerHTML=
-      '<span><span class="dot" style="background:var(--p)"></span>Rentals '+money(t.R)+'</span> '+
-      '<span><span class="dot" style="background:#00838F"></span>Parking '+money(t.P)+'</span> '+
-      '<span><span class="dot" style="background:#6A1B9A"></span>Taxis '+money(t.T)+'</span>';
-    document.getElementById("mRecv").textContent=money(t.ar);
-    document.getElementById("mRec").textContent=t.n;
-    document.getElementById("mExp").textContent=money(t.expense);
-    document.getElementById("mNet").textContent=money(t.net);
-    var list=hist().slice().reverse().slice(0,10);
-    var box=document.getElementById("recentList");
-    if(!list.length){box.innerHTML='<div class="em">No entries yet.</div>';return}
-    var h="";
-    for(var i=0;i<list.length;i++){
-      var r=list[i];
-      h+='<div class="li" data-id="'+r.id+'"><div class="li-row"><div><div style="font-weight:600">'+r.type.toUpperCase()+'</div><div style="font-size:11px;color:var(--t2)">'+entryLabel(r)+'</div></div><div style="text-align:right"><div style="font-weight:700">'+entryAmt(r)+'</div><button type="button" class="btn btn-sm btn-s edit-btn">View / Edit</button></div></div></div>';
+  function fillSelects() {
+    var cs = custs();
+    var is = inv();
+    var cOpt = '<option value="">— Select —</option>';
+    for (var i = 0; i < cs.length; i++) cOpt += '<option value="' + esc(cs[i].id) + '">' + esc(cs[i].name) + "</option>";
+    ["rCust", "pCust", "rcCust", "stmtCust"].forEach(function (id) { setOptions(id, cOpt); });
+    var rOpt = "";
+    var tOpt = "";
+    var eOpt = '<option value="">— None —</option>';
+    if (!is.length) {
+      rOpt = '<option value="">Add assets in Inventory</option>';
+      tOpt = rOpt;
+    } else {
+      for (var j = 0; j < is.length; j++) {
+        var a = is[j];
+        var lab = assetLabel(a);
+        rOpt += '<option value="' + esc(lab) + '">' + esc(lab) + "</option>";
+        eOpt += '<option value="' + esc(a.id) + '">' + esc(lab) + "</option>";
+        if (a.type === "Taxi") tOpt += '<option value="' + esc(lab) + '">' + esc(lab) + "</option>";
+      }
+      if (!tOpt) tOpt = '<option value="">Add taxi assets</option>';
     }
-    box.innerHTML=h;bindEditButtons(box);
+    setOptions("rVehicle", rOpt);
+    setOptions("tVehicle", tOpt);
+    setOptions("eVehicle", eOpt);
   }
-
-  function openEdit(id){
-    var h=hist(),r=null;
-    for(var i=0;i<h.length;i++)if(h[i].id===id){r=h[i];break}
-    if(!r)return;
-    document.getElementById("editId").value=id;
-    document.getElementById("editType").value=r.type;
-    document.getElementById("editDate").value=(r.time||"").slice(0,19).replace("T"," ");
-    document.getElementById("editAmt").value=r.total||r.amount||r.fare||r.amt||0;
-    document.getElementById("editNote").value=r.client||r.plate||r.note||r.cat||r.payee||"";
-    document.getElementById("editPaid").value=r.paid?"1":"0";
-    document.getElementById("editModal").classList.add("show");
+  function ensureOption(select, value) {
+    if (!select || !value) return;
+    var found = false;
+    for (var i = 0; i < select.options.length; i++) if (select.options[i].value === value) found = true;
+    if (!found) {
+      var o = document.createElement("option");
+      o.value = value;
+      o.textContent = value;
+      select.appendChild(o);
+    }
+    select.value = value;
   }
-  function saveEdit(){
-    var id=document.getElementById("editId").value;
-    var amt=Number(document.getElementById("editAmt").value)||0;
-    var note=document.getElementById("editNote").value;
-    var paid=document.getElementById("editPaid").value==="1";
-    var h=hist();
-    for(var i=0;i<h.length;i++){
-      if(h[i].id===id){
-        var t=h[i].type;
-        if(t==="rental"){h[i].total=amt;h[i].client=note;h[i].paid=paid}
-        else if(t==="parking"){h[i].amount=amt;h[i].plate=note;h[i].paid=paid}
-        else if(t==="taxi"){h[i].fare=amt}
-        else if(t==="expense"){h[i].amt=amt;h[i].note=note}
-        else if(t==="receipt"){h[i].amt=amt;h[i].note=note}
-        else if(t==="payment"){h[i].amt=amt;h[i].payee=note;h[i].note=note}
-        break;
+  function updateAsset(matchFn, mutate) {
+    var list = inv();
+    for (var i = 0; i < list.length; i++) {
+      if (matchFn(list[i])) {
+        mutate(list[i]);
+        save("inventory", list);
+        return true;
       }
     }
-    save("history",h);
-    document.getElementById("editModal").classList.remove("show");
-    refreshAll();renderDaybook();renderReports();
-    toast("Entry updated successfully");
+    return false;
   }
-  function deleteEdit(){
-    if(!confirm("Delete this entry?"))return;
-    var id=document.getElementById("editId").value;
-    save("history",hist().filter(function(x){return x.id!==id}));
-    document.getElementById("editModal").classList.remove("show");
-    refreshAll();renderDaybook();renderReports();
+  function depositsHeld() {
+    return hist().reduce(function (s, r) {
+      if (r.type === "rental" && !r.depositReturned) return s + (Number(r.deposit) || 0);
+      return s;
+    }, 0);
+  }
+  function isOverdue(r) {
+    return !!(r && r.type === "rental" && !r.returned && r.due && r.due < todayISO());
+  }
+  function serviceDue(a) {
+    if (!a) return false;
+    if (a.nextService && a.nextService <= todayISO()) return true;
+    if (Number(a.serviceAt) > 0 && Number(a.odometer) >= Number(a.serviceAt)) return true;
+    return false;
+  }
+  function calc() {
+    var h = hist();
+    var R = 0, P = 0, T = 0, E = 0, Rc = 0, Pay = 0, ar = 0;
+    for (var i = 0; i < h.length; i++) {
+      var r = h[i];
+      if (r.type === "rental") { R += Number(r.total) || 0; if (!r.paid) ar += Number(r.total) || 0; }
+      if (r.type === "parking") { P += Number(r.amount) || 0; if (!r.paid) ar += Number(r.amount) || 0; }
+      if (r.type === "taxi") T += Number(r.fare) || 0;
+      if (r.type === "expense") E += Number(r.amt) || 0;
+      if (r.type === "receipt") { Rc += Number(r.amt) || 0; ar -= Number(r.amt) || 0; }
+      if (r.type === "payment") Pay += Number(r.amt) || 0;
+    }
+    var cs = custs();
+    for (var k = 0; k < cs.length; k++) ar += Number(cs[k].opening) || 0;
+    var invVal = 0;
+    var is = inv();
+    for (var m = 0; m < is.length; m++) invVal += Number(is[m].value) || 0;
+    var income = R + P + T + Rc;
+    var expense = E + Pay;
+    var net = income - expense;
+    var cash = Rc + h.filter(function (x) { return (x.type === "rental" || x.type === "parking") && x.paid; }).reduce(function (s, x) { return s + (Number(x.total || x.amount) || 0); }, 0) + T - E - Pay;
+    return { R: R, P: P, T: T, E: E, Rc: Rc, Pay: Pay, ar: Math.max(0, ar), income: income, expense: expense, net: net, cash: cash, invVal: invVal, n: h.length };
+  }
+  function sumEntries(list) {
+    var income = 0, expense = 0;
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      if (r.type === "rental") income += Number(r.total) || 0;
+      else if (r.type === "parking") income += Number(r.amount) || 0;
+      else if (r.type === "taxi") income += Number(r.fare) || 0;
+      else if (r.type === "receipt") income += Number(r.amt) || 0;
+      else if (r.type === "expense" || r.type === "payment") expense += Number(r.amt) || 0;
+    }
+    return { income: income, expense: expense, net: income - expense, n: list.length };
+  }
+  function entryLabel(r) {
+    if (r.type === "rental") return [r.client, r.vehicle, ((r.qty || "") + " " + (r.billType || "")).trim()].filter(Boolean).join(" · ");
+    if (r.type === "parking") return [r.plate, r.bay, r.tariff].filter(Boolean).join(" · ");
+    if (r.type === "taxi") return [r.driverName, r.vehicle].filter(Boolean).join(" · ") || "Fare";
+    if (r.type === "expense") return [r.cat, r.vehicle, r.note].filter(Boolean).join(" · ");
+    if (r.type === "receipt") return r.note || r.client || "Receipt";
+    if (r.type === "payment") return r.payee || r.note || "Payment";
+    return "";
+  }
+  function entryNumber(r) {
+    if (r.type === "rental") return Number(r.total) || 0;
+    if (r.type === "parking") return Number(r.amount) || 0;
+    if (r.type === "taxi") return Number(r.fare) || 0;
+    return Number(r.amt) || 0;
+  }
+  function entryAmt(r) { return money(entryNumber(r)); }
+  function tags(r) {
+    var html = "";
+    if (r.type === "rental" && r.returned) html += '<span class="tag">Returned</span>';
+    else if (isOverdue(r)) html += '<span class="tag bad">Overdue</span>';
+    if (r.type === "rental" || r.type === "parking") html += r.paid ? '<span class="tag ok">Paid</span>' : '<span class="tag warn">On account</span>';
+    if (r.type === "rental" && Number(r.deposit) > 0 && !r.depositReturned) html += '<span class="tag">Deposit</span>';
+    if (r.type === "taxi") html += '<span class="tag">Split</span>';
+    return html ? '<div>' + html + "</div>" : "";
+  }
+  function entryDC(r) {
+    var dr = 0, cr = 0;
+    if (r.type === "rental") { if (r.paid) { dr = Number(r.total) || 0; cr = Number(r.total) || 0; } else dr = Number(r.total) || 0; }
+    else if (r.type === "parking") { if (r.paid) { dr = Number(r.amount) || 0; cr = Number(r.amount) || 0; } else dr = Number(r.amount) || 0; }
+    else if (r.type === "taxi") { dr = Number(r.fare) || 0; cr = Number(r.fare) || 0; }
+    else if (r.type === "receipt") { dr = Number(r.amt) || 0; }
+    else if (r.type === "expense" || r.type === "payment") { cr = Number(r.amt) || 0; }
+    return { dr: dr, cr: cr };
+  }
+  function renderAttention() {
+    var box = byId("attention");
+    var items = [];
+    hist().forEach(function (r) {
+      if (isOverdue(r)) items.push('<button type="button" class="linkish" data-open="' + esc(r.id) + '">Overdue rental · ' + esc(r.client || "Client") + " · due " + esc(r.due) + "</button>");
+    });
+    inv().forEach(function (a) {
+      if (serviceDue(a)) items.push('<button type="button" class="linkish" data-asset="' + esc(a.id) + '">Service due · ' + esc(a.name) + " · " + esc(a.plate) + "</button>");
+    });
+    if (!items.length) { box.hidden = true; byId("attentionList").innerHTML = ""; return; }
+    box.hidden = false;
+    byId("attentionList").innerHTML = items.join("");
+  }
+  function refreshAll() {
+    var t = calc();
+    byId("totalRev").textContent = money(t.income);
+    byId("bookCur").textContent = cur();
+    var bits = [["#1f4e79", "Rentals", t.R], ["#0f766e", "Parking", t.P], ["#6d28d9", "Taxis", t.T], ["#a16207", "Receipts", t.Rc]];
+    byId("revBreak").innerHTML = bits.map(function (b) {
+      return '<span><span class="dot" style="background:' + b[0] + '"></span>' + b[1] + " " + esc(money(b[2])) + "</span>";
+    }).join("");
+    byId("mRecv").textContent = money(t.ar);
+    byId("mRec").textContent = String(t.n);
+    byId("mExp").textContent = money(t.expense);
+    byId("mNet").textContent = money(t.net);
+    byId("mNet").style.color = t.net < 0 ? "var(--bad)" : "var(--ok)";
+    byId("mCash").textContent = money(t.cash);
+    byId("mDep").textContent = money(depositsHeld());
+    var assets = inv();
+    var busy = 0;
+    var overdue = 0;
+    hist().forEach(function (r) { if (isOverdue(r)) overdue += 1; });
+    assets.forEach(function (a) { if (a.status === "Rented" || a.status === "On Trip" || a.status === "Occupied") busy += 1; });
+    byId("mUtil").textContent = assets.length ? Math.round(100 * busy / assets.length) + "%" : "—";
+    byId("mUtilNote").textContent = assets.length ? (busy + " of " + assets.length + " in use") : "Add fleet assets";
+    byId("mOver").textContent = String(overdue);
+    byId("mOver").style.color = overdue ? "var(--bad)" : "var(--t)";
+    var day = todayISO();
+    var todays = hist().filter(function (r) { return localDay(r.time) === day; });
+    var ts = sumEntries(todays);
+    if (!ts.n) byId("todayBreak").textContent = "No entries yet today.";
+    else byId("todayBreak").innerHTML = "<span>Income " + esc(money(ts.income)) + "</span><span>Expenses " + esc(money(ts.expense)) + "</span><span>Net " + esc(money(ts.net)) + "</span><span>" + ts.n + (ts.n === 1 ? " entry" : " entries") + "</span>";
+    renderAttention();
+    var list = hist().slice().reverse().slice(0, 10);
+    var box = byId("recentList");
+    if (!list.length) { box.innerHTML = '<p class="em">No entries yet. Post a rental, parking ticket, taxi fare, or expense.</p>'; return; }
+    box.innerHTML = list.map(function (r) {
+      return '<div class="li" data-id="' + esc(r.id) + '"><div class="li-row"><div><div class="li-title">' + esc(String(r.type || "").toUpperCase()) + '</div><div class="li-sub">' + esc(entryLabel(r)) + "</div>" + tags(r) + '</div><div class="li-side"><div class="li-amt">' + esc(entryAmt(r)) + '</div><button type="button" class="btn btn-sm btn-s edit-btn">View / Edit</button></div></div></div>';
+    }).join("");
+  }
+  function findEntry(id) {
+    var h = hist();
+    for (var i = 0; i < h.length; i++) if (h[i].id === id) return h[i];
+    return null;
+  }
+  function focusables(root) {
+    return Array.prototype.filter.call(root.querySelectorAll("button, input, select, textarea, a[href]"), function (el) {
+      if (el.disabled || el.type === "hidden" || el.closest("[hidden]")) return false;
+      return true;
+    });
+  }
+  function openModal() {
+    lastFocus = document.activeElement;
+    var modal = byId("editModal");
+    modal.classList.add("show");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("modal-open");
+    byId("editAmt").focus();
+  }
+  function closeModal() {
+    var modal = byId("editModal");
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("modal-open");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+  function openEdit(id) {
+    var r = findEntry(id);
+    if (!r) return;
+    byId("editId").value = id;
+    byId("editRef").value = r.id || "";
+    byId("editType").value = r.type || "";
+    byId("editDate").value = localDay(r.time) + (r.time ? " " + (new Date(r.time).toLocaleTimeString() || "") : "");
+    byId("editAmt").value = r.total || r.amount || r.fare || r.amt || 0;
+    if (r.type === "expense") byId("editNote").value = r.note || "";
+    else if (r.type === "payment") byId("editNote").value = r.payee || r.note || "";
+    else byId("editNote").value = r.client || r.plate || r.note || "";
+    byId("editPaid").value = r.paid ? "1" : "0";
+    var extra = byId("editExtra");
+    extra.hidden = r.type !== "rental";
+    if (r.type === "rental") {
+      byId("editDue").value = r.due || "";
+      byId("editDep").value = r.deposit || 0;
+      byId("editDepBack").value = r.depositReturned ? "1" : "0";
+      byId("editReturned").value = r.returned ? "1" : "0";
+    }
+    openModal();
+  }
+  function saveEdit() {
+    var id = byId("editId").value;
+    var amt = Number(byId("editAmt").value) || 0;
+    var note = byId("editNote").value;
+    var paid = byId("editPaid").value === "1";
+    var h = hist();
+    for (var i = 0; i < h.length; i++) {
+      if (h[i].id !== id) continue;
+      var t = h[i].type;
+      var wasReturned = !!h[i].returned;
+      if (t === "rental") {
+        h[i].total = amt; h[i].client = note; h[i].paid = paid;
+        h[i].due = byId("editDue").value || "";
+        h[i].deposit = Number(byId("editDep").value) || 0;
+        h[i].depositReturned = byId("editDepBack").value === "1";
+        h[i].returned = byId("editReturned").value === "1";
+        if (h[i].vehicle && h[i].returned !== wasReturned) {
+          updateAsset(function (a) { return assetLabel(a) === h[i].vehicle; }, function (a) {
+            a.status = h[i].returned ? "Available" : "Rented";
+          });
+        }
+      } else if (t === "parking") { h[i].amount = amt; h[i].plate = note; h[i].paid = paid; }
+      else if (t === "taxi") {
+        var oldFare = Number(h[i].fare) || 0;
+        var ratio = oldFare ? (Number(h[i].driver) || 0) / oldFare : 0.6;
+        h[i].fare = amt;
+        h[i].driver = Math.round(amt * ratio * 100) / 100;
+        h[i].owner = Math.round((amt - h[i].driver) * 100) / 100;
+      }
+      else if (t === "expense") { h[i].amt = amt; h[i].note = note; }
+      else if (t === "receipt") { h[i].amt = amt; h[i].note = note; }
+      else if (t === "payment") { h[i].amt = amt; h[i].payee = note; h[i].note = note; }
+      break;
+    }
+    save("history", h);
+    closeModal();
+    refreshAll();
+    renderDaybook();
+    renderReports();
+    toast("Entry updated");
+  }
+  function deleteEdit() {
+    if (!confirm("Delete this entry?")) return;
+    var id = byId("editId").value;
+    save("history", hist().filter(function (x) { return x.id !== id; }));
+    closeModal();
+    refreshAll();
+    renderDaybook();
+    renderReports();
     toast("Entry deleted");
   }
-
-  function entryDC(r){
-    /* Debit = money in / receivable increase / asset; Credit = money out / income received */
-    var dr=0,cr=0;
-    if(r.type==="rental"){ if(r.paid){dr=Number(r.total)||0;cr=Number(r.total)||0;} else dr=Number(r.total)||0; }
-    else if(r.type==="parking"){ if(r.paid){dr=Number(r.amount)||0;cr=Number(r.amount)||0;} else dr=Number(r.amount)||0; }
-    else if(r.type==="taxi"){ dr=Number(r.fare)||0; cr=Number(r.fare)||0; }
-    else if(r.type==="receipt"){ dr=Number(r.amt)||0; }
-    else if(r.type==="expense"||r.type==="payment"){ cr=Number(r.amt)||0; }
-    return {dr:dr,cr:cr};
-  }
-  function renderDaybook(){
-    var f=document.getElementById("dbFilter").value;
-    var list=hist().slice().reverse();
-    if(f!=="all")list=list.filter(function(x){return x.type===f});
-    var box=document.getElementById("daybookList");
-    if(!list.length){box.innerHTML='<div class="em">No entries.</div>';return}
-    var h='<div class="card" style="padding:8px"><table class="tbl"><tr><th>Date</th><th>Type</th><th>Particulars</th><th class="r">Debit</th><th class="r">Credit</th><th></th></tr>';
-    var tDr=0,tCr=0;
-    for(var i=0;i<list.length;i++){
-      var r=list[i],dt=(r.time||"").slice(0,10),dc=entryDC(r);
-      tDr+=dc.dr; tCr+=dc.cr;
-      h+='<tr data-id="'+r.id+'"><td>'+dt+'</td><td>'+r.type.toUpperCase()+'</td><td>'+entryLabel(r)+'</td><td class="r">'+(dc.dr?money(dc.dr):"—")+'</td><td class="r">'+(dc.cr?money(dc.cr):"—")+'</td><td><button type="button" class="btn btn-sm btn-s edit-btn">Edit</button></td></tr>';
+  function renderDaybook() {
+    var f = byId("dbFilter").value;
+    var q = (byId("dbSearch").value || "").trim().toLowerCase();
+    var list = hist().slice().reverse();
+    if (f !== "all") list = list.filter(function (x) { return x.type === f; });
+    if (q) {
+      list = list.filter(function (r) {
+        var blob = [r.type, entryLabel(r), r.note, r.vehicle, r.payee, r.cat, r.client, r.plate, r.id].join(" ").toLowerCase();
+        return blob.indexOf(q) >= 0;
+      });
     }
-    h+='<tr><th colspan="3">Total</th><th class="r">'+money(tDr)+'</th><th class="r">'+money(tCr)+'</th><th></th></tr></table></div>';
-    box.innerHTML=h;bindEditButtons(box);
+    var box = byId("daybookList");
+    if (!list.length) { box.innerHTML = '<p class="em">No entries match.</p>'; return; }
+    var h = '<div class="card table-wrap"><table class="tbl wide"><caption class="sr-only">Ledger entries</caption><thead><tr><th scope="col">Date</th><th scope="col">Type</th><th scope="col">Particulars</th><th class="r" scope="col">Debit</th><th class="r" scope="col">Credit</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead><tbody>';
+    var tDr = 0, tCr = 0;
+    for (var i = 0; i < list.length; i++) {
+      var r = list[i];
+      var dc = entryDC(r);
+      tDr += dc.dr; tCr += dc.cr;
+      h += '<tr data-id="' + esc(r.id) + '"><td>' + esc(localDay(r.time)) + "</td><td>" + esc(String(r.type || "").toUpperCase()) + "</td><td>" + esc(entryLabel(r)) + '</td><td class="r">' + (dc.dr ? esc(money(dc.dr)) : "—") + '</td><td class="r">' + (dc.cr ? esc(money(dc.cr)) : "—") + '</td><td><button type="button" class="btn btn-sm btn-s edit-btn">Edit</button></td></tr>';
+    }
+    h += '<tr><th scope="row" colspan="3">Total</th><th class="r">' + esc(money(tDr)) + '</th><th class="r">' + esc(money(tCr)) + "</th><td></td></tr></tbody></table></div>";
+    box.innerHTML = h;
   }
-
-  function customerBalance(cid){
-    var cs=custs(),open=0,cname="";
-    for(var i=0;i<cs.length;i++)if(cs[i].id===cid){open=Number(cs[i].opening)||0;cname=cs[i].name}
-    var bal=open,h=hist();
-    for(var j=0;j<h.length;j++){
-      var r=h[j];
-      if(r.customerId===cid||(r.client&&r.client===cname)){
-        if(r.type==="rental"&&!r.paid)bal+=Number(r.total)||0;
-        if(r.type==="parking"&&!r.paid)bal+=Number(r.amount)||0;
-        if(r.type==="receipt")bal-=Number(r.amt)||0;
+  function customerBalance(cid) {
+    var cs = custs(), open = 0, cname = "";
+    for (var i = 0; i < cs.length; i++) if (cs[i].id === cid) { open = Number(cs[i].opening) || 0; cname = cs[i].name; }
+    var bal = open;
+    var h = hist();
+    for (var j = 0; j < h.length; j++) {
+      var r = h[j];
+      if (r.customerId === cid || (r.client && r.client === cname)) {
+        if (r.type === "rental" && !r.paid) bal += Number(r.total) || 0;
+        if (r.type === "parking" && !r.paid) bal += Number(r.amount) || 0;
+        if (r.type === "receipt") bal -= Number(r.amt) || 0;
       }
     }
     return bal;
   }
-
-  function renderCust(){
-    var cs=custs(),box=document.getElementById("custList");
-    if(!cs.length){box.innerHTML='<div class="em">No customers yet.</div>';return}
-    var h="";
-    for(var i=0;i<cs.length;i++){
-      var c=cs[i],bal=customerBalance(c.id);
-      h+='<div class="li"><div class="li-row"><div><div style="font-weight:600">'+c.name+'</div><div style="font-size:11px;color:var(--t2)">'+(c.phone||"")+' '+(c.email||"")+'</div></div><div style="text-align:right"><div style="font-weight:700">'+money(bal)+'</div><button type="button" class="btn btn-sm btn-s" data-cid="'+c.id+'">Stmt</button> <button type="button" class="btn btn-sm btn-d" data-delc="'+c.id+'">Del</button></div></div></div>';
+  function renderCust() {
+    var q = (byId("cSearch").value || "").trim().toLowerCase();
+    var cs = custs().filter(function (c) {
+      if (!q) return true;
+      return (c.name + " " + (c.phone || "") + " " + (c.email || "")).toLowerCase().indexOf(q) >= 0;
+    });
+    var box = byId("custList");
+    if (!cs.length) { box.innerHTML = '<p class="em">No customers yet.</p>'; return; }
+    box.innerHTML = cs.map(function (c) {
+      return '<div class="li"><div class="li-row"><div><div class="li-title">' + esc(c.name) + '</div><div class="li-sub">' + esc(((c.phone || "") + " " + (c.email || "")).trim()) + '</div></div><div class="li-side"><div class="li-amt">' + esc(money(customerBalance(c.id))) + '</div><button type="button" class="btn btn-sm btn-s" data-cid="' + esc(c.id) + '">Statement</button> <button type="button" class="btn btn-sm btn-d" data-delc="' + esc(c.id) + '" aria-label="Delete ' + esc(c.name) + '">Delete</button></div></div></div>';
+    }).join("");
+  }
+  function addCust() {
+    var name = (byId("cName").value || "").trim();
+    if (!name) { toast("Enter a customer name", "err"); return; }
+    var cs = custs();
+    cs.push({ id: uid(), name: name, phone: byId("cPhone").value, email: byId("cEmail").value, opening: Number(byId("cOpen").value) || 0 });
+    save("customers", cs);
+    byId("cName").value = ""; byId("cPhone").value = ""; byId("cEmail").value = ""; byId("cOpen").value = "0";
+    renderCust(); fillSelects(); refreshAll();
+    toast("Customer added");
+  }
+  function renderInv() {
+    var f = byId("invFilter").value;
+    var is = inv().filter(function (a) {
+      if (f === "all") return true;
+      if (f === "service") return serviceDue(a);
+      return a.status === f;
+    });
+    var box = byId("invList");
+    if (!is.length) { box.innerHTML = '<p class="em">No assets yet.</p>'; return; }
+    box.innerHTML = is.map(function (a) {
+      var svc = serviceDue(a) ? '<span class="tag bad">Service due</span>' : "";
+      var meta = [a.plate, a.type, a.status, a.odometer ? (a.odometer + " km") : ""].filter(Boolean).join(" · ");
+      return '<div class="li"><div class="li-row"><div><div class="li-title">' + esc(a.name) + '</div><div class="li-sub">' + esc(meta) + "</div>" + svc + '</div><div class="li-side"><div class="li-amt">' + esc(money(a.value)) + '</div><button type="button" class="btn btn-sm btn-s" data-editi="' + esc(a.id) + '">Edit</button> <button type="button" class="btn btn-sm btn-d" data-deli="' + esc(a.id) + '" aria-label="Delete ' + esc(a.name) + '">Delete</button></div></div></div>';
+    }).join("");
+  }
+  function addInv() {
+    var name = (byId("iName").value || "").trim();
+    var plate = (byId("iPlate").value || "").trim();
+    if (!name || !plate) { toast("Name and plate are required", "err"); return; }
+    var is = inv();
+    is.push({
+      id: uid(), name: name, plate: plate, type: byId("iType").value, status: byId("iStatus").value,
+      value: Number(byId("iValue").value) || 0, odometer: Number(byId("iOdo").value) || 0,
+      nextService: byId("iNext").value || "", serviceAt: Number(byId("iAt").value) || 0
+    });
+    save("inventory", is);
+    byId("iName").value = ""; byId("iPlate").value = ""; byId("iValue").value = "0"; byId("iOdo").value = "0"; byId("iNext").value = ""; byId("iAt").value = "";
+    renderInv(); fillSelects(); refreshAll();
+    toast("Asset added");
+  }
+  function beginAssetEdit(id) {
+    var a = inv().filter(function (x) { return x.id === id; })[0];
+    if (!a) return;
+    var form = byId("invEditForm");
+    form.hidden = false;
+    byId("iEditId").value = a.id;
+    byId("iEditName").value = a.name || "";
+    byId("iEditPlate").value = a.plate || "";
+    ensureOption(byId("iEditType"), a.type || "Other");
+    ensureOption(byId("iEditStatus"), a.status || "Available");
+    byId("iEditValue").value = a.value || 0;
+    byId("iEditOdo").value = a.odometer || 0;
+    byId("iEditNext").value = a.nextService || "";
+    byId("iEditAt").value = a.serviceAt || "";
+    byId("iEditName").focus();
+  }
+  function saveInvEdit() {
+    var id = byId("iEditId").value;
+    var name = (byId("iEditName").value || "").trim();
+    var plate = (byId("iEditPlate").value || "").trim();
+    if (!name || !plate) { toast("Name and plate are required", "err"); return; }
+    var list = inv();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) {
+        list[i].name = name;
+        list[i].plate = plate;
+        list[i].type = byId("iEditType").value;
+        list[i].status = byId("iEditStatus").value;
+        list[i].value = Number(byId("iEditValue").value) || 0;
+        list[i].odometer = Number(byId("iEditOdo").value) || 0;
+        list[i].nextService = byId("iEditNext").value || "";
+        list[i].serviceAt = Number(byId("iEditAt").value) || 0;
+      }
     }
-    box.innerHTML=h;
-    var st=box.querySelectorAll("[data-cid]");
-    for(var j=0;j<st.length;j++)st[j].onclick=function(){
-      showPage("reports");
-      document.querySelectorAll(".tab").forEach(function(t){t.classList.remove("on")});
-      document.querySelector('.tab[data-rep="stmt"]').classList.add("on");
-      document.querySelectorAll(".rep-panel").forEach(function(p){p.style.display="none"});
-      document.getElementById("rep-stmt").style.display="block";
-      document.getElementById("stmtCust").value=this.getAttribute("data-cid");
-      genStmt();
-    };
-    var dl=box.querySelectorAll("[data-delc]");
-    for(var k=0;k<dl.length;k++)dl[k].onclick=function(){
-      if(!confirm("Delete customer?"))return;
-      save("customers",custs().filter(function(x){return x.id!==this.getAttribute("data-delc")}.bind(this)));
-      renderCust();fillSelects();toast("Customer deleted");
-    };
+    save("inventory", list);
+    byId("invEditForm").hidden = true;
+    renderInv(); fillSelects(); refreshAll(); renderReports();
+    toast("Asset updated");
   }
-
-  function addCust(){
-    var name=(document.getElementById("cName").value||"").trim();
-    if(!name){toast("Enter customer name","err");return}
-    var cs=custs();
-    cs.push({id:uid(),name:name,phone:document.getElementById("cPhone").value,email:document.getElementById("cEmail").value,opening:Number(document.getElementById("cOpen").value)||0});
-    save("customers",cs);
-    document.getElementById("cName").value="";document.getElementById("cPhone").value="";document.getElementById("cEmail").value="";document.getElementById("cOpen").value="0";
-    renderCust();fillSelects();toast("Customer added successfully");
-  }
-
-  function renderInv(){
-    var is=inv(),box=document.getElementById("invList");
-    if(!is.length){box.innerHTML='<div class="em">No assets yet.</div>';return}
-    var h="";
-    for(var i=0;i<is.length;i++){
-      var a=is[i];
-      h+='<div class="li"><div class="li-row"><div><div style="font-weight:600">'+a.name+'</div><div style="font-size:11px;color:var(--t2)">'+a.plate+' • '+a.type+' • '+a.status+'</div></div><div style="text-align:right"><div>'+money(a.value)+'</div><button type="button" class="btn btn-sm btn-s" data-editi="'+a.id+'">Edit</button> <button type="button" class="btn btn-sm btn-d" data-deli="'+a.id+'">Del</button></div></div></div>';
+  function renderReports() {
+    var t = calc();
+    byId("plR").textContent = money(t.R);
+    byId("plP").textContent = money(t.P);
+    byId("plT").textContent = money(t.T);
+    byId("plRc").textContent = money(t.Rc);
+    byId("plInc").textContent = money(t.income);
+    byId("plE").textContent = money(t.E);
+    byId("plPay").textContent = money(t.Pay);
+    byId("plN").textContent = money(t.net);
+    var dep = depositsHeld();
+    var assets = t.cash + t.ar + t.invVal;
+    var capital = assets - dep - t.net;
+    byId("bsCash").textContent = money(t.cash);
+    byId("bsAr").textContent = money(t.ar);
+    byId("bsInv").textContent = money(t.invVal);
+    byId("bsTa").textContent = money(assets);
+    byId("bsDep").textContent = money(dep);
+    byId("bsAp").textContent = money(0);
+    byId("bsCap").textContent = money(capital);
+    byId("bsRe").textContent = money(t.net);
+    byId("bsTl").textContent = money(assets);
+    var buckets = [0, 0, 0, 0];
+    var counts = [0, 0, 0, 0];
+    var now = new Date();
+    hist().forEach(function (r) {
+      var amt = 0;
+      if (r.type === "rental" && !r.paid) amt = Number(r.total) || 0;
+      else if (r.type === "parking" && !r.paid) amt = Number(r.amount) || 0;
+      if (amt <= 0) return;
+      var days = 0;
+      if (r.time) days = Math.floor((now - new Date(r.time)) / 86400000);
+      if (days < 0 || isNaN(days)) days = 0;
+      var idx = days <= 30 ? 0 : days <= 60 ? 1 : days <= 90 ? 2 : 3;
+      buckets[idx] += amt;
+      counts[idx] += 1;
+    });
+    for (var i = 0; i < 4; i++) {
+      byId("age" + i).textContent = money(buckets[i]);
+      byId("age" + i + "n").textContent = String(counts[i]);
     }
-    box.innerHTML=h;
-    var dels=box.querySelectorAll("[data-deli]");
-    for(var j=0;j<dels.length;j++)dels[j].onclick=function(){
-      if(!confirm("Delete asset?"))return;
-      save("inventory",inv().filter(function(x){return x.id!==this.getAttribute("data-deli")}.bind(this)));
-      renderInv();fillSelects();toast("Asset deleted");
-    };
-    var eds=box.querySelectorAll("[data-editi]");
-    for(var k=0;k<eds.length;k++)eds[k].onclick=function(){
-      var id=this.getAttribute("data-editi");
-      var a=inv().filter(function(x){return x.id===id})[0];if(!a)return;
-      var st=prompt("Status",a.status);if(st===null)return;
-      var val=prompt("Value",a.value);if(val===null)return;
-      var list=inv();
-      for(var i=0;i<list.length;i++)if(list[i].id===id){list[i].status=st;list[i].value=Number(val)||0}
-      save("inventory",list);renderInv();fillSelects();toast("Asset updated");
-    };
-  }
-
-  function addInv(){
-    var name=(document.getElementById("iName").value||"").trim();
-    var plate=(document.getElementById("iPlate").value||"").trim();
-    if(!name||!plate){toast("Name and plate required","err");return}
-    var is=inv();
-    is.push({id:uid(),name:name,plate:plate,type:document.getElementById("iType").value,status:document.getElementById("iStatus").value,value:Number(document.getElementById("iValue").value)||0});
-    save("inventory",is);
-    document.getElementById("iName").value="";document.getElementById("iPlate").value="";document.getElementById("iValue").value="0";
-    renderInv();fillSelects();toast("Asset added successfully");
-  }
-
-  function renderReports(){
-    var t=calc();
-    document.getElementById("plR").textContent=money(t.R);
-    document.getElementById("plP").textContent=money(t.P);
-    document.getElementById("plT").textContent=money(t.T);
-    document.getElementById("plRc").textContent=money(t.Rc);
-    document.getElementById("plInc").textContent=money(t.income);
-    document.getElementById("plE").textContent=money(t.E);
-    document.getElementById("plPay").textContent=money(t.Pay);
-    document.getElementById("plN").textContent=money(t.net);
-    document.getElementById("bsCash").textContent=money(t.cash);
-    document.getElementById("bsAr").textContent=money(t.ar);
-    document.getElementById("bsInv").textContent=money(t.invVal);
-    document.getElementById("bsTa").textContent=money(t.cash+t.ar+t.invVal);
-    document.getElementById("bsAp").textContent=money(0);
-    document.getElementById("bsRe").textContent=money(t.net);
-    document.getElementById("bsTl").textContent=money(t.net);
+    var opening = custs().reduce(function (s, c) { return s + (Number(c.opening) || 0); }, 0);
+    byId("ageOpen").textContent = money(opening);
+    byId("ageRc").textContent = money(t.Rc);
+    byId("ageNet").textContent = money(t.ar);
     fillSelects();
   }
-
-  function genStmt(){
-    var cid=document.getElementById("stmtCust").value;
-    if(!cid){toast("Select a customer","err");return}
-    var cs=custs(),c=null;
-    for(var i=0;i<cs.length;i++)if(cs[i].id===cid)c=cs[i];
-    if(!c)return;
-    var co=load("company",{name:"AutoSheets"});
-    document.getElementById("stmtTitle").textContent="Statement — "+c.name;
-    var h=hist().filter(function(r){return r.customerId===cid||(r.client&&r.client===c.name)});
-    var html='<div class="hint">'+co.name+' • Customer statement ('+cur()+')</div>';
-    html+='<table class="tbl"><tr><th>Date</th><th>Particulars</th><th class="r">Debit</th><th class="r">Credit</th></tr>';
-    var bal=Number(c.opening)||0;
-    if(bal)html+='<tr><td></td><td>Opening Balance</td><td class="r">'+money(bal)+'</td><td class="r"></td></tr>';
-    h.sort(function(a,b){return (a.time||"").localeCompare(b.time||"")});
-    for(var j=0;j<h.length;j++){
-      var r=h[j],dt=(r.time||"").slice(0,10),dr="",cr="";
-      if(r.type==="rental"&&!r.paid){dr=money(r.total);bal+=Number(r.total)||0}
-      else if(r.type==="rental"&&r.paid){dr=money(r.total);cr=money(r.total)}
-      else if(r.type==="parking"&&!r.paid){dr=money(r.amount);bal+=Number(r.amount)||0}
-      else if(r.type==="parking"&&r.paid){dr=money(r.amount);cr=money(r.amount)}
-      else if(r.type==="receipt"){cr=money(r.amt);bal-=Number(r.amt)||0}
-      html+='<tr><td>'+dt+'</td><td>'+r.type+' '+(r.note||r.plate||"")+'</td><td class="r">'+dr+'</td><td class="r">'+cr+'</td></tr>';
-    }
-    html+='</table>';
-    document.getElementById("stmtBody").innerHTML=html;
-    document.getElementById("stmtBal").textContent=money(bal);
-    document.getElementById("stmtOut").style.display="block";
-    var co=load("company",{name:"AutoSheets"});
-    window._lastPrint = {title:"Statement — "+c.name, html:html, bal:money(bal), co:co.name||"AutoSheets"};
-    if(!document.getElementById("btnPrintStmt")){
-      var act=document.createElement("div"); act.className="print-actions"; act.id="stmtActions";
-      act.innerHTML='<button type="button" class="btn btn-p" id="btnPrintStmt">Print Statement</button><button type="button" class="btn btn-s" id="btnShareStmt">Share Statement</button>';
-      document.getElementById("stmtOut").appendChild(act);
-      document.getElementById("btnPrintStmt").onclick=function(){printDoc(window._lastPrint)};
-      document.getElementById("btnShareStmt").onclick=function(){shareDoc(window._lastPrint)};
-    }
+  function stmtParticulars(r) {
+    if (r.type === "rental") return "Rental " + [r.vehicle, r.qty, r.billType].filter(Boolean).join(" ");
+    if (r.type === "parking") return "Parking " + [r.plate, r.bay, r.tariff].filter(Boolean).join(" ");
+    if (r.type === "receipt") return "Receipt " + (r.note || "");
+    return (r.type || "") + " " + (r.note || "");
   }
-  function printDoc(doc){
-    if(!doc)return;
-    var area=document.getElementById("printArea");
-    area.style.display="block";
-    area.innerHTML='<div class="print-box"><h2>'+doc.co+'</h2><div class="meta">'+doc.title+' • '+cur()+' • '+new Date().toLocaleString()+'</div>'+doc.html+'<div style="margin-top:12px;font-weight:700">Balance: '+(doc.bal||"")+'</div><div class="meta" style="margin-top:16px">Generated by AutoSheets</div></div>';
+  function genStmt() {
+    var cid = byId("stmtCust").value;
+    if (!cid) { toast("Select a customer", "err"); return; }
+    var c = null;
+    var cs = custs();
+    for (var i = 0; i < cs.length; i++) if (cs[i].id === cid) c = cs[i];
+    if (!c) return;
+    var co = companyName();
+    byId("stmtTitle").textContent = "Statement — " + c.name;
+    var rows = hist().filter(function (r) { return r.customerId === cid || (r.client && r.client === c.name); });
+    rows.sort(function (a, b) { return (a.time || "").localeCompare(b.time || ""); });
+    var html = '<p class="hint">' + esc(co) + " · Customer statement (" + esc(cur()) + ")</p>";
+    html += '<div class="table-wrap"><table class="tbl"><caption class="sr-only">Customer statement</caption><thead><tr><th scope="col">Date</th><th scope="col">Particulars</th><th class="r" scope="col">Debit</th><th class="r" scope="col">Credit</th><th class="r" scope="col">Balance</th></tr></thead><tbody>';
+    var bal = Number(c.opening) || 0;
+    if (bal) html += '<tr><td></td><td>Opening balance</td><td class="r">' + esc(money(bal)) + '</td><td class="r"></td><td class="r">' + esc(money(bal)) + "</td></tr>";
+    for (var j = 0; j < rows.length; j++) {
+      var r = rows[j], dr = "", cr = "";
+      if (r.type === "rental" && !r.paid) { dr = money(r.total); bal += Number(r.total) || 0; }
+      else if (r.type === "rental" && r.paid) { dr = money(r.total); cr = money(r.total); }
+      else if (r.type === "parking" && !r.paid) { dr = money(r.amount); bal += Number(r.amount) || 0; }
+      else if (r.type === "parking" && r.paid) { dr = money(r.amount); cr = money(r.amount); }
+      else if (r.type === "receipt") { cr = money(r.amt); bal -= Number(r.amt) || 0; }
+      else continue;
+      html += "<tr><td>" + esc(localDay(r.time)) + "</td><td>" + esc(stmtParticulars(r)) + '</td><td class="r">' + esc(dr) + '</td><td class="r">' + esc(cr) + '</td><td class="r">' + esc(money(bal)) + "</td></tr>";
+    }
+    html += "</tbody></table></div>";
+    byId("stmtBody").innerHTML = html;
+    byId("stmtBal").textContent = money(bal);
+    byId("stmtOut").hidden = false;
+    window._lastPrint = { title: "Statement — " + c.name, html: html, bal: money(bal), co: co };
+  }
+  function printDoc(doc) {
+    if (!doc) return;
+    var area = byId("printArea");
+    area.hidden = false;
+    area.style.display = "block";
+    area.innerHTML = '<div class="print-box"><h2>' + esc(doc.co) + '</h2><p class="meta">' + esc(doc.title) + " · " + esc(cur()) + " · " + esc(new Date().toLocaleString()) + "</p>" + doc.html + (doc.bal ? '<p style="margin-top:12px;font-weight:800">Balance: ' + esc(doc.bal) + "</p>" : "") + '<p class="meta">Generated by AutoSheets Accounting</p></div>';
     window.print();
-    setTimeout(function(){area.style.display="none";area.innerHTML=""},500);
+    setTimeout(function () { area.style.display = "none"; area.innerHTML = ""; area.hidden = true; }, 500);
   }
-  function shareDoc(doc){
-    if(!doc)return;
-    var text = doc.co+"\n"+doc.title+"\nCurrency: "+cur()+"\nBalance: "+(doc.bal||"")+"\n\n(Generated by AutoSheets)";
-    if(navigator.share){
-      navigator.share({title:doc.title, text:text}).catch(function(){});
-    } else {
-      try{ navigator.clipboard.writeText(text); toast("Statement copied to clipboard"); }
-      catch(e){ toast("Share not supported — copy manually","err"); }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { toast("Copied to clipboard"); }).catch(function () { toast("Could not copy", "err"); });
+      return;
     }
+    toast("Copy is not available in this browser", "err");
   }
-  function printReceipt(r){
-    var co=load("company",{name:"AutoSheets"});
-    var lines="";
-    if(r.type==="rental") lines="Client: "+(r.client||"")+"\nVehicle: "+(r.vehicle||"")+"\nQty: "+(r.qty||"")+" "+(r.billType||"")+"\nTotal: "+money(r.total)+(r.paid?" (Paid)":" (On account)");
-    else if(r.type==="parking") lines="Plate: "+(r.plate||"")+"\nTariff: "+(r.tariff||"")+"\nAmount: "+money(r.amount)+(r.paid?" (Paid)":" (On account)");
-    else if(r.type==="taxi") lines="Fare: "+money(r.fare)+"\nDriver: "+money(r.driver);
-    else if(r.type==="receipt") lines="Receipt: "+money(r.amt)+"\n"+(r.note||"");
-    else if(r.type==="payment") lines="Payment: "+money(r.amt)+"\nPayee: "+(r.payee||"");
-    else if(r.type==="expense") lines="Expense: "+(r.cat||"")+" "+money(r.amt);
-    var html='<table class="tbl"><tr><td>Type</td><td class="r">'+r.type.toUpperCase()+'</td></tr><tr><td>Date</td><td class="r">'+(r.time||"").slice(0,19).replace("T"," ")+'</td></tr><tr><td colspan="2"><pre style="white-space:pre-wrap;font-family:inherit">'+lines+'</pre></td></tr></table>';
-    var dc=entryDC(r);
-    html+='<table class="tbl"><tr><th>Debit</th><th class="r">Credit</th></tr><tr><td>'+(dc.dr?money(dc.dr):"—")+'</td><td class="r">'+(dc.cr?money(dc.cr):"—")+'</td></tr></table>';
-    printDoc({title:"Receipt / Voucher", html:html, bal:"", co:co.name||"AutoSheets"});
+  function shareDoc(doc) {
+    if (!doc) return;
+    var text = doc.co + "\n" + doc.title + "\nCurrency: " + cur() + "\nBalance: " + (doc.bal || "") + "\n\nGenerated by AutoSheets";
+    if (navigator.share) navigator.share({ title: doc.title, text: text }).catch(function () {});
+    else copyText(text);
   }
-  function shareReceipt(r){
-    var co=load("company",{name:"AutoSheets"});
-    var text=co.name+"\n"+r.type.toUpperCase()+"\n"+entryLabel(r)+"\n"+entryAmt(r)+"\n"+(r.time||"").slice(0,10);
-    if(navigator.share) navigator.share({title:"AutoSheets "+r.type, text:text}).catch(function(){});
-    else { try{navigator.clipboard.writeText(text);toast("Copied to clipboard")}catch(e){toast("Share not supported","err")} }
+  function printReceipt(r) {
+    var lines = "";
+    if (r.type === "rental") lines = "Client: " + (r.client || "") + "\nVehicle: " + (r.vehicle || "") + "\nQty: " + (r.qty || "") + " " + (r.billType || "") + (r.due ? "\nDue: " + r.due : "") + (r.deposit ? "\nDeposit: " + money(r.deposit) : "") + "\nTotal: " + money(r.total) + (r.paid ? " (Paid)" : " (On account)");
+    else if (r.type === "parking") lines = "Plate: " + (r.plate || "") + (r.bay ? "\nBay: " + r.bay : "") + "\nTariff: " + (r.tariff || "") + "\nAmount: " + money(r.amount) + (r.paid ? " (Paid)" : " (On account)");
+    else if (r.type === "taxi") lines = (r.driverName ? "Driver: " + r.driverName + "\n" : "") + "Fare: " + money(r.fare) + "\nDriver share: " + money(r.driver) + "\nOwner share: " + money(r.owner);
+    else if (r.type === "receipt") lines = "Receipt: " + money(r.amt) + "\n" + (r.note || "");
+    else if (r.type === "payment") lines = "Payment: " + money(r.amt) + "\nPayee: " + (r.payee || "");
+    else if (r.type === "expense") lines = "Expense: " + (r.cat || "") + " " + money(r.amt) + (r.note ? "\n" + r.note : "");
+    var html = '<table class="tbl"><tbody><tr><td>Type</td><td class="r">' + esc(String(r.type || "").toUpperCase()) + '</td></tr><tr><td>Reference</td><td class="r">' + esc(r.id || "") + '</td></tr><tr><td>Date</td><td class="r">' + esc(localDay(r.time)) + '</td></tr><tr><td colspan="2"><pre style="white-space:pre-wrap;font-family:inherit">' + esc(lines) + "</pre></td></tr></tbody></table>";
+    var dc = entryDC(r);
+    html += '<table class="tbl"><thead><tr><th scope="col">Debit</th><th class="r" scope="col">Credit</th></tr></thead><tbody><tr><td>' + (dc.dr ? esc(money(dc.dr)) : "—") + '</td><td class="r">' + (dc.cr ? esc(money(dc.cr)) : "—") + "</td></tr></tbody></table>";
+    printDoc({ title: "Receipt / voucher", html: html, bal: "", co: companyName() });
   }
-
-  function genMonth(){
-    var m=document.getElementById("monthPick").value;
-    if(!m){toast("Pick a month","err");return}
-    var list=hist().filter(function(r){return (r.time||"").slice(0,7)===m});
-    var inc=0,exp=0;
-    for(var i=0;i<list.length;i++){
-      var r=list[i];
-      if(r.type==="rental")inc+=Number(r.total)||0;
-      if(r.type==="parking")inc+=Number(r.amount)||0;
-      if(r.type==="taxi")inc+=Number(r.fare)||0;
-      if(r.type==="receipt")inc+=Number(r.amt)||0;
-      if(r.type==="expense"||r.type==="payment")exp+=Number(r.amt)||0;
+  function shareReceipt(r) {
+    var text = companyName() + "\n" + String(r.type || "").toUpperCase() + "\n" + entryLabel(r) + "\n" + entryAmt(r) + "\n" + localDay(r.time);
+    if (navigator.share) navigator.share({ title: "AutoSheets " + r.type, text: text }).catch(function () {});
+    else copyText(text);
+  }
+  function shiftMonth(ym, delta) {
+    var p = ym.split("-");
+    var d = new Date(Number(p[0]), Number(p[1]) - 1 + delta, 1);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
+  }
+  function monthOf(r) { return localDay(r.time).slice(0, 7); }
+  function genMonth() {
+    var m = byId("monthPick").value;
+    if (!m) { toast("Pick a month", "err"); return; }
+    var list = hist().filter(function (r) { return monthOf(r) === m; });
+    var prev = sumEntries(hist().filter(function (r) { return monthOf(r) === shiftMonth(m, -1); }));
+    var curSum = sumEntries(list);
+    byId("monthTitle").textContent = "Monthly — " + m;
+    byId("moInc").textContent = money(curSum.income);
+    byId("moExp").textContent = money(curSum.expense);
+    byId("moNet").textContent = money(curSum.net);
+    byId("moPrev").textContent = money(prev.net);
+    byId("moCnt").textContent = String(curSum.n);
+    byId("monthList").innerHTML = list.map(function (r) {
+      return '<div class="li"><div class="li-row"><div>' + esc(String(r.type || "").toUpperCase()) + " · " + esc(entryLabel(r)) + "</div><div>" + esc(entryAmt(r)) + "</div></div></div>";
+    }).join("") || '<p class="em">No entries this month.</p>';
+    byId("monthOut").hidden = false;
+  }
+  function applyRates() {
+    var r = rates();
+    var bill = byId("rBill");
+    if (bill) {
+      var v = bill.value;
+      byId("rRate").value = v === "weekly" ? r.rentalWeekly : v === "monthly" ? r.rentalMonthly : r.rentalDaily;
     }
-    document.getElementById("monthTitle").textContent="Monthly — "+m;
-    document.getElementById("moInc").textContent=money(inc);
-    document.getElementById("moExp").textContent=money(exp);
-    document.getElementById("moNet").textContent=money(inc-exp);
-    document.getElementById("moCnt").textContent=list.length;
-    var h="";
-    for(var j=0;j<list.length;j++){var r=list[j];h+='<div class="li"><div class="li-row"><div>'+r.type.toUpperCase()+'</div><div>'+entryAmt(r)+'</div></div></div>'}
-    document.getElementById("monthList").innerHTML=h||'<div class="em">No entries this month</div>';
-    document.getElementById("monthOut").style.display="block";
-  }
-
-  function applyRates(){
-    var r=rates(),bill=document.getElementById("rBill");
-    if(bill){
-      var v=bill.value;
-      document.getElementById("rRate").value=v==="weekly"?r.rentalWeekly:v==="monthly"?r.rentalMonthly:r.rentalDaily;
+    var pt = byId("pTariff");
+    if (pt) {
+      var pv = pt.value;
+      byId("pRate").value = pv === "hourly" ? r.parkHourly : pv === "daily" ? r.parkDaily : pv === "weekly" ? r.parkWeekly : (r.parkMonthly || 400);
+      byId("pHours").disabled = pv !== "hourly";
     }
-    var pt=document.getElementById("pTariff");
-    if(pt){
-      var v=pt.value;
-      document.getElementById("pRate").value=v==="hourly"?r.parkHourly:v==="daily"?r.parkDaily:v==="weekly"?r.parkWeekly:(r.parkMonthly||400);
-    }
-    var tc=document.getElementById("tCommission");
-    if(tc)tc.value=r.taxiComm;
+    var tc = byId("tCommission");
+    if (tc) tc.value = r.taxiComm;
+    previewRental();
+    previewTaxi();
   }
-
-  function custNameById(id){var cs=custs();for(var i=0;i<cs.length;i++)if(cs[i].id===id)return cs[i].name;return ""}
-
-  function saveRental(){
-    var cid=document.getElementById("rCust").value;
-    var client=(document.getElementById("rClient").value||"").trim()||custNameById(cid)||"Client";
-    var qty=Number(document.getElementById("rQty").value)||1;
-    var rate=Number(document.getElementById("rRate").value)||0;
-    var total=qty*rate, paid=document.getElementById("rPaid").value==="1";
-    var h=hist();
-    h.push({id:uid(),type:"rental",customerId:cid||null,client:client,vehicle:document.getElementById("rVehicle").value,billType:document.getElementById("rBill").value,qty:qty,rate:rate,deposit:Number(document.getElementById("rDep").value)||0,total:total,paid:paid,time:new Date().toISOString()});
-    save("history",h);
-    toast("Rental saved — "+money(total)+(paid?" (Paid)":" (On account)"));
-    document.getElementById("rClient").value="";showPage("dashboard");
+  function previewRental() {
+    var qty = Number(byId("rQty").value) || 0;
+    var rate = Number(byId("rRate").value) || 0;
+    var dep = Number(byId("rDep").value) || 0;
+    byId("rPreview").textContent = "Agreement total " + money(qty * rate) + (dep ? " · Deposit held " + money(dep) + " (not income)" : "");
   }
-  function saveParking(){
-    var cid=document.getElementById("pCust").value;
-    var plate=(document.getElementById("pPlate").value||"Unknown").trim();
-    var tariff=document.getElementById("pTariff").value;
-    var hours=Number(document.getElementById("pHours").value)||1;
-    var rate=Number(document.getElementById("pRate").value)||0;
-    var amount=tariff==="hourly"?hours*rate:rate;
-    var paid=document.getElementById("pPaid").value==="1";
-    var h=hist();
-    h.push({id:uid(),type:"parking",customerId:cid||null,plate:plate,tariff:tariff,hours:hours,rate:rate,amount:amount,paid:paid,time:new Date().toISOString()});
-    save("history",h);
-    toast("Parking saved — "+money(amount));
-    document.getElementById("pPlate").value="";showPage("dashboard");
+  function previewTaxi() {
+    var fare = Number(byId("tFare").value) || 0;
+    var comm = Number(byId("tCommission").value) || 0;
+    var driver = Math.round(fare * comm) / 100;
+    byId("tPreview").textContent = "Full fare posts to taxi income. Driver " + money(driver) + " · Owner " + money(fare - driver) + ".";
   }
-  function saveTaxi(){
-    var fare=Number(document.getElementById("tFare").value)||0;
-    var comm=Number(document.getElementById("tCommission").value)||60;
-    var driver=Math.round(fare*comm)/100;
-    var h=hist();
-    h.push({id:uid(),type:"taxi",vehicle:document.getElementById("tVehicle").value,fare:fare,driver:driver,owner:fare-driver,paid:true,time:new Date().toISOString()});
-    save("history",h);
-    toast("Taxi saved — "+money(fare));
-    document.getElementById("tFare").value="";showPage("dashboard");
-  }
-  function saveExpense(){
-    var h=hist();
-    h.push({id:uid(),type:"expense",cat:document.getElementById("eCat").value,amt:document.getElementById("eAmt").value||"0",note:document.getElementById("eNote").value||"",time:new Date().toISOString()});
-    save("history",h);
-    toast("Expense saved successfully");
-    document.getElementById("eAmt").value="";document.getElementById("eNote").value="";showPage("dashboard");
-  }
-  function saveReceipt(){
-    var cid=document.getElementById("rcCust").value,amt=Number(document.getElementById("rcAmt").value)||0;
-    if(!amt){toast("Enter amount","err");return}
-    var h=hist();
-    h.push({id:uid(),type:"receipt",customerId:cid||null,amt:amt,note:document.getElementById("rcNote").value||"",time:new Date().toISOString()});
-    save("history",h);
-    toast("Receipt saved — "+money(amt));
-    document.getElementById("rcAmt").value="";showPage("dashboard");
-  }
-  function savePayment(){
-    var amt=Number(document.getElementById("payAmt").value)||0;
-    if(!amt){toast("Enter amount","err");return}
-    var h=hist();
-    h.push({id:uid(),type:"payment",payee:document.getElementById("payName").value||"Vendor",amt:amt,note:document.getElementById("payNote").value||"",time:new Date().toISOString()});
-    save("history",h);
-    toast("Payment saved — "+money(amt));
-    document.getElementById("payAmt").value="";document.getElementById("payName").value="";showPage("dashboard");
-  }
-
-  function updSettings(){
-    var t=calc();
-    document.getElementById("sRec").textContent=t.n;
-    document.getElementById("sCur").textContent=cur();
-    var r=rates();
-    document.getElementById("rDaily").value=r.rentalDaily;
-    document.getElementById("rWeekly").value=r.rentalWeekly;
-    document.getElementById("rMonthly").value=r.rentalMonthly;
-    document.getElementById("pHourly").value=r.parkHourly;
-    document.getElementById("pDaily").value=r.parkDaily;
-    document.getElementById("pWeekly").value=r.parkWeekly;
-    document.getElementById("pMonthly").value=r.parkMonthly||400;
-    document.getElementById("tComm").value=r.taxiComm;
-  }
-  function saveRates(){
-    save("rates",{
-      rentalDaily:Number(document.getElementById("rDaily").value)||0,
-      rentalWeekly:Number(document.getElementById("rWeekly").value)||0,
-      rentalMonthly:Number(document.getElementById("rMonthly").value)||0,
-      parkHourly:Number(document.getElementById("pHourly").value)||0,
-      parkDaily:Number(document.getElementById("pDaily").value)||0,
-      parkWeekly:Number(document.getElementById("pWeekly").value)||0,
-      parkMonthly:Number(document.getElementById("pMonthly").value)||0,
-      taxiComm:Number(document.getElementById("tComm").value)||60
+  function saveRental() {
+    var cid = byId("rCust").value;
+    var client = (byId("rClient").value || "").trim() || custNameById(cid) || "Client";
+    var qty = Number(byId("rQty").value) || 1;
+    var rate = Number(byId("rRate").value) || 0;
+    var total = qty * rate;
+    var paid = byId("rPaid").value === "1";
+    var vehicle = byId("rVehicle").value || "";
+    var due = byId("rDue").value || "";
+    var odo = Number(byId("rOdo").value) || 0;
+    var deposit = Number(byId("rDep").value) || 0;
+    var h = hist();
+    h.push({
+      id: uid(), type: "rental", customerId: cid || null, client: client, vehicle: vehicle,
+      billType: byId("rBill").value, qty: qty, rate: rate, deposit: deposit, total: total, paid: paid,
+      due: due, odoOut: odo, returned: false, depositReturned: false, time: new Date().toISOString()
     });
-    applyRates();toast("Rates saved successfully");
+    save("history", h);
+    if (vehicle) {
+      updateAsset(function (a) { return assetLabel(a) === vehicle; }, function (a) {
+        a.status = "Rented";
+        if (odo > (Number(a.odometer) || 0)) a.odometer = odo;
+      });
+    }
+    toast("Rental saved — " + money(total) + (paid ? " (Paid)" : " (On account)"));
+    byId("rClient").value = "";
+    byId("rDue").value = "";
+    byId("rOdo").value = "";
+    byId("rDep").value = "0";
+    showPage("dashboard");
   }
-  function saveCo(){
-    var n=(document.getElementById("coName").value||"AutoSheets").trim();
-    save("company",{name:n});
-    document.getElementById("sCo").textContent=n;
-    document.getElementById("hdrCo").textContent=n;
-    toast("Company saved successfully");
+  function saveParking() {
+    var cid = byId("pCust").value;
+    var plate = (byId("pPlate").value || "Unknown").trim();
+    var tariff = byId("pTariff").value;
+    var hours = Number(byId("pHours").value) || 1;
+    var rate = Number(byId("pRate").value) || 0;
+    var amount = tariff === "hourly" ? hours * rate : rate;
+    var paid = byId("pPaid").value === "1";
+    var h = hist();
+    h.push({
+      id: uid(), type: "parking", customerId: cid || null, client: custNameById(cid), plate: plate,
+      bay: byId("pBay").value || "", tariff: tariff, hours: hours, rate: rate, amount: amount, paid: paid,
+      time: new Date().toISOString()
+    });
+    save("history", h);
+    toast("Parking saved — " + money(amount));
+    byId("pPlate").value = "";
+    byId("pBay").value = "";
+    showPage("dashboard");
   }
-  function exportData(){
-    var data={session:load("session",{}),company:load("company",{}),rates:rates(),customers:custs(),inventory:inv(),history:hist(),currency:cur(),at:new Date().toISOString()};
-    var blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement("a");a.href=url;a.download="autosheets-books.json";
-    document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  function saveTaxi() {
+    var fare = Number(byId("tFare").value) || 0;
+    var comm = Number(byId("tCommission").value) || 60;
+    var driver = Math.round(fare * comm) / 100;
+    var h = hist();
+    h.push({
+      id: uid(), type: "taxi", vehicle: byId("tVehicle").value || "", driverName: (byId("tDriver").value || "").trim(),
+      fare: fare, driver: driver, owner: fare - driver, paid: true, time: new Date().toISOString()
+    });
+    save("history", h);
+    toast("Taxi saved — " + money(fare));
+    byId("tFare").value = "";
+    byId("tDriver").value = "";
+    showPage("dashboard");
   }
-  function clearData(){
-    if(confirm("Delete ALL accounting entries?")){save("history",[]);refreshAll();updSettings();renderDaybook();renderReports();toast("All entries cleared")}
+  function saveExpense() {
+    var vid = byId("eVehicle").value || "";
+    var odo = Number(byId("eOdo").value) || 0;
+    var vlabel = "";
+    inv().forEach(function (a) { if (a.id === vid) vlabel = assetLabel(a); });
+    var h = hist();
+    h.push({
+      id: uid(), type: "expense", cat: byId("eCat").value, amt: Number(byId("eAmt").value) || 0,
+      note: byId("eNote").value || "", vehicleId: vid || null, vehicle: vlabel, odo: odo, time: new Date().toISOString()
+    });
+    save("history", h);
+    if (vid && odo) {
+      updateAsset(function (a) { return a.id === vid; }, function (a) {
+        if (odo > (Number(a.odometer) || 0)) a.odometer = odo;
+      });
+    }
+    toast("Expense saved");
+    byId("eAmt").value = "";
+    byId("eNote").value = "";
+    byId("eOdo").value = "";
+    showPage("dashboard");
   }
-
-  function init(){
-    document.getElementById("btnLogin").onclick=doLogin;
-    document.getElementById("btnPinLogin").onclick=doPinLogin;
-    document.getElementById("btnPinOk").onclick=checkPin;
-    document.getElementById("btnPinBack").onclick=function(){document.getElementById("page-pin").style.display="none";document.getElementById("page-login").style.display="flex"};
-    document.getElementById("btnCur").onclick=cycleCur;
-    document.getElementById("btnLogout").onclick=doLogout;
-    document.getElementById("btnSavePin").onclick=savePin;
-    document.getElementById("btnSaveRates").onclick=saveRates;
-    document.getElementById("btnSaveCo").onclick=saveCo;
-    document.getElementById("btnExport").onclick=exportData;
-    document.getElementById("btnClear").onclick=clearData;
-    document.getElementById("btnAddCust").onclick=addCust;
-    document.getElementById("btnAddInv").onclick=addInv;
-    document.getElementById("btnRental").onclick=saveRental;
-    document.getElementById("btnParking").onclick=saveParking;
-    document.getElementById("btnTaxi").onclick=saveTaxi;
-    document.getElementById("btnExpense").onclick=saveExpense;
-    document.getElementById("btnReceipt").onclick=saveReceipt;
-    document.getElementById("btnPayment").onclick=savePayment;
-    document.getElementById("btnStmt").onclick=genStmt;
-    document.getElementById("btnMonth").onclick=genMonth;
-    document.getElementById("btnEditSave").onclick=saveEdit;
-    document.getElementById("btnEditDel").onclick=deleteEdit;
-    document.getElementById("btnEditClose").onclick=function(){document.getElementById("editModal").classList.remove("show")};
-    document.getElementById("btnEditPrint").onclick=function(){
-      var id=document.getElementById("editId").value; var h=hist(),r=null;
-      for(var i=0;i<h.length;i++)if(h[i].id===id){r=h[i];break}
-      if(r)printReceipt(r);
+  function saveReceipt() {
+    var cid = byId("rcCust").value;
+    var amt = Number(byId("rcAmt").value) || 0;
+    if (!amt) { toast("Enter an amount", "err"); return; }
+    var h = hist();
+    h.push({ id: uid(), type: "receipt", customerId: cid || null, client: custNameById(cid), amt: amt, note: byId("rcNote").value || "", time: new Date().toISOString() });
+    save("history", h);
+    toast("Receipt saved — " + money(amt));
+    byId("rcAmt").value = "";
+    byId("rcNote").value = "";
+    showPage("dashboard");
+  }
+  function savePayment() {
+    var amt = Number(byId("payAmt").value) || 0;
+    if (!amt) { toast("Enter an amount", "err"); return; }
+    var h = hist();
+    h.push({ id: uid(), type: "payment", payee: byId("payName").value || "Vendor", amt: amt, note: byId("payNote").value || "", time: new Date().toISOString() });
+    save("history", h);
+    toast("Payment saved — " + money(amt));
+    byId("payAmt").value = "";
+    byId("payName").value = "";
+    byId("payNote").value = "";
+    showPage("dashboard");
+  }
+  function updSettings() {
+    var t = calc();
+    byId("sRec").textContent = String(t.n);
+    byId("sCur").textContent = cur();
+    var r = rates();
+    byId("rDaily").value = r.rentalDaily;
+    byId("rWeekly").value = r.rentalWeekly;
+    byId("rMonthly").value = r.rentalMonthly;
+    byId("pHourly").value = r.parkHourly;
+    byId("pDaily").value = r.parkDaily;
+    byId("pWeekly").value = r.parkWeekly;
+    byId("pMonthly").value = r.parkMonthly || 400;
+    byId("tComm").value = r.taxiComm;
+    byId("sCo").textContent = companyName();
+    byId("coName").value = load("company", {}).name || "";
+  }
+  function saveRates() {
+    save("rates", {
+      rentalDaily: Number(byId("rDaily").value) || 0,
+      rentalWeekly: Number(byId("rWeekly").value) || 0,
+      rentalMonthly: Number(byId("rMonthly").value) || 0,
+      parkHourly: Number(byId("pHourly").value) || 0,
+      parkDaily: Number(byId("pDaily").value) || 0,
+      parkWeekly: Number(byId("pWeekly").value) || 0,
+      parkMonthly: Number(byId("pMonthly").value) || 0,
+      taxiComm: Number(byId("tComm").value) || 60
+    });
+    applyRates();
+    toast("Rates saved");
+  }
+  function saveCo() {
+    var n = (byId("coName").value || "AutoSheets").trim() || "AutoSheets";
+    save("company", { name: n });
+    byId("sCo").textContent = n;
+    byId("hdrCo").textContent = n;
+    document.title = n + " — AutoSheets Accounting";
+    toast("Company saved");
+  }
+  function download(filename, blob) {
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+  function exportData() {
+    var data = {
+      app: "AutoSheets", version: VERSION, session: load("session", {}), company: load("company", {}),
+      rates: rates(), customers: custs(), inventory: inv(), history: hist(), currency: cur(), at: new Date().toISOString()
     };
-    document.getElementById("btnEditShare").onclick=function(){
-      var id=document.getElementById("editId").value; var h=hist(),r=null;
-      for(var i=0;i<h.length;i++)if(h[i].id===id){r=h[i];break}
-      if(r)shareReceipt(r);
-    };
-    document.getElementById("dbFilter").onchange=renderDaybook;
-    document.getElementById("rBill").onchange=applyRates;
-    document.getElementById("pTariff").onchange=applyRates;
-    document.getElementById("goRental").onclick=function(){showPage("rental")};
-    document.getElementById("goParking").onclick=function(){showPage("parking")};
-    document.getElementById("goTaxi").onclick=function(){showPage("taxi")};
-    document.getElementById("goExpense").onclick=function(){showPage("expense")};
-    document.getElementById("goReceipt").onclick=function(){showPage("receipt")};
-    document.getElementById("goPayment").onclick=function(){showPage("payment")};
-    document.getElementById("goCustomer").onclick=function(){showPage("customers")};
-    document.getElementById("goInventory").onclick=function(){showPage("inventory")};
-
-    var rbs=document.querySelectorAll("#roleGrid .rb");
-    for(var i=0;i<rbs.length;i++)(function(el){el.onclick=function(){selectRole(el,"#roleGrid")}})(rbs[i]);
-    var srs=document.querySelectorAll("#setRoles .rb");
-    for(var j=0;j<srs.length;j++)(function(el){el.onclick=function(){
-      selectRole(el,"#setRoles");
-      document.getElementById("roleBadge").textContent=role.toUpperCase()+" • LIVE";
-      document.getElementById("sRole").textContent=role;
-      var s=load("session",{});s.role=role;save("session",s);
-    }})(srs[j]);
-    var nis=document.querySelectorAll(".ni");
-    for(var k=0;k<nis.length;k++)(function(el){el.onclick=function(){showPage(el.getAttribute("data-p"))}})(nis[k]);
-    var tabs=document.querySelectorAll(".tab");
-    for(var t=0;t<tabs.length;t++)(function(el){el.onclick=function(){
-      for(var x=0;x<tabs.length;x++)tabs[x].classList.remove("on");
-      el.classList.add("on");
-      var panels=document.querySelectorAll(".rep-panel");
-      for(var y=0;y<panels.length;y++)panels[y].style.display="none";
-      document.getElementById("rep-"+el.getAttribute("data-rep")).style.display="block";
-    }})(tabs[t]);
-
-    var sc=load("currency",null);
-    if(sc){var ix=curs.indexOf(sc);if(ix>=0){ci=ix;document.getElementById("curCode").textContent=curs[ci];document.getElementById("bookCur").textContent=curs[ci]}}
-    var now=new Date();
-    document.getElementById("monthPick").value=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0");
-    var session=load("session",null);
-    if(session&&session.loggedIn===true&&session.email){role=session.role||"Fleet Owner";enterApp(session.email)}
-    if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(function(){});
+    download("autosheets-books.json", new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
+    toast("JSON backup downloaded");
   }
-  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+  function csvCell(v) {
+    var s = String(v == null ? "" : v);
+    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  function exportCsv() {
+    var header = ["Date", "Type", "Particulars", "Amount", "Paid", "Deposit", "Due", "Customer", "Vehicle", "Plate", "Note", "Reference"];
+    var lines = [header.map(csvCell).join(",")];
+    hist().forEach(function (r) {
+      lines.push([
+        localDay(r.time), r.type, entryLabel(r), entryNumber(r).toFixed(2), r.paid ? "yes" : "no",
+        r.deposit || "", r.due || "", r.client || "", r.vehicle || "", r.plate || "", r.note || r.payee || r.cat || "", r.id
+      ].map(csvCell).join(","));
+    });
+    download("autosheets-ledger.csv", new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" }));
+    toast("CSV downloaded");
+  }
+  function importData(file) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var data = JSON.parse(String(reader.result || ""));
+        if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("bad");
+        if (!data.history && !data.customers && !data.inventory && !data.company && !data.rates) throw new Error("empty");
+        if (!confirm("Replace customers, fleet, entries, rates, and company name in this browser with this backup? Sign-in and PIN stay as they are.")) return;
+        if (Array.isArray(data.customers)) save("customers", data.customers);
+        if (Array.isArray(data.inventory)) save("inventory", data.inventory);
+        if (Array.isArray(data.history)) save("history", data.history);
+        if (data.rates && typeof data.rates === "object") save("rates", data.rates);
+        if (data.company && typeof data.company === "object") save("company", data.company);
+        if (typeof data.currency === "string" && curs.indexOf(data.currency) >= 0) {
+          ci = curs.indexOf(data.currency);
+          save("currency", cur());
+          setCurLabel();
+        }
+        var name = companyName();
+        byId("hdrCo").textContent = name;
+        byId("sCo").textContent = name;
+        byId("coName").value = (load("company", {}) || {}).name || "";
+        fillSelects(); applyRates(); refreshAll(); renderReports(); updSettings();
+        toast("Backup imported. Sign-in and PIN were not changed.");
+      } catch (e) {
+        toast("Could not read that backup", "err");
+      }
+    };
+    reader.onerror = function () { toast("Could not read that file", "err"); };
+    reader.readAsText(file);
+  }
+  function clearData() {
+    if (!confirm("Delete all accounting entries? Customers, fleet, and rates stay.")) return;
+    save("history", []);
+    refreshAll(); updSettings(); renderDaybook(); renderReports();
+    toast("All entries cleared");
+  }
+  function selectTab(name) {
+    var tabs = document.querySelectorAll(".tab");
+    for (var i = 0; i < tabs.length; i++) {
+      var on = tabs[i].getAttribute("data-rep") === name;
+      tabs[i].classList.toggle("on", on);
+      tabs[i].setAttribute("aria-selected", on ? "true" : "false");
+    }
+    var panels = document.querySelectorAll(".rep-panel");
+    for (var y = 0; y < panels.length; y++) panels[y].hidden = panels[y].id !== "rep-" + name;
+  }
+  function printToday() {
+    var day = todayISO();
+    var list = hist().filter(function (r) { return localDay(r.time) === day; });
+    var ts = sumEntries(list);
+    var rows = list.map(function (r) {
+      return "<tr><td>" + esc(localDay(r.time)) + "</td><td>" + esc(r.type) + "</td><td>" + esc(entryLabel(r)) + '</td><td class="r">' + esc(entryAmt(r)) + "</td></tr>";
+    }).join("");
+    var html = '<table class="tbl"><thead><tr><th>Date</th><th>Type</th><th>Particulars</th><th class="r">Amount</th></tr></thead><tbody>' + (rows || '<tr><td colspan="4">No entries</td></tr>') + "</tbody></table>";
+    html += "<p>Income " + esc(money(ts.income)) + " · Expenses " + esc(money(ts.expense)) + " · Net " + esc(money(ts.net)) + "</p>";
+    printDoc({ title: "Day sheet — " + day, html: html, bal: "", co: companyName() });
+  }
+  function onMainClick(e) {
+    var edit = e.target.closest(".edit-btn");
+    if (edit) {
+      var row = edit.closest("[data-id]");
+      if (row) openEdit(row.getAttribute("data-id"));
+      return;
+    }
+    var open = e.target.closest("[data-open]");
+    if (open) { openEdit(open.getAttribute("data-open")); return; }
+    var asset = e.target.closest("[data-asset]");
+    if (asset) { showPage("inventory", { keepFocus: true }); beginAssetEdit(asset.getAttribute("data-asset")); return; }
+    var stmt = e.target.closest("[data-cid]");
+    if (stmt) {
+      showPage("reports");
+      selectTab("stmt");
+      byId("stmtCust").value = stmt.getAttribute("data-cid");
+      genStmt();
+      return;
+    }
+    var delC = e.target.closest("[data-delc]");
+    if (delC) {
+      var cid = delC.getAttribute("data-delc");
+      if (!confirm("Delete this customer? Past entries stay in the ledger.")) return;
+      save("customers", custs().filter(function (x) { return x.id !== cid; }));
+      renderCust(); fillSelects(); refreshAll();
+      toast("Customer deleted");
+      return;
+    }
+    var delI = e.target.closest("[data-deli]");
+    if (delI) {
+      var iid = delI.getAttribute("data-deli");
+      if (!confirm("Delete this asset?")) return;
+      if (byId("iEditId").value === iid) byId("invEditForm").hidden = true;
+      save("inventory", inv().filter(function (x) { return x.id !== iid; }));
+      renderInv(); fillSelects(); refreshAll();
+      toast("Asset deleted");
+      return;
+    }
+    var ed = e.target.closest("[data-editi]");
+    if (ed) beginAssetEdit(ed.getAttribute("data-editi"));
+  }
+  function bindForm(id, fn) {
+    var form = byId(id);
+    if (!form) return;
+    form.addEventListener("submit", function (e) { e.preventDefault(); fn(); });
+  }
+  function init() {
+    bindForm("loginForm", doLogin);
+    bindForm("pinForm", checkPin);
+    bindForm("custForm", addCust);
+    bindForm("invForm", addInv);
+    bindForm("invEditForm", saveInvEdit);
+    bindForm("coForm", saveCo);
+    bindForm("pinSetForm", savePin);
+    bindForm("ratesForm", saveRates);
+    bindForm("rentalForm", saveRental);
+    bindForm("parkingForm", saveParking);
+    bindForm("taxiForm", saveTaxi);
+    bindForm("expenseForm", saveExpense);
+    bindForm("receiptForm", saveReceipt);
+    bindForm("paymentForm", savePayment);
+    bindForm("stmtForm", genStmt);
+    bindForm("monthForm", genMonth);
+    byId("btnShowPass").onclick = function () {
+      var input = byId("loginPassword");
+      var show = input.type === "password";
+      input.type = show ? "text" : "password";
+      this.textContent = show ? "Hide" : "Show";
+      this.setAttribute("aria-pressed", show ? "true" : "false");
+    };
+    byId("btnPinLogin").onclick = doPinLogin;
+    byId("btnPinBack").onclick = function () {
+      byId("page-pin").style.display = "none";
+      byId("page-login").style.display = "flex";
+      byId("loginEmail").focus();
+    };
+    byId("btnCur").onclick = cycleCur;
+    byId("btnLogout").onclick = doLogout;
+    byId("btnExport").onclick = exportData;
+    byId("btnExportCsv").onclick = exportCsv;
+    byId("btnClear").onclick = clearData;
+    byId("btnPrintToday").onclick = printToday;
+    byId("btnPrintPL").onclick = function () { renderReports(); printDoc({ title: "Profit and loss", html: byId("plTables").innerHTML, bal: "", co: companyName() }); };
+    byId("btnPrintBS").onclick = function () { renderReports(); printDoc({ title: "Balance sheet", html: byId("bsTables").innerHTML, bal: "", co: companyName() }); };
+    byId("btnPrintStmt").onclick = function () { printDoc(window._lastPrint); };
+    byId("btnShareStmt").onclick = function () { shareDoc(window._lastPrint); };
+    byId("btnEditSave").onclick = saveEdit;
+    byId("btnEditDel").onclick = deleteEdit;
+    byId("btnEditClose").onclick = closeModal;
+    byId("btnEditPrint").onclick = function () { var r = findEntry(byId("editId").value); if (r) printReceipt(r); };
+    byId("btnEditShare").onclick = function () { var r = findEntry(byId("editId").value); if (r) shareReceipt(r); };
+    byId("btnCancelInvEdit").onclick = function () { byId("invEditForm").hidden = true; };
+    byId("importFile").addEventListener("change", function () {
+      var file = this.files && this.files[0];
+      this.value = "";
+      if (file) importData(file);
+    });
+    byId("dbFilter").onchange = renderDaybook;
+    byId("dbSearch").oninput = renderDaybook;
+    byId("cSearch").oninput = renderCust;
+    byId("invFilter").onchange = renderInv;
+    byId("rBill").onchange = applyRates;
+    byId("pTariff").onchange = applyRates;
+    ["rQty", "rRate", "rDep"].forEach(function (id) { byId(id).addEventListener("input", previewRental); });
+    ["tFare", "tCommission"].forEach(function (id) { byId(id).addEventListener("input", previewTaxi); });
+    byId("goRental").onclick = function () { showPage("rental"); };
+    byId("goParking").onclick = function () { showPage("parking"); };
+    byId("goTaxi").onclick = function () { showPage("taxi"); };
+    byId("goExpense").onclick = function () { showPage("expense"); };
+    byId("goReceipt").onclick = function () { showPage("receipt"); };
+    byId("goPayment").onclick = function () { showPage("payment"); };
+    byId("goCustomer").onclick = function () { showPage("customers"); };
+    byId("goInventory").onclick = function () { showPage("inventory"); };
+    byId("main").addEventListener("click", onMainClick);
+    byId("editModal").addEventListener("click", function (e) { if (e.target === this) closeModal(); });
+    document.addEventListener("keydown", function (e) {
+      var modal = byId("editModal");
+      var open = modal.classList.contains("show");
+      if (e.key === "Escape" && open) { e.preventDefault(); closeModal(); return; }
+      if (e.key !== "Tab" || !open) return;
+      var nodes = focusables(modal);
+      if (!nodes.length) return;
+      var first = nodes[0], last = nodes[nodes.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+    var rbs = document.querySelectorAll("#roleGrid .rb");
+    for (var i = 0; i < rbs.length; i++) (function (el) { el.onclick = function () { selectRole(el, "#roleGrid"); }; })(rbs[i]);
+    var srs = document.querySelectorAll("#setRoles .rb");
+    for (var j = 0; j < srs.length; j++) (function (el) {
+      el.onclick = function () {
+        selectRole(el, "#setRoles");
+        byId("roleBadge").textContent = role.toUpperCase() + " • LIVE";
+        byId("sRole").textContent = role;
+        var s = load("session", {});
+        s.role = role;
+        save("session", s);
+      };
+    })(srs[j]);
+    var nis = document.querySelectorAll(".ni");
+    for (var k = 0; k < nis.length; k++) (function (el) { el.onclick = function () { showPage(el.getAttribute("data-p")); }; })(nis[k]);
+    var tabs = document.querySelectorAll(".tab");
+    for (var t = 0; t < tabs.length; t++) (function (el) {
+      el.onclick = function () { selectTab(el.getAttribute("data-rep")); };
+      el.addEventListener("keydown", function (e) {
+        if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+        var all = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+        var idx = all.indexOf(el);
+        var next = all[(idx + (e.key === "ArrowRight" ? 1 : all.length - 1)) % all.length];
+        next.focus();
+        selectTab(next.getAttribute("data-rep"));
+      });
+    })(tabs[t]);
+    window.addEventListener("hashchange", function () {
+      if (!appOpen()) return;
+      showPage(pageFromHash() || "dashboard", { silentHash: true });
+    });
+    var sc = load("currency", null);
+    if (sc) { var ix = curs.indexOf(sc); if (ix >= 0) { ci = ix; setCurLabel(); } }
+    if (!byId("monthPick").value) byId("monthPick").value = todayISO().slice(0, 7);
+    var session = load("session", null);
+    if (session && session.loggedIn === true && session.email) {
+      role = session.role || "Fleet Owner";
+      enterApp(session.email);
+    }
+    if ("serviceWorker" in navigator) {
+      var hadController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (hadController) window.location.reload();
+      });
+      navigator.serviceWorker.register("./sw.js").catch(function () {});
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+  else init();
 })();
 </script>
 </body>

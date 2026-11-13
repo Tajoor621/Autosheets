@@ -2,7 +2,7 @@
   "id": "/Autosheets/",
   "name": "AutoSheets",
   "short_name": "AutoSheets",
-  "description": "Offline fleet, rental, parking, and taxi accounting. Ledger, profit and loss, balance sheet, deposits, aging, and customer statements — stored in your browser.",
+  "description": "Offline car rental desk, fleet availability, invoicing, deposits and accounting reports, with parking and taxi books.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -65,9 +65,9 @@
       ]
     },
     {
-      "name": "Quick Rental",
+      "name": "Rental Desk",
       "short_name": "Rental",
-      "description": "Create a rental entry",
+      "description": "Open reservations, rental agreements and invoices",
       "url": "./index.html#rental",
       "icons": [
         {

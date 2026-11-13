@@ -278,6 +278,16 @@ body.modal-open { overflow: hidden; }
   #printArea { display: block !important; position: absolute; left: 0; top: 0; width: 100%; background: #fff; }
   .bn, .header, .toast, .modal, .skip { display: none !important; }
 }
+.rent-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 0 14px; }
+.rent-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.rent-card { scroll-margin-top: 92px; }
+.rent-card h3 { overflow-wrap: anywhere; }
+.rent-card details { margin-top: 12px; padding: 9px 0; border-top: 1px solid #c4bdb4; }
+.rent-card summary { cursor: pointer; font-weight: 700; }
+.rent-card td { overflow-wrap: anywhere; }
+.rent-card form { margin-bottom: 8px; }
+.rent-card .li-side { min-width: 0; }
+@media (max-width: 450px) { .ni { font-size: .66rem; } }
 </style>
 </head>
 <body>
@@ -340,6 +350,7 @@ body.modal-open { overflow: hidden; }
   <div class="shell">
     <nav class="bn" aria-label="Primary">
       <button type="button" class="ni active" data-p="dashboard" aria-current="page"><span aria-hidden="true">📊</span>Home</button>
+      <button type="button" class="ni" data-p="rental"><span aria-hidden="true">🚘</span>Rentals</button>
       <button type="button" class="ni" data-p="customers"><span aria-hidden="true">👤</span>Clients</button>
       <button type="button" class="ni" data-p="daybook"><span aria-hidden="true">📒</span>Ledger</button>
       <button type="button" class="ni" data-p="reports"><span aria-hidden="true">📈</span>Reports</button>
@@ -375,7 +386,7 @@ body.modal-open { overflow: hidden; }
         </section>
         <h2 class="st">Quick actions</h2>
         <div class="shortcuts">
-          <button type="button" class="sc" id="goRental"><span class="ic" aria-hidden="true">📄</span>Rental</button>
+          <button type="button" class="sc" id="goRental"><span class="ic" aria-hidden="true">📄</span>Rental desk</button>
           <button type="button" class="sc" id="goParking"><span class="ic" aria-hidden="true">🅿️</span>Parking</button>
           <button type="button" class="sc" id="goTaxi"><span class="ic" aria-hidden="true">🚕</span>Taxi</button>
           <button type="button" class="sc" id="goExpense"><span class="ic" aria-hidden="true">🧾</span>Expense</button>
@@ -391,6 +402,7 @@ body.modal-open { overflow: hidden; }
       <div id="page-customers" class="page container">
         <h2 class="st" id="custTitle">Customers</h2>
         <form id="custForm" class="card form-card" novalidate>
+          <input type="hidden" id="cEditId">
           <label for="cName">Name</label>
           <input id="cName" autocomplete="name" placeholder="Customer name" required>
           <label for="cPhone">Phone</label>
@@ -400,7 +412,11 @@ body.modal-open { overflow: hidden; }
           <label for="cOpen">Opening balance (receivable)</label>
           <input id="cOpen" type="number" inputmode="decimal" value="0" step="0.01">
           <p class="hint">Amount this customer already owes. It increases receivables and is not income.</p>
+          <label for="cTaxId">Tax registration number (optional)</label><input id="cTaxId" maxlength="60">
+          <label for="cLicense">Driving licence reference (optional)</label><input id="cLicense" maxlength="60" autocomplete="off">
+          <label for="cLicenseExpiry">Driving licence expiry (optional)</label><input id="cLicenseExpiry" type="date">
           <button type="submit" class="btn btn-p" id="btnAddCust">Add customer</button>
+          <button type="button" class="btn btn-s" id="btnCancelCust" hidden>Cancel edit</button>
         </form>
         <div class="card">
           <label for="cSearch">Search customers</label>
@@ -421,7 +437,7 @@ body.modal-open { overflow: hidden; }
           <label for="iStatus">Status</label>
           <select id="iStatus"><option>Available</option><option>Rented</option><option>On Trip</option><option>Maintenance</option><option>Occupied</option></select>
           <label for="iValue">Value / cost</label>
-          <input id="iValue" type="number" inputmode="decimal" value="0" step="0.01">
+          <input id="iValue" min="0" type="number" inputmode="decimal" value="0" step="0.01">
           <p class="hint">Book value is added to fleet assets on the balance sheet. It is not a bank balance.</p>
           <label for="iOdo">Odometer</label>
           <input id="iOdo" type="number" inputmode="numeric" min="0" step="1" value="0">
@@ -429,6 +445,8 @@ body.modal-open { overflow: hidden; }
           <input id="iNext" type="date">
           <label for="iAt">Service due at km</label>
           <input id="iAt" type="number" inputmode="numeric" min="0" step="1" placeholder="Optional">
+          <label for="iRegistration">Registration expiry</label><input id="iRegistration" type="date">
+          <label for="iInsurance">Insurance expiry</label><input id="iInsurance" type="date">
           <button type="submit" class="btn btn-p" id="btnAddInv">Add asset</button>
         </form>
         <form id="invEditForm" class="card form-card" hidden novalidate>
@@ -440,10 +458,12 @@ body.modal-open { overflow: hidden; }
           <select id="iEditType"><option>Rental</option><option>Taxi</option><option>Parking</option><option>Other</option></select>
           <label for="iEditStatus">Status</label>
           <select id="iEditStatus"><option>Available</option><option>Rented</option><option>On Trip</option><option>Maintenance</option><option>Occupied</option></select>
-          <label for="iEditValue">Value / cost</label><input id="iEditValue" type="number" step="0.01">
+          <label for="iEditValue">Value / cost</label><input id="iEditValue" min="0" type="number" step="0.01">
           <label for="iEditOdo">Odometer</label><input id="iEditOdo" type="number" min="0" step="1">
           <label for="iEditNext">Next service date</label><input id="iEditNext" type="date">
           <label for="iEditAt">Service due at km</label><input id="iEditAt" type="number" min="0" step="1">
+          <label for="iEditRegistration">Registration expiry</label><input id="iEditRegistration" type="date">
+          <label for="iEditInsurance">Insurance expiry</label><input id="iEditInsurance" type="date">
           <button type="submit" class="btn btn-p" id="btnSaveInvEdit">Save asset</button>
           <button type="button" class="btn btn-s" id="btnCancelInvEdit">Cancel</button>
         </form>
@@ -489,11 +509,25 @@ body.modal-open { overflow: hidden; }
           <button type="button" class="tab" id="tab-stmt" role="tab" aria-selected="false" aria-controls="rep-stmt" data-rep="stmt">Customer Stmt</button>
           <button type="button" class="tab" id="tab-month" role="tab" aria-selected="false" aria-controls="rep-month" data-rep="month">Monthly</button>
           <button type="button" class="tab" id="tab-aging" role="tab" aria-selected="false" aria-controls="rep-aging" data-rep="aging">Aging</button>
+          <button type="button" class="tab" id="tab-rental" role="tab" aria-selected="false" aria-controls="rep-rental" data-rep="rental">Rental reports</button>
+        </div>
+        <div id="rep-rental" class="rep-panel" role="tabpanel" aria-labelledby="tab-rental" hidden>
+          <div class="card">
+            <div class="rent-grid">
+              <label>From<input type="date" id="rrFrom"></label>
+              <label>To<input type="date" id="rrTo"></label>
+            </div>
+            <div class="rent-actions">
+              <button type="button" class="btn btn-s btn-sm" id="rrPrint">Print report</button>
+              <button type="button" class="btn btn-s btn-sm" id="rrExport">Download CSV</button>
+            </div>
+          </div>
+          <div id="rrBody"></div>
         </div>
         <div id="rep-pl" class="rep-panel" role="tabpanel" aria-labelledby="tab-pl">
           <div class="card">
             <h2 class="st">Profit and loss</h2>
-            <p class="hint">Income includes rental, parking, taxi, and other receipts. A receipt from a customer reduces what they owe and is also counted here.</p>
+            <p class="hint">Rental income excludes output tax. Customer receipts and applied deposits reduce the customer balance.</p>
             <div id="plTables" class="table-wrap">
               <table class="tbl">
                 <caption class="sr-only">Profit and loss</caption>
@@ -515,7 +549,7 @@ body.modal-open { overflow: hidden; }
         <div id="rep-bs" class="rep-panel" role="tabpanel" aria-labelledby="tab-bs" hidden>
           <div class="card">
             <h2 class="st">Balance sheet</h2>
-            <p class="hint">Cash is a book total from entries in this browser. Balancing capital makes assets equal liabilities and equity. It is not a bank balance, and AutoSheets does not connect to a bank.</p>
+            <p class="hint">Cash is the running book balance. Balancing capital includes opening customer balances and recorded fleet book values.</p>
             <div id="bsTables">
               <h3 class="hl">Assets</h3>
               <div class="table-wrap">
@@ -535,7 +569,8 @@ body.modal-open { overflow: hidden; }
                   <caption class="sr-only">Liabilities and equity</caption>
                   <tbody>
                     <tr><td>Customer deposits held</td><td class="r" id="bsDep">$0.00</td></tr>
-                    <tr><td>Accounts payable</td><td class="r" id="bsAp">$0.00</td></tr>
+                    <tr><td>Customer advances</td><td class="r" id="bsAdvance">$0.00</td></tr>
+                    <tr><td>Output tax balance</td><td class="r" id="bsTax">$0.00</td></tr>
                     <tr><td>Balancing capital</td><td class="r" id="bsCap">$0.00</td></tr>
                     <tr><td>Retained earnings (net)</td><td class="r" id="bsRe">$0.00</td></tr>
                     <tr><th scope="row">Total liabilities and equity</th><th class="r" id="bsTl">$0.00</th></tr>
@@ -586,18 +621,19 @@ body.modal-open { overflow: hidden; }
         <div id="rep-aging" class="rep-panel" role="tabpanel" aria-labelledby="tab-aging" hidden>
           <div class="card">
             <h2 class="st">Receivables aging</h2>
-            <p class="hint">Unpaid rental and parking invoices, aged from the entry date. Receipts and opening balances are shown apart so this can be read next to receivables on the dashboard.</p>
+            <p class="hint">Rental invoices age from their due date. Older records use their entry date. Account-level receipts and opening balances reconcile the aging buckets to the dashboard.</p>
             <div id="ageTables" class="table-wrap">
               <table class="tbl">
                 <caption class="sr-only">Receivables aging</caption>
                 <thead><tr><th scope="col">Bucket</th><th class="r" scope="col">Amount</th><th class="r" scope="col">Invoices</th></tr></thead>
                 <tbody>
-                  <tr><td>0–30 days</td><td class="r" id="age0">$0.00</td><td class="r" id="age0n">0</td></tr>
+                  <tr><td>Current</td><td class="r" id="ageCurrent"></td><td class="r" id="ageCurrentN"></td></tr>
+                  <tr><td>1–30 days overdue</td><td class="r" id="age0">$0.00</td><td class="r" id="age0n">0</td></tr>
                   <tr><td>31–60 days</td><td class="r" id="age1">$0.00</td><td class="r" id="age1n">0</td></tr>
                   <tr><td>61–90 days</td><td class="r" id="age2">$0.00</td><td class="r" id="age2n">0</td></tr>
                   <tr><td>Over 90 days</td><td class="r" id="age3">$0.00</td><td class="r" id="age3n">0</td></tr>
                   <tr><td>Opening balances (not aged)</td><td class="r" id="ageOpen">$0.00</td><td class="r">—</td></tr>
-                  <tr><td>Receipts on account</td><td class="r" id="ageRc">$0.00</td><td class="r">—</td></tr>
+                  <tr><td>Other account adjustments</td><td class="r" id="ageRc">$0.00</td><td class="r">—</td></tr>
                   <tr><th scope="row">Net receivables</th><th class="r" id="ageNet">$0.00</th><th class="r"></th></tr>
                 </tbody>
               </table>
@@ -619,6 +655,9 @@ body.modal-open { overflow: hidden; }
         <form id="coForm" class="card form-card" novalidate>
           <label for="coName">Company name</label>
           <input id="coName" autocomplete="organization" placeholder="Company name">
+          <label for="coAddress">Invoice address</label><input id="coAddress" maxlength="200">
+          <label for="coTaxId">Tax registration number</label><input id="coTaxId" maxlength="60">
+          <label for="coTaxRate">Default rental tax (%)</label><input id="coTaxRate" type="number" min="0" max="100" step="0.01" value="0">
           <button type="submit" class="btn btn-p" id="btnSaveCo">Save company</button>
         </form>
         <h2 class="st">Security — PIN</h2>
@@ -671,24 +710,53 @@ body.modal-open { overflow: hidden; }
       </div>
 
       <div id="page-rental" class="page container">
-        <h2 class="st" id="rentTitle">Rental agreement</h2>
-        <form id="rentalForm" class="card form-card" novalidate>
-          <label for="rCust">Customer</label><select id="rCust"></select>
-          <label for="rClient">Or new client name</label><input id="rClient" placeholder="If not in the list">
-          <label for="rVehicle">Vehicle</label><select id="rVehicle"></select>
-          <label for="rBill">Billing</label>
-          <select id="rBill"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select>
-          <label for="rQty">Quantity</label><input id="rQty" type="number" min="1" step="1" value="1">
-          <label for="rRate">Rate (in book currency)</label><input id="rRate" type="number" inputmode="decimal" step="0.01" placeholder="0">
+        <h2 class="st" id="rentTitle">Rental desk</h2>
+        <div class="metrics" id="rMetrics"></div>
+        <div class="rent-actions">
+          <button type="button" class="btn btn-p btn-sm" id="rNew">New reservation or rental</button>
+          <button type="button" class="btn btn-s btn-sm" id="rFleet">Manage fleet</button>
+          <button type="button" class="btn btn-s btn-sm" id="rCustomers">Manage customers</button>
+          <button type="button" class="btn btn-s btn-sm" id="rSchedule">Availability</button>
+        </div>
+        <section class="card" id="rSchedulePanel" hidden>
+          <h3 class="st">Fleet availability</h3>
+          <div class="rent-grid"><label>From<input type="datetime-local" id="rCheckFrom"></label>
+          <label>Until<input type="datetime-local" id="rCheckTo"></label></div>
+          <div id="rScheduleResult"></div>
+        </section>
+        <form id="rentalForm" class="card form-card" hidden>
+          <h3 class="st" id="rFormTitle">New rental</h3>
+          <div class="rent-grid">
+            <label>Customer<select id="rCust"></select></label>
+            <label>Or create a customer<input id="rClient" maxlength="100" autocomplete="off"></label>
+            <label>Vehicle<select id="rVehicle" required></select></label>
+            <label>Booking reference<input id="rReference" maxlength="80" placeholder="Optional"></label>
+            <label>Pickup<input id="rStart" type="datetime-local" required></label>
+            <label>Return due<input id="rDue" type="datetime-local" required></label>
+            <label>Billing unit<select id="rBill"><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="monthly">Monthly</option></select></label>
+            <label>Units<input id="rQty" type="number" min="1" max="10000" step="1" value="1" required></label>
+            <label>Rate<input id="rRate" type="number" min="0" max="10000000" step="0.01" required></label>
+            <label>Discount<input id="rDiscount" type="number" min="0" max="10000000" step="0.01" value="0" required></label>
+            <label>Tax rate (%)<input id="rTax" type="number" min="0" max="100" step="0.01" value="0" required></label>
+            <label>Invoice due date<input id="rInvoiceDue" type="date" required></label>
+            <label>Pickup location<input id="rPickup" maxlength="100"></label>
+            <label>Return location<input id="rDropoff" maxlength="100"></label>
+            <label>Included distance (km)<input id="rIncluded" type="number" min="0" max="10000000" step="1" placeholder="Optional"></label>
+            <label>Extra distance rate per km<input id="rKmRate" type="number" min="0" max="10000000" step="0.01" value="0"></label>
+          </div>
+          <label>Agreement notes<textarea id="rNotes" maxlength="2000"></textarea></label>
           <p class="preview" id="rPreview" aria-live="polite"></p>
-          <label for="rDep">Deposit</label><input id="rDep" type="number" inputmode="decimal" value="0" step="0.01">
-          <p class="hint">A deposit is held, not income, until you mark it returned on the entry.</p>
-          <label for="rOdo">Odometer out</label><input id="rOdo" type="number" inputmode="numeric" min="0" step="1" placeholder="Optional">
-          <label for="rDue">Return due</label><input id="rDue" type="date">
-          <label for="rPaid">Paid now?</label>
-          <select id="rPaid"><option value="0">No — on account</option><option value="1">Yes — received</option></select>
-          <button type="submit" class="btn btn-p" id="btnRental">Save rental</button>
+          <div class="rent-actions">
+            <button type="submit" class="btn btn-p btn-sm" id="btnRental">Save reservation</button>
+            <button type="button" class="btn btn-s btn-sm" id="rDismiss">Close form</button>
+          </div>
         </form>
+        <div id="rDetail" hidden></div>
+        <div class="card rent-grid">
+          <label>Search rentals<input type="search" id="rSearch" placeholder="Customer, plate or reference"></label>
+          <label>Status<select id="rFilter"><option value="all">All</option><option value="reserved">Reserved</option><option value="out">Out</option><option value="overdue">Overdue</option><option value="returned">Returned</option><option value="cancelled">Cancelled</option></select></label>
+        </div>
+        <div id="rList"></div>
       </div>
 
       <div id="page-parking" class="page container">
@@ -749,6 +817,7 @@ body.modal-open { overflow: hidden; }
       <div id="page-receipt" class="page container">
         <h2 class="st" id="rcptTitle">Receipt</h2>
         <form id="receiptForm" class="card form-card" novalidate>
+          <p class="hint">Use the rental agreement to record payment against its invoices. Select a customer here for an account-level receipt, or leave blank for other income.</p>
           <label for="rcCust">Customer</label><select id="rcCust"></select>
           <label for="rcAmt">Amount received</label><input id="rcAmt" type="number" inputmode="decimal" step="0.01">
           <label for="rcNote">Note</label><input id="rcNote" placeholder="Against invoice / advance">
@@ -795,9 +864,13 @@ body.modal-open { overflow: hidden; }
     </div>
   </div>
 </div>
+<script src="rental-books.js"></script>
+<script src="rental-desk.js"></script>
 <script>
 (function () {
-  var VERSION = "4.3.0";
+  var VERSION = "4.4.0";
+  var B = window.RentalBooks;
+  var rental;
   var BASE_TITLE = "AutoSheets Accounting — Fleet, Rental, Parking & Taxi Books";
   var ACCOUNTS = { "owner@autosheets.com": "demo1234", "admin@autosheets.com": "admin123" };
   var role = "Fleet Owner";
@@ -806,18 +879,34 @@ body.modal-open { overflow: hidden; }
   var ci = 0;
   var defRates = { rentalDaily: 85, rentalWeekly: 500, rentalMonthly: 1800, parkHourly: 8, parkDaily: 35, parkWeekly: 150, parkMonthly: 400, taxiComm: 60 };
   var lastFocus = null;
-  var subPages = ["rental", "parking", "taxi", "expense", "receipt", "payment", "inventory"];
+  var subPages = [ "parking", "taxi", "expense", "receipt", "payment", "inventory"];
 
   function byId(id) { return document.getElementById(id); }
-  function save(k, v) { try { localStorage.setItem("as_" + k, JSON.stringify(v)); } catch (e) {} }
+  function save(k, v) { localStorage.setItem("as_" + k, JSON.stringify(v)); }
   function load(k, f) { try { var v = localStorage.getItem("as_" + k); return v ? JSON.parse(v) : f; } catch (e) { return f; } }
   function rates() { return load("rates", defRates); }
   function hist() { return load("history", []); }
   function custs() { return load("customers", []); }
-  function inv() { return load("inventory", []); }
+  function rawInventory() { return load("inventory", []); }
+  function inv() {
+    var rows = hist().filter(function (row) { return row.type === "rental"; });
+    return rawInventory().map(function (asset) {
+      var matches = rows.filter(function (row) { return B.matchesVehicle(row, asset); });
+      var busy = matches.some(B.active);
+      var odometer = Math.max.apply(null, [Number(asset.odometer) || 0].concat(matches.map(function (row) {
+        return Math.max(Number(row.odoOut) || 0, Number(row.odoIn) || 0);
+      })));
+      return Object.assign({}, asset, { status: busy ? "Rented" : asset.status, odometer: odometer });
+    });
+  }
+  function writeHistory(rows) { localStorage.setItem("as_history", JSON.stringify(rows)); }
+  function writeCustomers(rows) { localStorage.setItem("as_customers", JSON.stringify(rows)); }
+  function company() { return load("company", {}); }
   function cur() { return curs[ci]; }
   function money(n) { return (sym[cur()] || (cur() + " ")) + (Number(n) || 0).toFixed(2); }
-  function uid() { return "E" + Date.now() + "_" + Math.floor(Math.random() * 9999); }
+  function uid() {
+    return "E" + Date.now() + "_" + Array.from(crypto.getRandomValues(new Uint8Array(6)), function (n) { return n.toString(16).padStart(2, "0"); }).join("");
+  }
   function esc(s) {
     return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
@@ -869,11 +958,16 @@ body.modal-open { overflow: hidden; }
     byId("btnCur").setAttribute("aria-label", "Book currency " + cur() + ". Activate to switch currency.");
   }
   function cycleCur() {
+    if (hist().some(function (row) { return B.managed(row) && !B.pending(row); })) {
+      toast("Book currency is fixed once a rental invoice is issued", "err");
+      return;
+    }
     ci = (ci + 1) % curs.length;
     save("currency", cur());
     setCurLabel();
     refreshAll();
     renderReports();
+    if (byId("page-rental").classList.contains("active")) rental.render();
   }
   function focusHeading(pageEl) {
     var heading = pageEl.querySelector("h2");
@@ -903,7 +997,8 @@ body.modal-open { overflow: hidden; }
     if (name === "reports") renderReports();
     if (name === "settings") updSettings();
     if (name === "dashboard") refreshAll();
-    if (["rental", "parking", "taxi", "receipt", "expense"].indexOf(name) >= 0) { fillSelects(); applyRates(); }
+    if (name === "rental") { fillSelects(); rental.render(); }
+    if (["parking", "taxi", "receipt", "expense"].indexOf(name) >= 0) { fillSelects(); applyRates(); }
     if (!opts.silentHash) {
       var next = "#" + name;
       if (location.hash !== next) {
@@ -1017,6 +1112,7 @@ body.modal-open { overflow: hidden; }
     var prev = el.value;
     el.innerHTML = html;
     if (prev) el.value = prev;
+    if (el.selectedIndex < 0) el.selectedIndex = 0;
   }
   function fillSelects() {
     var cs = custs();
@@ -1024,23 +1120,20 @@ body.modal-open { overflow: hidden; }
     var cOpt = '<option value="">— Select —</option>';
     for (var i = 0; i < cs.length; i++) cOpt += '<option value="' + esc(cs[i].id) + '">' + esc(cs[i].name) + "</option>";
     ["rCust", "pCust", "rcCust", "stmtCust"].forEach(function (id) { setOptions(id, cOpt); });
-    var rOpt = "";
     var tOpt = "";
     var eOpt = '<option value="">— None —</option>';
     if (!is.length) {
-      rOpt = '<option value="">Add assets in Inventory</option>';
-      tOpt = rOpt;
+      tOpt = '<option value="">Add taxi assets</option>';
     } else {
       for (var j = 0; j < is.length; j++) {
         var a = is[j];
         var lab = assetLabel(a);
-        rOpt += '<option value="' + esc(lab) + '">' + esc(lab) + "</option>";
         eOpt += '<option value="' + esc(a.id) + '">' + esc(lab) + "</option>";
         if (a.type === "Taxi") tOpt += '<option value="' + esc(lab) + '">' + esc(lab) + "</option>";
       }
       if (!tOpt) tOpt = '<option value="">Add taxi assets</option>';
     }
-    setOptions("rVehicle", rOpt);
+    rental.vehicleOptions();
     setOptions("tVehicle", tOpt);
     setOptions("eVehicle", eOpt);
   }
@@ -1057,7 +1150,7 @@ body.modal-open { overflow: hidden; }
     select.value = value;
   }
   function updateAsset(matchFn, mutate) {
-    var list = inv();
+    var list = rawInventory();
     for (var i = 0; i < list.length; i++) {
       if (matchFn(list[i])) {
         mutate(list[i]);
@@ -1068,13 +1161,15 @@ body.modal-open { overflow: hidden; }
     return false;
   }
   function depositsHeld() {
-    return hist().reduce(function (s, r) {
-      if (r.type === "rental" && !r.depositReturned) return s + (Number(r.deposit) || 0);
-      return s;
-    }, 0);
+    return B.amount(-(B.ledger(hist())["Deposits held"] || 0));
   }
-  function isOverdue(r) {
-    return !!(r && r.type === "rental" && !r.returned && r.due && r.due < todayISO());
+  function isOverdue(row) { return row.type === "rental" && AutoSheetsRental.overdue(row); }
+  function fleetDocumentAlerts(asset) {
+    var limit = new Date(todayISO() + "T12:00");
+    limit.setDate(limit.getDate() + 30);
+    return [["Registration", asset.registration], ["Insurance", asset.insurance]].filter(function (item) {
+      return item[1] && item[1] <= localDay(limit);
+    }).map(function (item) { return item[0] + " " + (item[1] < todayISO() ? "expired" : "expires") + " " + item[1]; });
   }
   function serviceDue(a) {
     if (!a) return false;
@@ -1083,41 +1178,29 @@ body.modal-open { overflow: hidden; }
     return false;
   }
   function calc() {
-    var h = hist();
-    var R = 0, P = 0, T = 0, E = 0, Rc = 0, Pay = 0, ar = 0;
-    for (var i = 0; i < h.length; i++) {
-      var r = h[i];
-      if (r.type === "rental") { R += Number(r.total) || 0; if (!r.paid) ar += Number(r.total) || 0; }
-      if (r.type === "parking") { P += Number(r.amount) || 0; if (!r.paid) ar += Number(r.amount) || 0; }
-      if (r.type === "taxi") T += Number(r.fare) || 0;
-      if (r.type === "expense") E += Number(r.amt) || 0;
-      if (r.type === "receipt") { Rc += Number(r.amt) || 0; ar -= Number(r.amt) || 0; }
-      if (r.type === "payment") Pay += Number(r.amt) || 0;
-    }
-    var cs = custs();
-    for (var k = 0; k < cs.length; k++) ar += Number(cs[k].opening) || 0;
-    var invVal = 0;
-    var is = inv();
-    for (var m = 0; m < is.length; m++) invVal += Number(is[m].value) || 0;
-    var income = R + P + T + Rc;
-    var expense = E + Pay;
-    var net = income - expense;
-    var cash = Rc + h.filter(function (x) { return (x.type === "rental" || x.type === "parking") && x.paid; }).reduce(function (s, x) { return s + (Number(x.total || x.amount) || 0); }, 0) + T - E - Pay;
-    return { R: R, P: P, T: T, E: E, Rc: Rc, Pay: Pay, ar: Math.max(0, ar), income: income, expense: expense, net: net, cash: cash, invVal: invVal, n: h.length };
+    var rows = hist().filter(function (row) { return !B.pending(row); });
+    var customers = custs();
+    var t = sumEntries(rows);
+    var balances = B.receivables(rows, customers);
+    t.ar = B.amount(balances.due);
+    t.advances = B.amount(balances.advances);
+    t.cash = B.amount(t.accounts["Cash / bank"] || 0);
+    t.tax = B.amount(-(t.accounts["Output tax"] || 0));
+    t.invVal = B.amount(B.sum(inv(), function (asset) { return B.cents(asset.value); }));
+    return t;
   }
   function sumEntries(list) {
-    var income = 0, expense = 0;
-    for (var i = 0; i < list.length; i++) {
-      var r = list[i];
-      if (r.type === "rental") income += Number(r.total) || 0;
-      else if (r.type === "parking") income += Number(r.amount) || 0;
-      else if (r.type === "taxi") income += Number(r.fare) || 0;
-      else if (r.type === "receipt") income += Number(r.amt) || 0;
-      else if (r.type === "expense" || r.type === "payment") expense += Number(r.amt) || 0;
-    }
-    return { income: income, expense: expense, net: income - expense, n: list.length };
+    var accounts = B.ledger(list);
+    var read = function (key, sign) { return (accounts[key] || 0) * sign; };
+    var R = read("Rental income", -1), P = read("Parking income", -1), T = read("Taxi income", -1);
+    var Rc = read("Other income", -1), E = read("Expenses", 1), Pay = read("Payments / costs", 1);
+    return { accounts: accounts, R: B.amount(R), P: B.amount(P), T: B.amount(T), Rc: B.amount(Rc),
+      E: B.amount(E), Pay: B.amount(Pay), income: B.amount(R + P + T + Rc), expense: B.amount(E + Pay),
+      net: B.amount(R + P + T + Rc - E - Pay), n: list.length };
   }
   function entryLabel(r) {
+    if (B.managed(r)) return [r.number, r.client, r.vehicle].filter(Boolean).join(" · ");
+    if (B.rentalEvent(r)) return [AutoSheetsRental.eventLabels[r.type], r.number, r.client, r.note].filter(Boolean).join(" · ");
     if (r.type === "rental") return [r.client, r.vehicle, ((r.qty || "") + " " + (r.billType || "")).trim()].filter(Boolean).join(" · ");
     if (r.type === "parking") return [r.plate, r.bay, r.tariff].filter(Boolean).join(" · ");
     if (r.type === "taxi") return [r.driverName, r.vehicle].filter(Boolean).join(" · ") || "Fare";
@@ -1127,6 +1210,8 @@ body.modal-open { overflow: hidden; }
     return "";
   }
   function entryNumber(r) {
+    if (r.invoice) return B.amount(r.invoice.gross) * (r.type === "rental-credit" ? -1 : 1);
+    if (B.rentalEvent(r)) return B.amount(r.cents);
     if (r.type === "rental") return Number(r.total) || 0;
     if (r.type === "parking") return Number(r.amount) || 0;
     if (r.type === "taxi") return Number(r.fare) || 0;
@@ -1135,22 +1220,18 @@ body.modal-open { overflow: hidden; }
   function entryAmt(r) { return money(entryNumber(r)); }
   function tags(r) {
     var html = "";
-    if (r.type === "rental" && r.returned) html += '<span class="tag">Returned</span>';
+    if (r.type === "rental" && (r.returned || r.state === "returned")) html += '<span class="tag">Returned</span>';
     else if (isOverdue(r)) html += '<span class="tag bad">Overdue</span>';
-    if (r.type === "rental" || r.type === "parking") html += r.paid ? '<span class="tag ok">Paid</span>' : '<span class="tag warn">On account</span>';
+    if ((!B.managed(r) && r.type === "rental") || r.type === "parking") html += r.paid ? '<span class="tag ok">Paid</span>' : '<span class="tag warn">On account</span>';
     if (r.type === "rental" && Number(r.deposit) > 0 && !r.depositReturned) html += '<span class="tag">Deposit</span>';
     if (r.type === "taxi") html += '<span class="tag">Split</span>';
     return html ? '<div>' + html + "</div>" : "";
   }
-  function entryDC(r) {
-    var dr = 0, cr = 0;
-    if (r.type === "rental") { if (r.paid) { dr = Number(r.total) || 0; cr = Number(r.total) || 0; } else dr = Number(r.total) || 0; }
-    else if (r.type === "parking") { if (r.paid) { dr = Number(r.amount) || 0; cr = Number(r.amount) || 0; } else dr = Number(r.amount) || 0; }
-    else if (r.type === "taxi") { dr = Number(r.fare) || 0; cr = Number(r.fare) || 0; }
-    else if (r.type === "receipt") { dr = Number(r.amt) || 0; }
-    else if (r.type === "expense" || r.type === "payment") { cr = Number(r.amt) || 0; }
-    return { dr: dr, cr: cr };
+  function entryDC(row) {
+    var lines = B.journal(row);
+    return { dr: B.amount(B.sum(lines, function (line) { return line.dr; })), cr: B.amount(B.sum(lines, function (line) { return line.cr; })) };
   }
+  function postedHistory() { return hist().filter(function (row) { return !B.pending(row); }); }
   function renderAttention() {
     var box = byId("attention");
     var items = [];
@@ -1158,6 +1239,9 @@ body.modal-open { overflow: hidden; }
       if (isOverdue(r)) items.push('<button type="button" class="linkish" data-open="' + esc(r.id) + '">Overdue rental · ' + esc(r.client || "Client") + " · due " + esc(r.due) + "</button>");
     });
     inv().forEach(function (a) {
+      fleetDocumentAlerts(a).forEach(function (alert) {
+        items.push('<button type="button" class="linkish" data-asset="' + esc(a.id) + '">' + esc(alert + " · " + a.plate) + '</button>');
+      });
       if (serviceDue(a)) items.push('<button type="button" class="linkish" data-asset="' + esc(a.id) + '">Service due · ' + esc(a.name) + " · " + esc(a.plate) + "</button>");
     });
     if (!items.length) { box.hidden = true; byId("attentionList").innerHTML = ""; return; }
@@ -1168,7 +1252,7 @@ body.modal-open { overflow: hidden; }
     var t = calc();
     byId("totalRev").textContent = money(t.income);
     byId("bookCur").textContent = cur();
-    var bits = [["#1f4e79", "Rentals", t.R], ["#0f766e", "Parking", t.P], ["#6d28d9", "Taxis", t.T], ["#a16207", "Receipts", t.Rc]];
+    var bits = [["#1f4e79", "Rentals", t.R], ["#0f766e", "Parking", t.P], ["#6d28d9", "Taxis", t.T], ["#a16207", "Other income", t.Rc]];
     byId("revBreak").innerHTML = bits.map(function (b) {
       return '<span><span class="dot" style="background:' + b[0] + '"></span>' + b[1] + " " + esc(money(b[2])) + "</span>";
     }).join("");
@@ -1189,12 +1273,12 @@ body.modal-open { overflow: hidden; }
     byId("mOver").textContent = String(overdue);
     byId("mOver").style.color = overdue ? "var(--bad)" : "var(--t)";
     var day = todayISO();
-    var todays = hist().filter(function (r) { return localDay(r.time) === day; });
+    var todays = postedHistory().filter(function (r) { return localDay(r.time) === day; });
     var ts = sumEntries(todays);
     if (!ts.n) byId("todayBreak").textContent = "No entries yet today.";
     else byId("todayBreak").innerHTML = "<span>Income " + esc(money(ts.income)) + "</span><span>Expenses " + esc(money(ts.expense)) + "</span><span>Net " + esc(money(ts.net)) + "</span><span>" + ts.n + (ts.n === 1 ? " entry" : " entries") + "</span>";
     renderAttention();
-    var list = hist().slice().reverse().slice(0, 10);
+    var list = postedHistory().reverse().slice(0, 10);
     var box = byId("recentList");
     if (!list.length) { box.innerHTML = '<p class="em">No entries yet. Post a rental, parking ticket, taxi fare, or expense.</p>'; return; }
     box.innerHTML = list.map(function (r) {
@@ -1230,6 +1314,8 @@ body.modal-open { overflow: hidden; }
   function openEdit(id) {
     var r = findEntry(id);
     if (!r) return;
+    if (B.managed(r)) { rental.open(r); return; }
+    if (B.rentalEvent(r)) { var agreement = findEntry(r.rentalId); if (agreement) rental.open(agreement); return; }
     byId("editId").value = id;
     byId("editRef").value = r.id || "";
     byId("editType").value = r.type || "";
@@ -1265,6 +1351,9 @@ body.modal-open { overflow: hidden; }
         h[i].deposit = Number(byId("editDep").value) || 0;
         h[i].depositReturned = byId("editDepBack").value === "1";
         h[i].returned = byId("editReturned").value === "1";
+        if (!h[i].returned && wasReturned && inv().some(function (vehicle) {
+          return B.matchesVehicle(h[i], vehicle) && B.overlap(h, vehicle, new Date().toISOString().slice(0, 16), "9999-12-31T23:59", id, new Date().toISOString().slice(0, 16));
+        })) { toast("This vehicle has another rental or reservation", "err"); return; }
         if (h[i].vehicle && h[i].returned !== wasReturned) {
           updateAsset(function (a) { return assetLabel(a) === h[i].vehicle; }, function (a) {
             a.status = h[i].returned ? "Available" : "Rented";
@@ -1293,7 +1382,14 @@ body.modal-open { overflow: hidden; }
   function deleteEdit() {
     if (!confirm("Delete this entry?")) return;
     var id = byId("editId").value;
-    save("history", hist().filter(function (x) { return x.id !== id; }));
+    var row = findEntry(id);
+    var remaining = hist().filter(function (x) { return x.id !== id; });
+    if (row && row.type === "rental" && !B.managed(row) && B.active(row)) {
+      updateAsset(function (asset) { return B.matchesVehicle(row, asset); }, function (asset) {
+        if (asset.status === "Rented") asset.status = "Available";
+      });
+    }
+    save("history", remaining);
     closeModal();
     refreshAll();
     renderDaybook();
@@ -1303,8 +1399,8 @@ body.modal-open { overflow: hidden; }
   function renderDaybook() {
     var f = byId("dbFilter").value;
     var q = (byId("dbSearch").value || "").trim().toLowerCase();
-    var list = hist().slice().reverse();
-    if (f !== "all") list = list.filter(function (x) { return x.type === f; });
+    var list = postedHistory().reverse();
+    if (f !== "all") list = list.filter(function (x) { return x.type === f || (f === "rental" && B.rentalEvent(x)); });
     if (q) {
       list = list.filter(function (r) {
         var blob = [r.type, entryLabel(r), r.note, r.vehicle, r.payee, r.cat, r.client, r.plate, r.id].join(" ").toLowerCase();
@@ -1318,26 +1414,17 @@ body.modal-open { overflow: hidden; }
     for (var i = 0; i < list.length; i++) {
       var r = list[i];
       var dc = entryDC(r);
+      var accounts = B.journal(r).map(function (line) {
+        return (line.dr ? "Dr " : "Cr ") + line.account + " " + money(B.amount(line.dr || line.cr));
+      }).join(" · ");
       tDr += dc.dr; tCr += dc.cr;
-      h += '<tr data-id="' + esc(r.id) + '"><td>' + esc(localDay(r.time)) + "</td><td>" + esc(String(r.type || "").toUpperCase()) + "</td><td>" + esc(entryLabel(r)) + '</td><td class="r">' + (dc.dr ? esc(money(dc.dr)) : "—") + '</td><td class="r">' + (dc.cr ? esc(money(dc.cr)) : "—") + '</td><td><button type="button" class="btn btn-sm btn-s edit-btn">Edit</button></td></tr>';
+      h += '<tr data-id="' + esc(r.id) + '"><td>' + esc(localDay(r.time)) + "</td><td>" + esc(String(r.type || "").toUpperCase()) + "</td><td>" + esc(entryLabel(r)) + '<div class="li-sub">' + esc(accounts) + '</div></td><td class="r">' + (dc.dr ? esc(money(dc.dr)) : "—") + '</td><td class="r">' + (dc.cr ? esc(money(dc.cr)) : "—") + '</td><td><button type="button" class="btn btn-sm btn-s edit-btn">Edit</button></td></tr>';
     }
     h += '<tr><th scope="row" colspan="3">Total</th><th class="r">' + esc(money(tDr)) + '</th><th class="r">' + esc(money(tCr)) + "</th><td></td></tr></tbody></table></div>";
     box.innerHTML = h;
   }
   function customerBalance(cid) {
-    var cs = custs(), open = 0, cname = "";
-    for (var i = 0; i < cs.length; i++) if (cs[i].id === cid) { open = Number(cs[i].opening) || 0; cname = cs[i].name; }
-    var bal = open;
-    var h = hist();
-    for (var j = 0; j < h.length; j++) {
-      var r = h[j];
-      if (r.customerId === cid || (r.client && r.client === cname)) {
-        if (r.type === "rental" && !r.paid) bal += Number(r.total) || 0;
-        if (r.type === "parking" && !r.paid) bal += Number(r.amount) || 0;
-        if (r.type === "receipt") bal -= Number(r.amt) || 0;
-      }
-    }
-    return bal;
+    return B.amount(B.receivables(hist(), custs()).balances.get(cid) || 0);
   }
   function renderCust() {
     var q = (byId("cSearch").value || "").trim().toLowerCase();
@@ -1348,18 +1435,44 @@ body.modal-open { overflow: hidden; }
     var box = byId("custList");
     if (!cs.length) { box.innerHTML = '<p class="em">No customers yet.</p>'; return; }
     box.innerHTML = cs.map(function (c) {
-      return '<div class="li"><div class="li-row"><div><div class="li-title">' + esc(c.name) + '</div><div class="li-sub">' + esc(((c.phone || "") + " " + (c.email || "")).trim()) + '</div></div><div class="li-side"><div class="li-amt">' + esc(money(customerBalance(c.id))) + '</div><button type="button" class="btn btn-sm btn-s" data-cid="' + esc(c.id) + '">Statement</button> <button type="button" class="btn btn-sm btn-d" data-delc="' + esc(c.id) + '" aria-label="Delete ' + esc(c.name) + '">Delete</button></div></div></div>';
+      return '<div class="li"><div class="li-row"><div><div class="li-title">' + esc(c.name) + '</div><div class="li-sub">' + esc([c.phone, c.email, c.licenseExpiry ? "Licence expiry " + c.licenseExpiry : ""].filter(Boolean).join(" · ")) + '</div></div><div class="li-side"><div class="li-amt">' + esc(money(customerBalance(c.id))) + '</div><button type="button" class="btn btn-sm btn-s" data-cid="' + esc(c.id) + '">Statement</button> <button type="button" class="btn btn-sm btn-s" data-editc="' + esc(c.id) + '">Edit</button> <button type="button" class="btn btn-sm btn-d" data-delc="' + esc(c.id) + '" aria-label="Delete ' + esc(c.name) + '">Delete</button></div></div></div>';
     }).join("");
   }
+  function resetCustomerForm() {
+    byId("custForm").reset();
+    byId("cEditId").value = "";
+    byId("btnAddCust").textContent = "Add customer";
+    byId("btnCancelCust").hidden = true;
+  }
+  function editCustomer(id) {
+    var c = custs().find(function (customer) { return customer.id === id; });
+    if (!c) return;
+    var values = { cEditId: c.id, cName: c.name, cPhone: c.phone, cEmail: c.email, cOpen: c.opening || 0,
+      cTaxId: c.taxId, cLicense: c.license, cLicenseExpiry: c.licenseExpiry };
+    Object.keys(values).forEach(function (key) { byId(key).value = values[key] || ""; });
+    byId("btnAddCust").textContent = "Save customer";
+    byId("btnCancelCust").hidden = false;
+    byId("cName").focus();
+  }
   function addCust() {
-    var name = (byId("cName").value || "").trim();
-    if (!name) { toast("Enter a customer name", "err"); return; }
+    var name = byId("cName").value.trim();
+    if (!name || !byId("custForm").reportValidity()) { toast("Check the customer details", "err"); return; }
+    var id = byId("cEditId").value;
     var cs = custs();
-    cs.push({ id: uid(), name: name, phone: byId("cPhone").value, email: byId("cEmail").value, opening: Number(byId("cOpen").value) || 0 });
-    save("customers", cs);
-    byId("cName").value = ""; byId("cPhone").value = ""; byId("cEmail").value = ""; byId("cOpen").value = "0";
+    var current = cs.find(function (customer) { return customer.id === id; });
+    if (id && !current) { toast("Customer record is unavailable", "err"); return; }
+    if (current && current.name !== name && hist().some(function (row) { return !row.customerId && row.client === current.name; })) {
+      toast("This name is linked to older entries and must be kept", "err"); return;
+    }
+    var customer = { id: id || uid(), name: name, phone: byId("cPhone").value.trim(), email: byId("cEmail").value.trim(),
+      opening: B.amount(B.cents(byId("cOpen").value)), taxId: byId("cTaxId").value.trim(), license: byId("cLicense").value.trim(),
+      licenseExpiry: byId("cLicenseExpiry").value };
+    if (current) cs[cs.indexOf(current)] = customer;
+    else cs.push(customer);
+    writeCustomers(cs);
+    resetCustomerForm();
     renderCust(); fillSelects(); refreshAll();
-    toast("Customer added");
+    toast(current ? "Customer updated" : "Customer added");
   }
   function renderInv() {
     var f = byId("invFilter").value;
@@ -1373,6 +1486,7 @@ body.modal-open { overflow: hidden; }
     box.innerHTML = is.map(function (a) {
       var svc = serviceDue(a) ? '<span class="tag bad">Service due</span>' : "";
       var meta = [a.plate, a.type, a.status, a.odometer ? (a.odometer + " km") : ""].filter(Boolean).join(" · ");
+      svc += fleetDocumentAlerts(a).map(function (alert) { return '<span class="tag warn">' + esc(alert) + '</span>'; }).join("");
       return '<div class="li"><div class="li-row"><div><div class="li-title">' + esc(a.name) + '</div><div class="li-sub">' + esc(meta) + "</div>" + svc + '</div><div class="li-side"><div class="li-amt">' + esc(money(a.value)) + '</div><button type="button" class="btn btn-sm btn-s" data-editi="' + esc(a.id) + '">Edit</button> <button type="button" class="btn btn-sm btn-d" data-deli="' + esc(a.id) + '" aria-label="Delete ' + esc(a.name) + '">Delete</button></div></div></div>';
     }).join("");
   }
@@ -1380,14 +1494,17 @@ body.modal-open { overflow: hidden; }
     var name = (byId("iName").value || "").trim();
     var plate = (byId("iPlate").value || "").trim();
     if (!name || !plate) { toast("Name and plate are required", "err"); return; }
-    var is = inv();
+    if (!byId("invForm").reportValidity()) return;
+    var is = rawInventory();
+    if (is.some(function (asset) { return asset.plate.toLowerCase() === plate.toLowerCase(); })) { toast("Plate already exists", "err"); return; }
     is.push({
       id: uid(), name: name, plate: plate, type: byId("iType").value, status: byId("iStatus").value,
       value: Number(byId("iValue").value) || 0, odometer: Number(byId("iOdo").value) || 0,
-      nextService: byId("iNext").value || "", serviceAt: Number(byId("iAt").value) || 0
+      nextService: byId("iNext").value || "", serviceAt: Number(byId("iAt").value) || 0,
+      registration: byId("iRegistration").value, insurance: byId("iInsurance").value
     });
     save("inventory", is);
-    byId("iName").value = ""; byId("iPlate").value = ""; byId("iValue").value = "0"; byId("iOdo").value = "0"; byId("iNext").value = ""; byId("iAt").value = "";
+    byId("iName").value = ""; byId("iPlate").value = ""; byId("iValue").value = "0"; byId("iOdo").value = "0"; byId("iNext").value = ""; byId("iAt").value = ""; byId("iRegistration").value = ""; byId("iInsurance").value = "";
     renderInv(); fillSelects(); refreshAll();
     toast("Asset added");
   }
@@ -1405,6 +1522,8 @@ body.modal-open { overflow: hidden; }
     byId("iEditOdo").value = a.odometer || 0;
     byId("iEditNext").value = a.nextService || "";
     byId("iEditAt").value = a.serviceAt || "";
+    byId("iEditRegistration").value = a.registration || "";
+    byId("iEditInsurance").value = a.insurance || "";
     byId("iEditName").focus();
   }
   function saveInvEdit() {
@@ -1412,17 +1531,31 @@ body.modal-open { overflow: hidden; }
     var name = (byId("iEditName").value || "").trim();
     var plate = (byId("iEditPlate").value || "").trim();
     if (!name || !plate) { toast("Name and plate are required", "err"); return; }
-    var list = inv();
+    if (!byId("invEditForm").reportValidity()) return;
+    var list = rawInventory();
+    if (list.some(function (asset) { return asset.id !== id && asset.plate.toLowerCase() === plate.toLowerCase(); })) { toast("Plate already exists", "err"); return; }
+    var current = list.find(function (asset) { return asset.id === id; });
+    if (!current) return;
+    var linked = hist().filter(function (row) { return row.type === "rental" && B.matchesVehicle(row, current); });
+    var active = linked.some(B.active);
+    if (linked.some(function (row) { return !B.managed(row) && B.active(row); }) && assetLabel(current) !== assetLabel({ name: name, plate: plate })) {
+      toast("Close the legacy rental before changing this vehicle’s name or plate", "err"); return;
+    }
+    if (linked.some(function (row) { return B.managed(row) && row.state === "reserved"; }) && (byId("iEditStatus").value !== "Available" || !["Rental", "Other"].includes(byId("iEditType").value))) {
+      toast("Move or cancel this vehicle’s reservations before making it unavailable", "err"); return;
+    }
     for (var i = 0; i < list.length; i++) {
       if (list[i].id === id) {
         list[i].name = name;
         list[i].plate = plate;
         list[i].type = byId("iEditType").value;
-        list[i].status = byId("iEditStatus").value;
+        list[i].status = active ? current.status : byId("iEditStatus").value;
         list[i].value = Number(byId("iEditValue").value) || 0;
         list[i].odometer = Number(byId("iEditOdo").value) || 0;
         list[i].nextService = byId("iEditNext").value || "";
         list[i].serviceAt = Number(byId("iEditAt").value) || 0;
+        list[i].registration = byId("iEditRegistration").value;
+        list[i].insurance = byId("iEditInsurance").value;
       }
     }
     save("inventory", list);
@@ -1442,42 +1575,34 @@ body.modal-open { overflow: hidden; }
     byId("plN").textContent = money(t.net);
     var dep = depositsHeld();
     var assets = t.cash + t.ar + t.invVal;
-    var capital = assets - dep - t.net;
+    var capital = assets - dep - t.tax - t.advances - t.net;
     byId("bsCash").textContent = money(t.cash);
     byId("bsAr").textContent = money(t.ar);
     byId("bsInv").textContent = money(t.invVal);
     byId("bsTa").textContent = money(assets);
     byId("bsDep").textContent = money(dep);
-    byId("bsAp").textContent = money(0);
+    byId("bsAdvance").textContent = money(t.advances);
+    byId("bsTax").textContent = money(t.tax);
     byId("bsCap").textContent = money(capital);
     byId("bsRe").textContent = money(t.net);
     byId("bsTl").textContent = money(assets);
-    var buckets = [0, 0, 0, 0];
-    var counts = [0, 0, 0, 0];
-    var now = new Date();
-    hist().forEach(function (r) {
-      var amt = 0;
-      if (r.type === "rental" && !r.paid) amt = Number(r.total) || 0;
-      else if (r.type === "parking" && !r.paid) amt = Number(r.amount) || 0;
-      if (amt <= 0) return;
-      var days = 0;
-      if (r.time) days = Math.floor((now - new Date(r.time)) / 86400000);
-      if (days < 0 || isNaN(days)) days = 0;
-      var idx = days <= 30 ? 0 : days <= 60 ? 1 : days <= 90 ? 2 : 3;
-      buckets[idx] += amt;
-      counts[idx] += 1;
-    });
+    var rows = hist();
+    var aged = B.aging(rows, todayISO(), localDay);
     for (var i = 0; i < 4; i++) {
-      byId("age" + i).textContent = money(buckets[i]);
-      byId("age" + i + "n").textContent = String(counts[i]);
+      byId("age" + i).textContent = money(B.amount(aged.buckets[i + 1]));
+      byId("age" + i + "n").textContent = String(aged.counts[i + 1]);
     }
-    var opening = custs().reduce(function (s, c) { return s + (Number(c.opening) || 0); }, 0);
+    byId("ageCurrent").textContent = money(B.amount(aged.buckets[0]));
+    byId("ageCurrentN").textContent = String(aged.counts[0]);
+    var opening = B.amount(B.sum(custs(), function (c) { return B.cents(c.opening); }));
     byId("ageOpen").textContent = money(opening);
-    byId("ageRc").textContent = money(t.Rc);
+    byId("ageRc").textContent = money(t.ar - opening - B.amount(B.sum(aged.buckets, function (value) { return value; })));
     byId("ageNet").textContent = money(t.ar);
+    rental.report();
     fillSelects();
   }
   function stmtParticulars(r) {
+    if (B.managed(r) || B.rentalEvent(r)) return entryLabel(r);
     if (r.type === "rental") return "Rental " + [r.vehicle, r.qty, r.billType].filter(Boolean).join(" ");
     if (r.type === "parking") return "Parking " + [r.plate, r.bay, r.tariff].filter(Boolean).join(" ");
     if (r.type === "receipt") return "Receipt " + (r.note || "");
@@ -1492,27 +1617,28 @@ body.modal-open { overflow: hidden; }
     if (!c) return;
     var co = companyName();
     byId("stmtTitle").textContent = "Statement — " + c.name;
-    var rows = hist().filter(function (r) { return r.customerId === cid || (r.client && r.client === c.name); });
+    var uniqueName = cs.filter(function (customer) { return customer.name === c.name; }).length === 1;
+    var rows = postedHistory().filter(function (r) { return r.customerId === cid || (!r.customerId && uniqueName && r.client === c.name); });
     rows.sort(function (a, b) { return (a.time || "").localeCompare(b.time || ""); });
     var html = '<p class="hint">' + esc(co) + " · Customer statement (" + esc(cur()) + ")</p>";
     html += '<div class="table-wrap"><table class="tbl"><caption class="sr-only">Customer statement</caption><thead><tr><th scope="col">Date</th><th scope="col">Particulars</th><th class="r" scope="col">Debit</th><th class="r" scope="col">Credit</th><th class="r" scope="col">Balance</th></tr></thead><tbody>';
-    var bal = Number(c.opening) || 0;
-    if (bal) html += '<tr><td></td><td>Opening balance</td><td class="r">' + esc(money(bal)) + '</td><td class="r"></td><td class="r">' + esc(money(bal)) + "</td></tr>";
+    var bal = B.cents(c.opening);
+    if (bal) html += '<tr><td></td><td>Opening balance</td><td class="r">' + esc(money(B.amount(bal))) + '</td><td class="r"></td><td class="r">' + esc(money(B.amount(bal))) + "</td></tr>";
     for (var j = 0; j < rows.length; j++) {
       var r = rows[j], dr = "", cr = "";
-      if (r.type === "rental" && !r.paid) { dr = money(r.total); bal += Number(r.total) || 0; }
-      else if (r.type === "rental" && r.paid) { dr = money(r.total); cr = money(r.total); }
-      else if (r.type === "parking" && !r.paid) { dr = money(r.amount); bal += Number(r.amount) || 0; }
-      else if (r.type === "parking" && r.paid) { dr = money(r.amount); cr = money(r.amount); }
-      else if (r.type === "receipt") { cr = money(r.amt); bal -= Number(r.amt) || 0; }
+      var change = B.receivable(r);
+      if (change > 0) dr = money(B.amount(change));
+      else if (change < 0) cr = money(B.amount(-change));
+      else if ((r.type === "rental" || r.type === "parking") && r.paid) { dr = entryAmt(r); cr = entryAmt(r); }
       else continue;
-      html += "<tr><td>" + esc(localDay(r.time)) + "</td><td>" + esc(stmtParticulars(r)) + '</td><td class="r">' + esc(dr) + '</td><td class="r">' + esc(cr) + '</td><td class="r">' + esc(money(bal)) + "</td></tr>";
+      bal += change;
+      html += "<tr><td>" + esc(localDay(r.time)) + "</td><td>" + esc(stmtParticulars(r)) + '</td><td class="r">' + esc(dr) + '</td><td class="r">' + esc(cr) + '</td><td class="r">' + esc(money(B.amount(bal))) + "</td></tr>";
     }
     html += "</tbody></table></div>";
     byId("stmtBody").innerHTML = html;
-    byId("stmtBal").textContent = money(bal);
+    byId("stmtBal").textContent = money(B.amount(bal));
     byId("stmtOut").hidden = false;
-    window._lastPrint = { title: "Statement — " + c.name, html: html, bal: money(bal), co: co };
+    window._lastPrint = { title: "Statement — " + c.name, html: html, bal: money(B.amount(bal)), co: co };
   }
   function printDoc(doc) {
     if (!doc) return;
@@ -1563,8 +1689,8 @@ body.modal-open { overflow: hidden; }
   function genMonth() {
     var m = byId("monthPick").value;
     if (!m) { toast("Pick a month", "err"); return; }
-    var list = hist().filter(function (r) { return monthOf(r) === m; });
-    var prev = sumEntries(hist().filter(function (r) { return monthOf(r) === shiftMonth(m, -1); }));
+    var list = postedHistory().filter(function (r) { return monthOf(r) === m; });
+    var prev = sumEntries(postedHistory().filter(function (r) { return monthOf(r) === shiftMonth(m, -1); }));
     var curSum = sumEntries(list);
     byId("monthTitle").textContent = "Monthly — " + m;
     byId("moInc").textContent = money(curSum.income);
@@ -1579,11 +1705,6 @@ body.modal-open { overflow: hidden; }
   }
   function applyRates() {
     var r = rates();
-    var bill = byId("rBill");
-    if (bill) {
-      var v = bill.value;
-      byId("rRate").value = v === "weekly" ? r.rentalWeekly : v === "monthly" ? r.rentalMonthly : r.rentalDaily;
-    }
     var pt = byId("pTariff");
     if (pt) {
       var pv = pt.value;
@@ -1592,52 +1713,16 @@ body.modal-open { overflow: hidden; }
     }
     var tc = byId("tCommission");
     if (tc) tc.value = r.taxiComm;
-    previewRental();
     previewTaxi();
   }
-  function previewRental() {
-    var qty = Number(byId("rQty").value) || 0;
-    var rate = Number(byId("rRate").value) || 0;
-    var dep = Number(byId("rDep").value) || 0;
-    byId("rPreview").textContent = "Agreement total " + money(qty * rate) + (dep ? " · Deposit held " + money(dep) + " (not income)" : "");
-  }
+
   function previewTaxi() {
     var fare = Number(byId("tFare").value) || 0;
     var comm = Number(byId("tCommission").value) || 0;
     var driver = Math.round(fare * comm) / 100;
     byId("tPreview").textContent = "Full fare posts to taxi income. Driver " + money(driver) + " · Owner " + money(fare - driver) + ".";
   }
-  function saveRental() {
-    var cid = byId("rCust").value;
-    var client = (byId("rClient").value || "").trim() || custNameById(cid) || "Client";
-    var qty = Number(byId("rQty").value) || 1;
-    var rate = Number(byId("rRate").value) || 0;
-    var total = qty * rate;
-    var paid = byId("rPaid").value === "1";
-    var vehicle = byId("rVehicle").value || "";
-    var due = byId("rDue").value || "";
-    var odo = Number(byId("rOdo").value) || 0;
-    var deposit = Number(byId("rDep").value) || 0;
-    var h = hist();
-    h.push({
-      id: uid(), type: "rental", customerId: cid || null, client: client, vehicle: vehicle,
-      billType: byId("rBill").value, qty: qty, rate: rate, deposit: deposit, total: total, paid: paid,
-      due: due, odoOut: odo, returned: false, depositReturned: false, time: new Date().toISOString()
-    });
-    save("history", h);
-    if (vehicle) {
-      updateAsset(function (a) { return assetLabel(a) === vehicle; }, function (a) {
-        a.status = "Rented";
-        if (odo > (Number(a.odometer) || 0)) a.odometer = odo;
-      });
-    }
-    toast("Rental saved — " + money(total) + (paid ? " (Paid)" : " (On account)"));
-    byId("rClient").value = "";
-    byId("rDue").value = "";
-    byId("rOdo").value = "";
-    byId("rDep").value = "0";
-    showPage("dashboard");
-  }
+
   function saveParking() {
     var cid = byId("pCust").value;
     var plate = (byId("pPlate").value || "Unknown").trim();
@@ -1698,7 +1783,7 @@ body.modal-open { overflow: hidden; }
   function saveReceipt() {
     var cid = byId("rcCust").value;
     var amt = Number(byId("rcAmt").value) || 0;
-    if (!amt) { toast("Enter an amount", "err"); return; }
+    if (amt <= 0) { toast("Enter a positive amount", "err"); return; }
     var h = hist();
     h.push({ id: uid(), type: "receipt", customerId: cid || null, client: custNameById(cid), amt: amt, note: byId("rcNote").value || "", time: new Date().toISOString() });
     save("history", h);
@@ -1709,7 +1794,7 @@ body.modal-open { overflow: hidden; }
   }
   function savePayment() {
     var amt = Number(byId("payAmt").value) || 0;
-    if (!amt) { toast("Enter an amount", "err"); return; }
+    if (amt <= 0) { toast("Enter a positive amount", "err"); return; }
     var h = hist();
     h.push({ id: uid(), type: "payment", payee: byId("payName").value || "Vendor", amt: amt, note: byId("payNote").value || "", time: new Date().toISOString() });
     save("history", h);
@@ -1733,7 +1818,11 @@ body.modal-open { overflow: hidden; }
     byId("pMonthly").value = r.parkMonthly || 400;
     byId("tComm").value = r.taxiComm;
     byId("sCo").textContent = companyName();
-    byId("coName").value = load("company", {}).name || "";
+    var saved = company();
+    byId("coName").value = saved.name || "";
+    byId("coAddress").value = saved.address || "";
+    byId("coTaxId").value = saved.taxId || "";
+    byId("coTaxRate").value = saved.taxRate || 0;
   }
   function saveRates() {
     save("rates", {
@@ -1751,7 +1840,8 @@ body.modal-open { overflow: hidden; }
   }
   function saveCo() {
     var n = (byId("coName").value || "AutoSheets").trim() || "AutoSheets";
-    save("company", { name: n });
+    if (!byId("coTaxRate").reportValidity()) return;
+    save("company", { name: n, address: byId("coAddress").value.trim(), taxId: byId("coTaxId").value.trim(), taxRate: Number(byId("coTaxRate").value) || 0 });
     byId("sCo").textContent = n;
     byId("hdrCo").textContent = n;
     document.title = n + " — AutoSheets Accounting";
@@ -1770,23 +1860,23 @@ body.modal-open { overflow: hidden; }
   function exportData() {
     var data = {
       app: "AutoSheets", version: VERSION, session: load("session", {}), company: load("company", {}),
-      rates: rates(), customers: custs(), inventory: inv(), history: hist(), currency: cur(), at: new Date().toISOString()
+      rates: rates(), customers: custs(), inventory: rawInventory(), history: hist(), currency: cur(), at: new Date().toISOString()
     };
     download("autosheets-books.json", new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
     toast("JSON backup downloaded");
   }
   function csvCell(v) {
     var s = String(v == null ? "" : v);
-    if (/^[=+\-@]/.test(s)) s = "'" + s;
+    if (/^[\s]*[=+\-@]|^[\t\r\n]/.test(s)) s = "'" + s;
     return '"' + s.replace(/"/g, '""') + '"';
   }
   function exportCsv() {
     var header = ["Date", "Type", "Particulars", "Amount", "Paid", "Deposit", "Due", "Customer", "Vehicle", "Plate", "Note", "Reference"];
     var lines = [header.map(csvCell).join(",")];
-    hist().forEach(function (r) {
+    postedHistory().forEach(function (r) {
       lines.push([
         localDay(r.time), r.type, entryLabel(r), entryNumber(r).toFixed(2), r.paid ? "yes" : "no",
-        r.deposit || "", r.due || "", r.client || "", r.vehicle || "", r.plate || "", r.note || r.payee || r.cat || "", r.id
+        r.deposit || "", r.invoiceDue || r.due || "", r.client || "", r.vehicle || "", r.plate || "", r.note || r.payee || r.cat || "", r.id
       ].map(csvCell).join(","));
     });
     download("autosheets-ledger.csv", new Blob([lines.join("\n")], { type: "text/csv;charset=utf-8" }));
@@ -1799,6 +1889,10 @@ body.modal-open { overflow: hidden; }
         var data = JSON.parse(String(reader.result || ""));
         if (!data || typeof data !== "object" || Array.isArray(data)) throw new Error("bad");
         if (!data.history && !data.customers && !data.inventory && !data.company && !data.rates) throw new Error("empty");
+        ["customers", "inventory", "history"].forEach(function (key) {
+          if (key in data && (!Array.isArray(data[key]) || data[key].some(function (item) { return !item || typeof item !== "object" || Array.isArray(item); }))) throw new Error("bad records");
+        });
+        if (Array.isArray(data.history)) B.validateRentalBackup(data.history);
         if (!confirm("Replace customers, fleet, entries, rates, and company name in this browser with this backup? Sign-in and PIN stay as they are.")) return;
         if (Array.isArray(data.customers)) save("customers", data.customers);
         if (Array.isArray(data.inventory)) save("inventory", data.inventory);
@@ -1824,7 +1918,12 @@ body.modal-open { overflow: hidden; }
     reader.readAsText(file);
   }
   function clearData() {
-    if (!confirm("Delete all accounting entries? Customers, fleet, and rates stay.")) return;
+    if (!confirm("Delete all accounting entries and rental records? Customers, fleet, and rates stay.")) return;
+    var rows = hist();
+    save("inventory", rawInventory().map(function (asset) {
+      if (asset.status === "Rented" && rows.some(function (row) { return B.active(row) && B.matchesVehicle(row, asset); })) asset.status = "Available";
+      return asset;
+    }));
     save("history", []);
     refreshAll(); updSettings(); renderDaybook(); renderReports();
     toast("All entries cleared");
@@ -1841,7 +1940,7 @@ body.modal-open { overflow: hidden; }
   }
   function printToday() {
     var day = todayISO();
-    var list = hist().filter(function (r) { return localDay(r.time) === day; });
+    var list = postedHistory().filter(function (r) { return localDay(r.time) === day; });
     var ts = sumEntries(list);
     var rows = list.map(function (r) {
       return "<tr><td>" + esc(localDay(r.time)) + "</td><td>" + esc(r.type) + "</td><td>" + esc(entryLabel(r)) + '</td><td class="r">' + esc(entryAmt(r)) + "</td></tr>";
@@ -1869,9 +1968,12 @@ body.modal-open { overflow: hidden; }
       genStmt();
       return;
     }
+    var editC = e.target.closest("[data-editc]");
+    if (editC) { editCustomer(editC.getAttribute("data-editc")); return; }
     var delC = e.target.closest("[data-delc]");
     if (delC) {
       var cid = delC.getAttribute("data-delc");
+      if (hist().some(function (row) { return B.managed(row) && row.customerId === cid; })) { toast("This customer has linked rental records", "err"); return; }
       if (!confirm("Delete this customer? Past entries stay in the ledger.")) return;
       save("customers", custs().filter(function (x) { return x.id !== cid; }));
       renderCust(); fillSelects(); refreshAll();
@@ -1881,9 +1983,11 @@ body.modal-open { overflow: hidden; }
     var delI = e.target.closest("[data-deli]");
     if (delI) {
       var iid = delI.getAttribute("data-deli");
+      var vehicle = rawInventory().find(function (asset) { return asset.id === iid; });
+      if (vehicle && hist().some(function (row) { return row.type === "rental" && B.matchesVehicle(row, vehicle) && (B.active(row) || row.state === "reserved"); })) { toast("Close this vehicle’s open rentals and reservations first", "err"); return; }
       if (!confirm("Delete this asset?")) return;
       if (byId("iEditId").value === iid) byId("invEditForm").hidden = true;
-      save("inventory", inv().filter(function (x) { return x.id !== iid; }));
+      save("inventory", rawInventory().filter(function (x) { return x.id !== iid; }));
       renderInv(); fillSelects(); refreshAll();
       toast("Asset deleted");
       return;
@@ -1894,18 +1998,29 @@ body.modal-open { overflow: hidden; }
   function bindForm(id, fn) {
     var form = byId(id);
     if (!form) return;
-    form.addEventListener("submit", function (e) { e.preventDefault(); fn(); });
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var action = function () { try { fn(); } catch (error) { toast("Could not save. Check browser storage and try again.", "err"); } };
+      if (navigator.locks) navigator.locks.request("autosheets-books", action);
+      else action();
+    });
   }
   function init() {
+    rental = AutoSheetsRental.create({ byId: byId, esc: esc, money: money, hist: hist, custs: custs, inv: inv, rates: rates,
+      todayISO: todayISO, localDay: localDay, toast: toast, printDoc: printDoc, companyName: companyName, showPage: showPage,
+      download: download, csvCell: csvCell, assetLabel: assetLabel, company: company, fillSelects: fillSelects,
+      writeHistory: writeHistory, writeCustomers: writeCustomers, refresh: refreshAll, uid: uid, depositsHeld: depositsHeld });
+    rental.init();
     bindForm("loginForm", doLogin);
     bindForm("pinForm", checkPin);
     bindForm("custForm", addCust);
+    byId("btnCancelCust").onclick = resetCustomerForm;
     bindForm("invForm", addInv);
     bindForm("invEditForm", saveInvEdit);
     bindForm("coForm", saveCo);
     bindForm("pinSetForm", savePin);
     bindForm("ratesForm", saveRates);
-    bindForm("rentalForm", saveRental);
+
     bindForm("parkingForm", saveParking);
     bindForm("taxiForm", saveTaxi);
     bindForm("expenseForm", saveExpense);
@@ -1951,9 +2066,7 @@ body.modal-open { overflow: hidden; }
     byId("dbSearch").oninput = renderDaybook;
     byId("cSearch").oninput = renderCust;
     byId("invFilter").onchange = renderInv;
-    byId("rBill").onchange = applyRates;
     byId("pTariff").onchange = applyRates;
-    ["rQty", "rRate", "rDep"].forEach(function (id) { byId(id).addEventListener("input", previewRental); });
     ["tFare", "tCommission"].forEach(function (id) { byId(id).addEventListener("input", previewTaxi); });
     byId("goRental").onclick = function () { showPage("rental"); };
     byId("goParking").onclick = function () { showPage("parking"); };

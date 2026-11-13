@@ -1,9 +1,11 @@
 /* AutoSheets service worker — offline shell, fresh HTML when online. */
-const CACHE_NAME = "autosheets-v5";
+const CACHE_NAME = "autosheets-v6";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
+  "./rental-books.js",
+  "./rental-desk.js",
   "./sw.js",
   "./assets/icon-192x192.png",
   "./assets/icon-512x512.png"
@@ -18,7 +20,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+      Promise.all(keys.filter((k) => /^autosheets-v\d+$/.test(k) && k !== CACHE_NAME).map((k) => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
@@ -31,6 +33,18 @@ function isDocument(request) {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  const scope = new URL(self.registration.scope);
+  const url = new URL(event.request.url);
+  if (url.origin !== scope.origin || !url.pathname.startsWith(scope.pathname)) return;
+  if (["rental-books.js", "rental-desk.js"].some((name) => url.pathname === new URL(name, scope).pathname)) {
+    event.respondWith(fetch(event.request).then((response) => {
+      if (!response.ok) throw new Error("Rental script unavailable");
+      const copy = response.clone();
+      event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy)));
+      return response;
+    }).catch(() => caches.match(event.request).then((cached) => cached || Response.error())));
+    return;
+  }
 
   if (isDocument(event.request)) {
     event.respondWith(

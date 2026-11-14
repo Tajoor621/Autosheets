@@ -16,14 +16,13 @@ The cash figure on the balance sheet is a running total of entries in this brows
 
 ## What you can do
 
-- Sign in with email and password, or unlock the same browser with a 4–6 digit PIN.
-- Work as Fleet Owner, Rental Desk, Parking Attendant, Dispatcher, or Accountant. Every role can use the full set of books.
-- Post rental agreements, parking tickets, taxi fares, expenses, customer receipts, and vendor payments.
-- Keep customers, opening balances, and a fleet list with plate, status, book value, odometer, and service due.
-- Choose a book currency from USD, EUR, AED, GBP, SAR, and PKR before issuing a rental invoice. Currency selection does not convert prior amounts.
-- Read a ledger with debit and credit, profit and loss, a balance sheet, customer statements, a monthly summary, and receivables aging.
-- Print or share a voucher, a day sheet, profit and loss, the balance sheet, and a customer statement.
-- Export a JSON backup or a CSV ledger, and import a JSON backup without changing the password or PIN.
+- Configure an encrypted workspace, or open a temporary one to try the interface.
+- Post rental agreements, parking tickets, taxi fares, expenses, customer receipts, vendor payments, and multi-line journals.
+- Review trial balance, account-by-account general ledger, profit and loss, balance sheet, cash movements, receivables aging, and vehicle contribution.
+- Reconcile cash, bank, and card clearing against a statement balance, with outstanding items carried forward. Reconciliation is manual.
+- Close a posting period and track changes in the workspace activity log. Correct posted journals with a reversing journal.
+- Choose USD, EUR, AED, GBP, SAR, or PKR before entering posted or opening balances. The app uses a single book currency.
+- Print vouchers and statements, download CSV reports, and restore encrypted or legacy JSON backups.
 
 ## Car rental workflow
 
@@ -36,28 +35,17 @@ The cash figure on the balance sheet is a running total of entries in this brows
 
 Issued invoices and their transactions post to the journal. Rental reports include a date-filtered invoice and tax register, vehicle contribution from recorded revenue and expenses, rental cash movements and current agreement balances. Export the reports as CSV or print them. Existing rentals still open in their original entry editor. The reports treat customer receipts as collections against receivables and unassigned receipts as other income.
 
-AutoSheets uses a single browser's books. Payment methods record money already received or sent. The web app has no shared staff accounts, online booking, payment processing, tax filing, traffic-fine feeds or bank connection. Local sign-in and PIN provide a screen lock and do not encrypt the browser data or exported backups.
+Taxi commission is the driver share of the fare. The full fare posts as taxi income. Record the driver payout separately if it applies.
 
-Taxi commission is the driver share of the fare. The full fare is still taxi income. The driver and owner amounts are stored on the entry.
+## Workspace security
 
-## Demo sign-in
+The existing site's books migrate in place once you create a new vault passphrase. AutoSheets writes the encrypted vault before removing its legacy plaintext keys, including the old password and PIN records. The public demo login is replaced by a temporary workspace when the browser has no books.
 
-The sign-in on the public page is a **demo only**. It is not a company account.
-
-| Field | Value |
-| --- | --- |
-| Email | `owner@autosheets.com` |
-| Password | `demo1234` |
-
-A new email is saved in this browser when the password is at least 4 characters. Use a password you do not use anywhere else. Passwords and the PIN stay in `localStorage` on this device. They are not sent to a server.
-
-## Your books stay on this device
-
-Nothing is uploaded when you add a customer, a vehicle, or an entry. Clearing the site data for this browser deletes the books, so export a backup first.
-
-The JSON backup includes the signed-in email and role. It does not include the password or PIN. Importing a file replaces customers, fleet, entries, rates, and the company name, and leaves sign-in and the PIN alone.
-
-The app also installs as a standalone page and can open again from the cache when the network is down. While you are online, the page itself is loaded fresh.
+- AutoSheets encrypts the local snapshot and backups with Web Crypto AES-256-GCM. The vault derives its key from your passphrase using PBKDF2-HMAC-SHA-256 with a random salt and 600,000 iterations.
+- The passphrase stays in memory while unlocking or changing it. The derived key stays in the unlocked tab. Reloading or locking the tab clears the live workspace, and inactivity locks it after 10 minutes.
+- Keep an encrypted backup and your passphrase safe. Backups use the passphrase from the time of export. There is no server that can recover it. CSV exports and printouts contain readable business data.
+- Work modes are local labels. The activity log is part of the encrypted workspace and is not an independent or immutable audit trail. Browser extensions, a compromised device, or compromised deployed code can expose an unlocked workspace.
+- The installed web app caches its application files for offline use. The books live in this browser's storage. AutoSheets has no shared staff accounts, live bank feeds, payment processing or government tax submission.
 
 ## Using the pages
 
@@ -68,9 +56,9 @@ The app also installs as a standalone page and can open again from the cache whe
 | Clients | Customers and what each one owes |
 | Ledger | Every entry, with search and a debit / credit total |
 | Reports | Profit and loss, balance sheet, customer statement, month, aging, and rental accounting reports |
-| Settings | Company name, PIN, default rates, role, export, import, and clear entries |
+| Settings | Company details, vault passphrase, default rates, work mode, encrypted backup, and restore |
 
-These addresses open the matching page after sign-in:
+These addresses open the matching page after vault unlock:
 
 - [Home](https://tajoor621.github.io/Autosheets/#dashboard)
 - [Rental](https://tajoor621.github.io/Autosheets/#rental)
@@ -86,7 +74,7 @@ The site is static. From this folder:
 python3 -m http.server 8765
 ```
 
-Open [http://127.0.0.1:8765/](http://127.0.0.1:8765/). GitHub Pages publishes the same files from `main`. Run `node --test tests/rental-books.test.cjs` to check the rental accounting rules. `.nojekyll` keeps the asset paths as they are.
+Open [http://127.0.0.1:8765/](http://127.0.0.1:8765/). GitHub Pages publishes the same files from `main`. Run `node --test tests/*.test.cjs` to check rental accounting, closing, reconciliation, and the vault. `.nojekyll` keeps the asset paths as they are.
 
 ## Optional Expo app
 
@@ -104,6 +92,9 @@ Node.js 18 or newer is enough for that shell. The published website does not nee
 ```
 AutoSheets/
 ├── index.html          # Published accounting app
+├── web-app.js          # Web workspace and business workflows
+├── vault.js            # Authenticated encryption
+├── accounting*.js      # Accounting engine and report UI
 ├── manifest.json       # Installable app metadata
 ├── sw.js               # Offline cache
 ├── assets/             # Icon and screenshots

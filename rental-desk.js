@@ -39,7 +39,6 @@
     const titleFor = row => row.number || row.id;
     let selected = "";
     let editing = "";
-    let busy = false;
 
     function amountLine(label, value) {
       return '<tr><th scope="row">' + esc(label) + '</th><td class="r">' + esc(fmt(value)) + '</td></tr>';
@@ -110,17 +109,6 @@
       editing = "";
     }
 
-    async function mutate(action) {
-      if (busy) return;
-      busy = true;
-      try {
-        if (navigator.locks) await navigator.locks.request("autosheets-books", action);
-        else action();
-      } catch (error) {
-        toast(error.message || "The rental change could not be saved.", "err");
-      } finally { busy = false; }
-    }
-
     function checkWindow(rows, vehicle, start, due, except) {
       if (due <= start || !Number.isFinite(new Date(start).getTime()) || !Number.isFinite(new Date(due).getTime())) throw new Error("Return must be later than pickup.");
       if (!vehicle || !["Rental", "Other"].includes(vehicle.type)) throw new Error("Select a rental vehicle.");
@@ -132,9 +120,7 @@
 
     function persist(rows, message) {
       api.writeHistory(rows);
-      api.refresh();
-      render();
-      toast(message);
+      return () => { api.refresh(); render(); toast(message); };
     }
 
     function saveReservation() {
@@ -175,21 +161,19 @@
       if (old) rows[rows.indexOf(old)] = next;
       else rows.push(next);
       if (newCustomer) api.writeCustomers([...customers, customer]);
-      try { api.writeHistory(rows); }
-      catch (error) {
-        if (newCustomer) api.writeCustomers(customers);
-        throw error;
-      }
-      closeForm();
-      selected = id;
-      api.refresh();
-      render(true);
-      toast(old ? "Reservation updated" : "Reservation saved. Check out the vehicle when it leaves.");
+      api.writeHistory(rows);
+      return () => {
+        closeForm();
+        selected = id;
+        api.refresh();
+        render(true);
+        toast(old ? "Reservation updated" : "Reservation saved. Check out the vehicle when it leaves.");
+      };
     }
 
     function event(row, type, data) {
       return { id: api.uid(), type, rentalId: row.id, number: titleFor(row), customerId: row.customerId,
-        client: row.client, vehicleId: row.vehicleId, vehicle: row.vehicle, time: isoNow(), ...data };
+        client: row.client, vehicleId: row.vehicleId, vehicle: row.vehicle, time: isoNow(), channelVersion: 1, ...data };
     }
 
     function charge(row, label, value, note, type = "rental-charge", taxRate = row.invoice.taxRate) {
@@ -294,7 +278,7 @@
       }
 
       row.updatedAt = isoNow();
-      persist([...rows, ...next], message);
+      return persist([...rows, ...next], message);
     }
 
     function formActions(row, position) {
@@ -481,7 +465,7 @@
         ["Rental revenue", amount(-(accounts["Rental income"] || 0))],
         ["Output tax", amount(-(accounts["Output tax"] || 0))],
         ["Recorded vehicle expenses", amount(accounts.Expenses || 0)],
-        ["Net rental cash movement", amount(accounts["Cash / bank"] || 0)],
+        ["Net rental cash movement", amount(B.sum(root.AutoSheetsAccounting.cashAccounts, account => accounts[account] || 0))],
         ["Net deposit liability movement", amount(-(accounts["Deposits held"] || 0))]
       ];
       const openRows = outstanding.map(({ row, billed, paid, held }) => [titleFor(row), row.client, row.vehicle, amount(billed - paid), amount(held)]);
@@ -515,12 +499,13 @@
       ["rQty", "rRate", "rDiscount", "rTax"].forEach(id => el(id).oninput = preview);
       el("rSearch").oninput = () => render();
       el("rFilter").onchange = () => render();
-      el("rentalForm").onsubmit = event => { event.preventDefault(); mutate(saveReservation); };
+      el("rentalForm").onsubmit = event => { event.preventDefault(); api.transact(editing ? "Edit reservation" : "Create reservation", saveReservation); };
       el("rDetail").addEventListener("submit", event => {
         event.preventDefault();
         const data = new FormData(event.target);
         const id = selected;
-        mutate(() => applyAction(event.target.dataset.rentForm, id, data));
+        const action = event.target.dataset.rentForm;
+        api.transact(eventLabels[action] || ({ checkout: "Check out vehicle", return: "Return vehicle", extend: "Extend rental", cancel: "Cancel reservation" })[action], () => applyAction(action, id, data));
       });
       el("rDetail").addEventListener("click", event => {
         const button = event.target.closest("button");

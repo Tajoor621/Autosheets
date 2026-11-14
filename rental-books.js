@@ -52,7 +52,9 @@
       if (value < 0) { [debit, credit] = [credit, debit]; value = -value; }
       lines.push({ account: debit, dr: value, cr: 0 }, { account: credit, dr: 0, cr: value });
     };
+    if (row.type === "journal") return row.lines;
     if (pending(row)) return lines;
+    const channel = row.channelVersion !== 1 ? "Cash / bank" : row.method === "Cash" ? "Cash on hand" : row.method === "Bank transfer" ? "Bank" : row.method === "Card" ? "Card clearing" : "Cash / bank";
     if (managed(row) || row.type === "rental-charge" || row.type === "rental-credit") {
       const sign = row.type === "rental-credit" ? -1 : 1;
       post("Accounts receivable", "Rental income", sign * row.invoice.net);
@@ -65,9 +67,9 @@
     } else if (row.type === "taxi") {
       post("Cash / bank", "Taxi income", cents(row.fare));
     } else if (row.type === "receipt") {
-      post("Cash / bank", customerKey(row) ? "Accounts receivable" : "Other income", cents(row.amt));
+      post(channel, customerKey(row) ? "Accounts receivable" : "Other income", cents(row.amt));
     } else if (row.type === "expense" || row.type === "payment") {
-      post(row.type === "expense" ? "Expenses" : "Payments / costs", "Cash / bank", cents(row.amt));
+      post(row.type === "expense" ? "Expenses" : "Payments / costs", channel, cents(row.amt));
     } else {
       const accounts = {
         "rental-payment": ["Cash / bank", "Accounts receivable"],
@@ -76,7 +78,7 @@
         "deposit-apply": ["Deposits held", "Accounts receivable"],
         "rental-refund": ["Accounts receivable", "Cash / bank"]
       }[row.type];
-      if (accounts) post(accounts[0], accounts[1], row.cents);
+      if (accounts) post(accounts[0] === "Cash / bank" ? channel : accounts[0], accounts[1] === "Cash / bank" ? channel : accounts[1], row.cents);
     }
     return lines;
   }
